@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Color base para tema claro -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="brown_background">#C88769</color>
+    <color name="brown_background1">#E39976</color>
+    <color name="brown_background2">#cc846c</color>
+    <color name="brown_background3">#dbb39f</color>
+    <color name="brown_background4">#623222</color>
+    <color name="brown_background5">#713927</color>
+    <color name="brown_background6">#6f4029</color>
+
+    <!-- Color base para tema oscuro -->
+    <color name="dark_black">#FF000000</color>
+    <color name="dark_white">#FFe0e0e0</color>
+    <color name="dark_brown_background">#80534C</color>
+    <color name="dark_brown_background1">#95665B</color>
+    <color name="dark_brown_background2">#8B5A50</color>
+    <color name="dark_brown_background3">#A1796D</color>
+    <color name="dark_brown_background4">#4B2620</color>
+    <color name="dark_brown_background5">#562C24</color>
+    <color name="dark_brown_background6">#563028</color>
+</resources>
