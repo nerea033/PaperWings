@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">PaperWings</string>
     <string name="not_account">¿No tienes cuenta? Regístrate</string>
+    <string name="have_account">¿Tienes cuenta? Inicia Sesión</string>
     <string name="login_txt">Iniciar Sesión</string>
+    <string name="register_txt">Registrarse</string>
     <string name="username_txt">Nombre de usuario</string>
     <string name="password_txt">Contraseña</string>
     <string name="mail_txt">E-mail</string>

@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loginActivity"
+    android:id="@+id/registerActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/img_loginbkg"
-    tools:context=".view.Login">
+    tools:context=".view.Register">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -30,17 +30,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@string/login_txt"
+                android:text="@string/register_txt"
                 android:textAlignment="center"
                 android:textColor="@color/brown_background1"
                 android:textSize="36sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/tbUsernameLogin"
+                android:id="@+id/tbusername"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
+                android:background="@drawable/custom_edittext_v2"
+                android:drawableStart="@drawable/ic_user"
+                android:drawableEnd="@drawable/ic_information"
+                android:paddingEnd="15dp"
+                android:drawablePadding="8dp"
+                android:hint="@string/username_txt"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/tbUsernameLogin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edittext_v2"
                 android:drawableStart="@drawable/ic_mail"
                 android:drawablePadding="8dp"
@@ -67,7 +82,7 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
                 android:backgroundTint="@color/brown_background1"
-                android:text="@string/login_txt"
+                android:text="@string/register_txt"
                 android:textSize="18sp"
                 app:cornerRadius="20dp" />
 
@@ -81,12 +96,11 @@
                 android:paddingEnd="15dp"
                 android:clickable="true"
                 android:gravity="center"
-                android:text="@string/not_account"
+                android:text="@string/have_account"
                 android:textSize="12sp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -128,4 +142,3 @@
     </androidx.cardview.widget.CardView>
 
 </LinearLayout>
-
