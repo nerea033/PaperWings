@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,9 @@ class Login : AppCompatActivity() {
     private lateinit var tbPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var linkRegister: TextView
+    private var btnGoogle: ImageButton? = null
+    private var btnFacebook: ImageButton? = null
+    private var btnTwitter: ImageButton? = null
 
     // Inicializo la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,24 +39,11 @@ class Login : AppCompatActivity() {
         tbPassword = findViewById(R.id.tbPswLogin)
         btnLogin = findViewById(R.id.btnLogin)
         linkRegister = findViewById(R.id.linkRegister)
+        btnGoogle = findViewById(R.id.btnGoogle)
+        btnFacebook = findViewById(R.id.btnFacebook)
+        btnTwitter = findViewById(R.id.btnTwitter)
 
-        // Establecer un evento clic para cambiar a la actividad de registro
-        linkRegister.setOnClickListener {
-            irARegistro(R.layout.activity_register)
-            finish()
-        }
-
-        // Establecer un evento clic para ir a la pantalla de Libros
-        btnLogin.setOnClickListener {iniciarSesion()}
 
     }
 
-    /**
-     * Cambia a la actividad de registro.
-     * @param [layoutId] ID del diseño de la vista de registro.
-     */
-    fun irARegistro(layoutId: Int) {
-        val intent = Intent(this, RegisterActivity::class.java)
-        startActivity(intent)
-    }
 }
