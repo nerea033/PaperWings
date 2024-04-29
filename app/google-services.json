@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "56862780480",
+    "project_id": "paperwings-64f62",
+    "storage_bucket": "paperwings-64f62.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56862780480:android:e31e6225ab83c30f38c3a5",
+        "android_client_info": {
+          "package_name": "es.dam.paperwings"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChr9mDXuysiI2a9ggomRM6oI8Wwbeigpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
