@@ -37,7 +37,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/tbusername"
+                android:id="@+id/tbUsernameRegister"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
@@ -52,7 +52,7 @@
                 android:textColor="@color/black" />
 
             <EditText
-                android:id="@+id/tbUsernameLogin"
+                android:id="@+id/tbMailRegister"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
@@ -64,7 +64,7 @@
                 android:textColor="@color/black" />
 
             <EditText
-                android:id="@+id/tbPswLogin"
+                android:id="@+id/tbPswRegister"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
@@ -77,7 +77,7 @@
                 android:textColor="@color/black" />
 
             <Button
-                android:id="@+id/btnLogin"
+                android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
@@ -87,7 +87,7 @@
                 app:cornerRadius="20dp" />
 
             <TextView
-                android:id="@+id/linkRegister"
+                android:id="@+id/linkToLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="33dp"
                 android:layout_marginTop="15dp"

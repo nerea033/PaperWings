@@ -35,10 +35,10 @@ class Login : AppCompatActivity() {
         }
 
         // Inicializo los elementos de la vista
-        tbUsername = findViewById(R.id.tbUsernameLogin)
+        tbUsername = findViewById(R.id.tbMailLogin)
         tbPassword = findViewById(R.id.tbPswLogin)
         btnLogin = findViewById(R.id.btnLogin)
-        linkRegister = findViewById(R.id.linkRegister)
+        linkRegister = findViewById(R.id.linkToRegister)
         btnGoogle = findViewById(R.id.btnGoogle)
         btnFacebook = findViewById(R.id.btnFacebook)
         btnTwitter = findViewById(R.id.btnTwitter)

@@ -37,7 +37,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/tbUsernameLogin"
+                android:id="@+id/tbMailLogin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
@@ -72,7 +72,7 @@
                 app:cornerRadius="20dp" />
 
             <TextView
-                android:id="@+id/linkRegister"
+                android:id="@+id/linkToRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="33dp"
                 android:layout_marginTop="15dp"
