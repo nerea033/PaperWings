@@ -63,4 +63,7 @@ dependencies {
     // Dependency for the Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")
 
+    // JDBC MySQL sacado de mvn repository
+    implementation("mysql:mysql-connector-java:5.1.6")
+
 }

@@ -47,7 +47,6 @@
                 android:paddingEnd="15dp"
                 android:drawablePadding="8dp"
                 android:hint="@string/username_txt"
-                android:inputType="textPassword"
                 android:padding="8dp"
                 android:textColor="@color/black" />
 

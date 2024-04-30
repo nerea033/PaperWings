@@ -47,34 +47,76 @@ class Register : AppCompatActivity() {
     }
 
     /**
-     * Método para registrar un usuario
+     * Método para registrar un usuario en Base de datos y Firebase
      */
     fun registerUser() {
+        val username: String = tbUsername.text.toString()
+        val mail: String = tbMail.text.toString()
+        val password: String = tbPassword.text.toString()
+
         btnRegister.setOnClickListener {
 
-            if (tbMail.text.isNotEmpty() && tbPassword.text.isNotEmpty()){ // Si están todos los campos rellenos
+            if (mail.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty()) { // Si están todos los campos rellenos
+                if (password.length >= 6 && username.length <= 50) { // Comprobar los caracteres de los String
+                    if (isValidEmail(mail)) { // Comprobar si el mail es válido
 
-                FirebaseAuth.getInstance()
-                    .createUserWithEmailAndPassword(tbMail.text.toString(), tbPassword.text.toString())
-                    .addOnCompleteListener{ // Verificar si se completa
-
-                        if (it.isSuccessful){
-                            // Ir a la pantalla principal del usuario sin privilegios
-                            switchToHome()
-                        } else {
-                            // Mensaje de error
-                            showAlert()
+                        registerFirebase(mail, password) { uid ->
+                            if (uid != null) {
+                                // Registro exitoso
+                                println("Registro exitoso. UID del usuario: $uid")
+                            } else {
+                                // Mostrar mensaje de error
+                                println("Error al registrar el usuario.")
+                            }
                         }
+                    } else {
+                        // Mostrar mensaje de error
+                        println("El correo electrónico no es válido.")
                     }
-
+                } else {
+                    // Mostrar mensaje de error
+                    println("La contraseña debe tener entre 6 al menos 5 caracteres.")
+                }
+            } else {
+                // Mostrar mensaje de error
+                println("Por favor, completa todos los campos.")
             }
         }
     }
 
     /**
+     * Método para registrar al usuario en Firebase Authentication
+     */
+    fun registerFirebase(mail: String, password: String, onComplete: (String?) -> Unit) {
+        FirebaseAuth.getInstance()
+            .createUserWithEmailAndPassword(mail, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser = task.result?.user
+                    val uid = firebaseUser?.uid
+                    onComplete(uid) // Llamar al callback con el UID
+                } else {
+                    // Si hay un error, llamar al callback con null
+                    onComplete(null)
+                    // Mensaje de error
+                    println("Error al registrar el usuario.")
+                }
+            }
+    }
+
+    /**
+     * Función para validar un correo electrónico
+     */
+    fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+        return email.matches(emailRegex.toRegex())
+    }
+
+
+    /**
      * Método para mostrar mensaje de error
      */
-    fun showAlert(){
+    fun showAlert() {
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
