@@ -4,6 +4,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#DC868686</color>
+    <color name="trasparent">#00FFFFFF</color>
     <color name="brown_background">#C88769</color>
     <color name="brown_background1">#E39976</color>
     <color name="brown_background2">#cc846c</color>
