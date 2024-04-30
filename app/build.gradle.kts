@@ -64,6 +64,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
 
     // JDBC MySQL sacado de mvn repository
-    implementation("mysql:mysql-connector-java:5.1.6")
+    implementation("mysql:mysql-connector-java:8.0.28")
+
+    // Kotlin Coroutines para Android
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
 }

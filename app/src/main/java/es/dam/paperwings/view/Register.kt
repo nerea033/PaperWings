@@ -2,6 +2,7 @@ package es.dam.paperwings.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Message
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -12,6 +13,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
+import es.dam.paperwings.controller.ControllerPaperWings
+import es.dam.paperwings.model.entities.User
 import java.nio.file.attribute.AclEntry.Builder
 
 class Register : AppCompatActivity() {
@@ -51,6 +54,8 @@ class Register : AppCompatActivity() {
      */
     fun registerUser() {
 
+        var userId: String = ""
+
         btnRegister.setOnClickListener {
             val username: String = tbUsername.text.toString()
             val mail: String = tbMail.text.toString()
@@ -63,23 +68,34 @@ class Register : AppCompatActivity() {
                         registerFirebase(mail, password) { uid ->
                             if (uid != null) {
                                 // Registro exitoso
-                                println("Registro exitoso. UID del usuario: $uid")
+                                showAlert("Registro exitoso. UID del usuario: $uid")
+                                userId = uid.toString()
+
+                                // Crear un usuario con el uid de FIREBASE y su nombre
+                                val user = User(uid, username) // Usar val aquí asegura que user no es mutable
+
+                                // Instanciar el controlador
+                                val controller = ControllerPaperWings()
+
+                                // Pasar el usuario al controlador para insertarlo en la Base de Datos
+                                controller.registerUser(user)
+
                             } else {
                                 // Mostrar mensaje de error
-                                println("Error al registrar el usuario.")
+                                showAlert("Error al registrar el usuario.")
                             }
                         }
                     } else {
                         // Mostrar mensaje de error
-                        println("El correo electrónico no es válido.")
+                        showAlert("El correo electrónico no es válido.")
                     }
                 } else {
                     // Mostrar mensaje de error
-                    println("La contraseña debe tener entre 6 al menos 5 caracteres.")
+                    showAlert("La contraseña debe tener entre 6 al menos 5 caracteres.")
                 }
             } else {
                 // Mostrar mensaje de error
-                println("Por favor, completa todos los campos.")
+                showAlert("Por favor, completa todos los campos.")
             }
         }
     }
@@ -99,13 +115,13 @@ class Register : AppCompatActivity() {
                     // Si hay un error, llamar al callback con null
                     onComplete(null)
                     // Mensaje de error
-                    println("Error al registrar el usuario.")
+                    showAlert("Error al registrar el usuario")
                 }
             }
     }
 
     /**
-     * Función para validar un correo electrónico
+     * Función 'regex' para validar un correo electrónico
      */
     fun isValidEmail(email: String): Boolean {
         val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
@@ -116,11 +132,11 @@ class Register : AppCompatActivity() {
     /**
      * Método para mostrar mensaje de error
      */
-    fun showAlert() {
+    fun showAlert(message: String) {
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Correo o contraseña no válidos")
+        builder.setMessage(message)
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()

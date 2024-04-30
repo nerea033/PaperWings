@@ -27,6 +27,7 @@ class Home : AppCompatActivity() {
             // Abre Activity2 al hacer clic en el botón
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
+            finish()
         }
 
 

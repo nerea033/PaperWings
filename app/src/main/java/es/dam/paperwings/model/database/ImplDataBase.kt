@@ -10,16 +10,15 @@ import java.sql.SQLException
  */
 class ImplDataBase : DaoDataBase{
 
-    private val URL = "jdbc:mysql://tu_servidor:puerto/tu_base_de_datos" //tu_servidor:puerto/tu_base_de_datos
-    private val USER = "usuario"
-    private val PASSWORD = "contraseña"
+    private val URL = "jdbc:mysql://sql.freedb.tech:3306/freedb_PaperWingsDB" //tu_servidor:puerto/tu_base_de_datos
+    private val USER = "freedb_nerea"
+    private val PASSWORD = "6%p!n%QneUDQV7h"
     /**
      * Conexión a la base de datos
      *
      */
     fun connect(): Connection {
         return try {
-            Class.forName("com.mysql.cj.jdbc.Driver") //Cargar el controlador JDBC
             DriverManager.getConnection(URL, USER, PASSWORD) // Obtener la conexión a la base de datos
         } catch (e: SQLException) {
             throw RuntimeException("Error al conectar a la base de datos", e)
@@ -39,6 +38,7 @@ class ImplDataBase : DaoDataBase{
             ps.executeUpdate()
 
             conn.close()
+            println("Inserción realizada con éxito "+user.getUid() + "\nname" + user.getName() + "\rol" + user.getRol())
         } catch (e: SQLException) {
             println("Error al realizar el alta en la base de datos: ${e.message}")
         }
