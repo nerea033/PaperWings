@@ -50,11 +50,11 @@ class Register : AppCompatActivity() {
      * Método para registrar un usuario en Base de datos y Firebase
      */
     fun registerUser() {
-        val username: String = tbUsername.text.toString()
-        val mail: String = tbMail.text.toString()
-        val password: String = tbPassword.text.toString()
 
         btnRegister.setOnClickListener {
+            val username: String = tbUsername.text.toString()
+            val mail: String = tbMail.text.toString()
+            val password: String = tbPassword.text.toString()
 
             if (mail.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty()) { // Si están todos los campos rellenos
                 if (password.length >= 6 && username.length <= 50) { // Comprobar los caracteres de los String

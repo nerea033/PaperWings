@@ -60,7 +60,8 @@
                 android:drawablePadding="8dp"
                 android:hint="@string/mail_txt"
                 android:padding="8dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/tbPswRegister"
