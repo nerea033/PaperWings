@@ -1,7 +1,7 @@
 package es.dam.paperwings.controller
 
-import es.dam.paperwings.model.database.DaoDataBase
-import es.dam.paperwings.model.database.FactoryDataBase
+import es.dam.paperwings.model.dataBase.DaoDataBase
+import es.dam.paperwings.model.dataBase.FactoryDataBase
 import es.dam.paperwings.model.entities.User
 
 class ControllerPaperWings {

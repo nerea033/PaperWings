@@ -146,7 +146,7 @@ class Register : AppCompatActivity() {
      * Método para cambiar la pestaña a la principal (Home)
      */
     private fun switchToHome() {
-        val homeIntent: Intent = Intent(this, Home::class.java).apply {
+        val homeIntent: Intent = Intent(this, MainActivity::class.java).apply {
             // Si quiero llevar datos hago:
             //putExtra("nombreCampo", campo) *campo es lo que le metería por parámetro al método
 

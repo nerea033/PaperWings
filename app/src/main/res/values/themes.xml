@@ -8,4 +8,9 @@
     </style>
 
     <style name="Theme.PaperWings" parent="Base.Theme.PaperWings" />
+
+    <!-- Color del indicador del botton navigation menú -->
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/brown_background3</item>
+    </style>
 </resources>
