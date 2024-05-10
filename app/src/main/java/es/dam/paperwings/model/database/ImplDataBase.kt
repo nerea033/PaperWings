@@ -1,5 +1,6 @@
-package es.dam.paperwings.model.database
+package es.dam.paperwings.model.dataBase
 
+import es.dam.paperwings.model.dataBase.DaoDataBase
 import es.dam.paperwings.model.entities.User
 import java.sql.Connection
 import java.sql.DriverManager
@@ -8,7 +9,7 @@ import java.sql.SQLException
 /**
  * Clase de Implementación, desarrolla los métodos CRUD de la BBDD indicados en el DAO
  */
-class ImplDataBase : DaoDataBase{
+class ImplDataBase : DaoDataBase {
 
     private val URL = "jdbc:mysql://sql.freedb.tech:3306/freedb_PaperWingsDB" //tu_servidor:puerto/tu_base_de_datos
     private val USER = "freedb_nerea"

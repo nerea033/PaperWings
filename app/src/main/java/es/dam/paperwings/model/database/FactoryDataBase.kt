@@ -1,4 +1,4 @@
-package es.dam.paperwings.model.database
+package es.dam.paperwings.model.dataBase
 
 /**
  * Clase que se encarga de elegir qué archivo de base de datos elegir si el de prueba o el de implementación

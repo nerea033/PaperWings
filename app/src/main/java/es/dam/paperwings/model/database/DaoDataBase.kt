@@ -1,4 +1,4 @@
-package es.dam.paperwings.model.database
+package es.dam.paperwings.model.dataBase
 
 import es.dam.paperwings.model.entities.User
 

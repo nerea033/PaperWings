@@ -2,27 +2,28 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/main_admin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".view.MainActivityAdmin">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frame_container"/>
+        android:id="@+id/frame_container_admin"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/botton_navigation"
+        android:id="@+id/botton_navigation_admin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_menu"
+        app:menu="@menu/bottom_menu_admin"
         android:background="@color/white"
         app:itemIconTint="@color/brown_background"
         app:itemTextColor="@color/brown_background"
         app:itemIconSize="30dp"
         app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

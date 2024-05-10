@@ -34,20 +34,16 @@ class MainActivity : AppCompatActivity() {
         // Transiciones entre fragments
         bottomNavigationView.setOnItemSelectedListener {menuItem ->
             when (menuItem.itemId){
-                R.id.bottom_home -> {
+                R.id.bottom_start -> {
                     replaceFragment(HomeFragment())
                     true
                 }
-                R.id.bottom_search -> {
+                R.id.bottom_category -> {
                     replaceFragment(SearchFragment())
                     true
                 }
-                R.id.bottom_menu -> {
+                R.id.bottom_cart -> {
                     replaceFragment(MenuFragment())
-                    true
-                }
-                R.id.bottom_card -> {
-                    replaceFragment(CardFragment())
                     true
                 }
                 R.id.bottom_profile -> {

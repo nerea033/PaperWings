@@ -11,6 +11,6 @@
 
     <!-- Color del indicador del botton navigation menú -->
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/brown_background3</item>
+        <item name="android:color">#88E3B8A2</item>
     </style>
 </resources>
