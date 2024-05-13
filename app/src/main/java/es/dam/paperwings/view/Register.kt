@@ -2,7 +2,6 @@ package es.dam.paperwings.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Message
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,11 +10,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
-import es.dam.paperwings.controller.ControllerPaperWings
+import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.User
-import java.nio.file.attribute.AclEntry.Builder
+import kotlinx.coroutines.launch
 
 class Register : AppCompatActivity() {
 
@@ -68,34 +68,30 @@ class Register : AppCompatActivity() {
                         registerFirebase(mail, password) { uid ->
                             if (uid != null) {
                                 // Registro exitoso
-                                showAlert("Registro exitoso. UID del usuario: $uid")
                                 userId = uid.toString()
 
-                                // Crear un usuario con el uid de FIREBASE y su nombre
-                                val user = User(uid, username) // Usar val aquí asegura que user no es mutable
-
-                                // Instanciar el controlador
-                                val controller = ControllerPaperWings()
-
-                                // Pasar el usuario al controlador para insertarlo en la Base de Datos
-                                controller.registerUser(user)
+                                // Le paso el uid del Firebase Authentication junto al username a la API para que lo inserte en la DDBB
+                                lifecycleScope.launch {
+                                    addUserToDatabase(userId, username)
+                                    switchToHome()  // Llamada a switchToHome después de agregar al usuario a la base de datos
+                                }
 
                             } else {
                                 // Mostrar mensaje de error
-                                showAlert("Error al registrar el usuario.")
+                                showAlert("Error","Error al registrar el usuario.")
                             }
                         }
                     } else {
                         // Mostrar mensaje de error
-                        showAlert("El correo electrónico no es válido.")
+                        showAlert("Error","El correo electrónico no es válido.")
                     }
                 } else {
                     // Mostrar mensaje de error
-                    showAlert("La contraseña debe tener entre 6 al menos 5 caracteres.")
+                    showAlert("Error","La contraseña debe tener entre 6 al menos 5 caracteres.")
                 }
             } else {
                 // Mostrar mensaje de error
-                showAlert("Por favor, completa todos los campos.")
+                showAlert("Error","Por favor, completa todos los campos.")
             }
         }
     }
@@ -115,13 +111,39 @@ class Register : AppCompatActivity() {
                     // Si hay un error, llamar al callback con null
                     onComplete(null)
                     // Mensaje de error
-                    showAlert("Error al registrar el usuario")
+                    showAlert("Error","Error al registrar el usuario")
                 }
             }
     }
 
+
     /**
-     * Función 'regex' para validar un correo electrónico
+     * Método para pasar el usuario a la API y de esta a la DDBB
+     */
+    suspend fun addUserToDatabase(uid: String, username: String) {
+        val user = User(uid, username)  // Crear el objeto usuario
+        val userService = ApiServiceFactory.makeUsersService()  // Obtener la instancia del servicio API
+
+        try {
+            val response = userService.addUser(user)  // Hacer la llamada API
+            if (response.isSuccessful) {
+                // Usuario agregado con éxito
+                    showAlert("Información","Usuario creado con éxito. Nombre del usuario: ${user.name}")
+
+            } else {
+                // Fallo al agregar el usuario, manejar error
+                val errorResponse = response.errorBody()?.string()
+                showAlert("Error","Error al crear el usuario: $errorResponse")
+            }
+        } catch (e: Exception) {
+            // Manejar excepciones, como problemas de red o configuración
+            showAlert("Error","Error al conectar con la API: ${e.message}")
+        }
+    }
+
+
+    /**
+     * Función 'regex' para validar un correo electrónico.
      */
     fun isValidEmail(email: String): Boolean {
         val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
@@ -132,10 +154,10 @@ class Register : AppCompatActivity() {
     /**
      * Método para mostrar mensaje de error
      */
-    fun showAlert(message: String) {
+    fun showAlert(title: String, message: String) {
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
+        builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
@@ -149,10 +171,11 @@ class Register : AppCompatActivity() {
         val homeIntent: Intent = Intent(this, MainActivity::class.java).apply {
             // Si quiero llevar datos hago:
             //putExtra("nombreCampo", campo) *campo es lo que le metería por parámetro al método
-
         }
-        // Comenzar la actividad
+        // Comenzar la actividad.
         startActivity(homeIntent)
+        // Finalizar la actividad actual.
+        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
     }
 
 
