@@ -47,6 +47,10 @@ class Register : AppCompatActivity() {
 
         registerUser()
 
+        linkToLogin.setOnClickListener {
+            switchToLogin()
+        }
+
     }
 
     /**
@@ -73,7 +77,7 @@ class Register : AppCompatActivity() {
                                 // Le paso el uid del Firebase Authentication junto al username a la API para que lo inserte en la DDBB
                                 lifecycleScope.launch {
                                     addUserToDatabase(userId, username)
-                                    switchToHome()  // Llamada a switchToHome después de agregar al usuario a la base de datos
+                                    switchToHome(username)  // Llamada a switchToHome después de agregar al usuario a la base de datos
                                 }
 
                             } else {
@@ -152,7 +156,7 @@ class Register : AppCompatActivity() {
 
 
     /**
-     * Método para mostrar mensaje de error
+     * Método para mostrar mensaje
      */
     fun showAlert(title: String, message: String) {
 
@@ -167,13 +171,24 @@ class Register : AppCompatActivity() {
     /**
      * Método para cambiar la pestaña a la principal (Home)
      */
-    private fun switchToHome() {
-        val homeIntent: Intent = Intent(this, MainActivity::class.java).apply {
-            // Si quiero llevar datos hago:
-            //putExtra("nombreCampo", campo) *campo es lo que le metería por parámetro al método
+    private fun switchToHome(username: String) {
+        val homeIntent = Intent(this, MainActivity::class.java).apply {
+            // Pasar el username a la nueva actividad
+            putExtra("username", username)
         }
         // Comenzar la actividad.
         startActivity(homeIntent)
+        // Finalizar la actividad actual.
+        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+    }
+
+    /**
+     * Método para cambiar la pestaña de Login
+     */
+    private fun switchToLogin() {
+        val loginIntent: Intent = Intent(this, Login::class.java).apply {}
+        // Comenzar la actividad.
+        startActivity(loginIntent)
         // Finalizar la actividad actual.
         finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
     }

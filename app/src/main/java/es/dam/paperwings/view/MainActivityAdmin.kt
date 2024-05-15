@@ -30,6 +30,13 @@ class MainActivityAdmin : AppCompatActivity() {
             insets
         }
 
+        // Recuperar el username del intent (del login o register)
+        val username = intent.getStringExtra("username")
+
+        if (username != null) {
+            // Mostrar el nombre del usuario
+        }
+
         bottomNavigationView = findViewById(R.id.botton_navigation_admin)
 
         // Transiciones entre fragments
