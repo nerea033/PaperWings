@@ -18,8 +18,8 @@ interface ApiUsersServices {
     @GET("users") // La función 'suspend' permite trabajar con corrutinas directamente.
     suspend fun listUsers(): Response<Structure<User>>
 
-    @GET("users/{id}") // Ruta para obtener los usuarios por id
-    suspend fun fetchUserByUid(@Path("id") id: String): Response<Structure<User>>
+    @GET("users/{uid}") // Ruta para obtener los usuarios por uid
+    suspend fun fetchUserByUid(@Path("uid") uid: String): Response<Structure<User>>
 
 }
 

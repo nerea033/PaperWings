@@ -7,8 +7,11 @@
     <string name="username_txt">Nombre de usuario</string>
     <string name="password_txt">Contraseña</string>
     <string name="mail_txt">E-mail</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cover">Cover</string>
+    <string name="title_place_holder">Title Place Holder</string>
+    <string name="author_place_holder">Author Place Holder</string>
+    <string name="description_place_holder">Description Place Holder</string>
+    <string name="hello_blank_fragment">Hello Blank Fragment</string>
 
 
 </resources>

@@ -84,7 +84,7 @@ class Login : AppCompatActivity() {
 
                                 if (rolResult == "USER") {
                                     // Si el rol es "USER", cambiar a la actividad principal pasando el username
-                                    switchToHome(usernameResult)
+                                    switchToHome(usernameResult, userId)
                                 } else if (rolResult == "ADMIN"){
                                     // Si el rol es "admin", cambiar a la actividad principal del administrador pasando el username
                                     switchToHomeAdmin(usernameResult)
@@ -167,22 +167,24 @@ class Login : AppCompatActivity() {
      * Método para mostrar mensaje
      */
     fun showAlert(title: String, message: String) {
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(title)
-        builder.setMessage(message)
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+        if (!isFinishing) { // Verificar si la actividad no está en proceso de finalización
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(title)
+            builder.setMessage(message)
+            builder.setPositiveButton("Aceptar", null)
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
     }
 
     /**
      * Método para cambiar la pestaña a la principal (Home)
      */
-    private fun switchToHome(username: String) {
+    private fun switchToHome(username: String, uid: String) {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
             // Pasar el username a la nueva actividad
             putExtra("username", username)
+            putExtra("uid", uid)
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         // Recuperar el username del intent (del login o register)
         val username = intent.getStringExtra("username")
+        val uid = intent.getStringExtra("uid")
 
         if (username != null) {
             // Mostrar el nombre del usuario

@@ -159,13 +159,14 @@ class Register : AppCompatActivity() {
      * Método para mostrar mensaje
      */
     fun showAlert(title: String, message: String) {
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(title)
-        builder.setMessage(message)
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+        if (!isFinishing) { // Verificar si la actividad no está en proceso de finalización
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(title)
+            builder.setMessage(message)
+            builder.setPositiveButton("Aceptar", null)
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
     }
 
     /**

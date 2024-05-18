@@ -1,60 +1,102 @@
 package es.dam.paperwings.view.fragments
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import es.dam.paperwings.R
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import es.dam.paperwings.databinding.FragmentHomeBinding
+import es.dam.paperwings.model.BookClickListener
+import es.dam.paperwings.model.api.ApiServiceFactory
+import es.dam.paperwings.model.entities.Book
+import es.dam.paperwings.view.BookDetailActivity
+import es.dam.paperwings.view.CardAdapter
+import es.dam.paperwings.view.Login
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class HomeFragment : Fragment(), BookClickListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+
+    // LiveData to hold the list of books
+    private val _booksLiveData = MutableLiveData<List<Book>>()
+    val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        // Inflate the layout for this fragment and initialize the binding object.
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
+        val cardAdapter = CardAdapter(emptyList(), this)
+        binding.recycledViewUser.apply {
+            layoutManager = GridLayoutManager(activity?.applicationContext, 2)
+            adapter = cardAdapter
+        }
+
+        // Observe the books LiveData and update the adapter when the data changes
+        booksLiveData.observe(viewLifecycleOwner, { books ->
+            cardAdapter.updateBooks(books)
+        })
+
+        // Start loading books
+        lifecycleScope.launch {
+            fetchBooks()
+        }
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    suspend fun fetchBooks(){
+        val bookService = ApiServiceFactory.makeBooksService()
+        var id: Int = 0
+        var title: String = ""
+        var author: String = ""
+        var price: Double = 0.0
+        try {
+
+            // Get the books
+            val response = bookService.listBooks()
+            if (response.isSuccessful && response.body() != null) { // Si no hay error y no es null
+
+                // Store the books in the LiveData
+                val booksList = response.body()!!.data
+                if (booksList != null && booksList.isNotEmpty()) {
+
+                    _booksLiveData.postValue(booksList)
+
+                } else {
+                    println("Lista vacía")
                 }
+            } else {
+                println("Error al obtener los libros: ${response.errorBody()?.string()}")
             }
+        } catch (e: Exception) {
+            println("Error en la red o al parsear los datos: ${e.message}")
+        }
+
+    }
+
+    override fun onBookClick(book: Book) {
+        val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
+        intent.putExtra("id_book", book.id)
+        startActivity(intent)
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
