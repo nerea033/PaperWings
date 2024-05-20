@@ -20,10 +20,11 @@
             android:padding="25dp">
 
             <ImageButton
+                android:id="@+id/ibGoBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_go_back"
-                android:background="@color/trasparent"/>
+                android:background="@color/trasparent"
+                android:src="@drawable/ic_go_back" />
 
             <ImageView
                 android:id="@+id/ivCoverDetail"
@@ -317,7 +318,7 @@
 
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnAddCart"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_margin="25dp"

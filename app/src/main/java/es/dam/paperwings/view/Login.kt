@@ -196,7 +196,9 @@ class Login : AppCompatActivity() {
      * Método para cambiar la pestaña a la principal (Home)
      */
     private fun switchToHome() {
-        val homeIntent = Intent(this, MainActivity::class.java).apply {}
+        val homeIntent = Intent(this, MainActivity::class.java).apply {
+            putExtra("FRAGMENT_TO_LOAD", "home")
+        }
         // Comenzar la actividad.
         startActivity(homeIntent)
         // Finalizar la actividad actual.
@@ -208,7 +210,9 @@ class Login : AppCompatActivity() {
      * Método para cambiar la pestaña a la principal (HomeAdmin) del administrador
      */
     private fun switchToHomeAdmin() {
-        val homeIntent: Intent = Intent(this, MainActivityAdmin::class.java).apply {}
+        val homeIntent: Intent = Intent(this, MainActivityAdmin::class.java).apply {
+            putExtra("FRAGMENT_TO_LOAD", "home")
+        }
         // Comenzar la actividad.
         startActivity(homeIntent)
         // Finalizar la actividad actual.

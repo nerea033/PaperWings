@@ -78,10 +78,34 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        // Fragmento inicial
-        replaceFragment(HomeFragment())
+        // Verifica el fragmento que debe ser mostrado inicialmente
+        val fragmentToLoad = intent.getStringExtra("FRAGMENT_TO_LOAD")
+        when (fragmentToLoad) {
+            "home" -> {
+                replaceFragment(HomeFragment())
+                selectBottomNavItem(R.id.bottom_start)
+            }
+            "search" -> {
+                replaceFragment(SearchFragment())
+                selectBottomNavItem(R.id.bottom_category)
+            }
+            "menu" -> {
+                replaceFragment(MenuFragment())
+                selectBottomNavItem(R.id.bottom_cart)
+            }
+            "profile" -> {
+                replaceFragment(ProfileFragment())
+                selectBottomNavItem(R.id.bottom_profile)
+            }
+            else -> {
+                replaceFragment(HomeFragment())
+                selectBottomNavItem(R.id.bottom_start)
+            }
+        }
+
     }
 
+    // Verificar si ha iniciado sesión
     private fun checkUserAuthentication() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
@@ -94,5 +118,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
+    }
+
+    private fun selectBottomNavItem(itemId: Int) {
+        bottomNavigationView.selectedItemId = itemId
     }
 }

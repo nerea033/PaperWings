@@ -195,8 +195,8 @@ class Register : AppCompatActivity() {
      */
     private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
-            // Pasar el username a la nueva actividad
-            //putExtra("username", username)
+            // Pasar el fragmento que quiero mostrar a la actividad
+            putExtra("FRAGMENT_TO_LOAD", "home")
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

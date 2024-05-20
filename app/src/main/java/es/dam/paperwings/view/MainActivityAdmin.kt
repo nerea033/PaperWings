@@ -11,9 +11,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.dam.paperwings.R
 import es.dam.paperwings.view.fragments.AddFragment
 import es.dam.paperwings.view.fragments.DeleteFragment
-import es.dam.paperwings.view.fragments.HomeFragment
-import es.dam.paperwings.view.fragments.MenuFragment
-import es.dam.paperwings.view.fragments.SearchFragment
 import es.dam.paperwings.view.fragments.UpdateFragment
 
 class MainActivityAdmin : AppCompatActivity() {
@@ -63,11 +60,37 @@ class MainActivityAdmin : AppCompatActivity() {
 
         }
 
-        // Fragmento inicial
-        replaceFragment(AddFragment())
+        // Verifica el fragmento que debe ser mostrado inicialmente
+        val fragmentToLoad = intent.getStringExtra("FRAGMENT_TO_LOAD")
+        when (fragmentToLoad) {
+            "home" -> {
+                replaceFragment(AddFragment())
+                selectBottomNavItem(R.id.bottom_add)
+            }
+            "search" -> {
+                replaceFragment(UpdateFragment())
+                selectBottomNavItem(R.id.bottom_update)
+            }
+            "menu" -> {
+                replaceFragment(DeleteFragment())
+                selectBottomNavItem(R.id.bottom_delete)
+            }
+            "profile" -> {
+                replaceFragment(ProfileFragment())
+                selectBottomNavItem(R.id.bottom_profile)
+            }
+            else -> {
+                replaceFragment(AddFragment())
+                selectBottomNavItem(R.id.bottom_add)
+            }
+        }
     }
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame_container_admin, fragment).commit()
+    }
+
+    private fun selectBottomNavItem(itemId: Int) {
+        bottomNavigationView.selectedItemId = itemId
     }
 }
