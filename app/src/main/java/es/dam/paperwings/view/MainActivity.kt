@@ -1,5 +1,6 @@
 package es.dam.paperwings.view
 
+import ProfileFragment
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,6 @@ import es.dam.paperwings.R
 import es.dam.paperwings.view.fragments.CardFragment
 import es.dam.paperwings.view.fragments.HomeFragment
 import es.dam.paperwings.view.fragments.MenuFragment
-import es.dam.paperwings.view.fragments.ProfileFragment
 import es.dam.paperwings.view.fragments.SearchFragment
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         // Recuperar el username del intent (del login o register)
         val username = intent.getStringExtra("username")
         val uid = intent.getStringExtra("uid")
+        val mail = intent.getStringExtra("mail")
 
         if (username != null) {
             // Mostrar el nombre del usuario
@@ -44,6 +45,13 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId){
                 R.id.bottom_start -> {
                     replaceFragment(HomeFragment())
+                    val homefragment = HomeFragment()
+                    val args = Bundle()
+                    args.putString("username", username)
+                    args.putString("uid", uid)
+                    args.putString("mail", mail)
+                    homefragment.arguments = args
+                    replaceFragment(homefragment)
                     true
                 }
                 R.id.bottom_category -> {
@@ -55,7 +63,13 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.bottom_profile -> {
-                    replaceFragment(ProfileFragment())
+                    val profileFragment = ProfileFragment()
+                    val args = Bundle()
+                    args.putString("username", username)
+                    args.putString("uid", uid)
+                    args.putString("mail", mail)
+                    profileFragment.arguments = args
+                    replaceFragment(profileFragment)
                     true
                 }
                 else -> false

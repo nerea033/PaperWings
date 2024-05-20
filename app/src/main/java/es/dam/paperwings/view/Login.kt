@@ -84,7 +84,7 @@ class Login : AppCompatActivity() {
 
                                 if (rolResult == "USER") {
                                     // Si el rol es "USER", cambiar a la actividad principal pasando el username
-                                    switchToHome(usernameResult, userId)
+                                    switchToHome(usernameResult, userId, mail)
                                 } else if (rolResult == "ADMIN"){
                                     // Si el rol es "admin", cambiar a la actividad principal del administrador pasando el username
                                     switchToHomeAdmin(usernameResult)
@@ -180,11 +180,12 @@ class Login : AppCompatActivity() {
     /**
      * Método para cambiar la pestaña a la principal (Home)
      */
-    private fun switchToHome(username: String, uid: String) {
+    private fun switchToHome(username: String, uid: String, mail: String) {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
             // Pasar el username a la nueva actividad
             putExtra("username", username)
             putExtra("uid", uid)
+            putExtra("mail", mail)
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

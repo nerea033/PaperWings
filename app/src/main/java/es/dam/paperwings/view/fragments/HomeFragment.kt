@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import es.dam.paperwings.R
 import es.dam.paperwings.databinding.FragmentHomeBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
@@ -24,6 +27,11 @@ class HomeFragment : Fragment(), BookClickListener {
     // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+
+    private var uid: String? = null
+    private var username: String? = null
+
 
 
     // LiveData to hold the list of books
@@ -55,15 +63,16 @@ class HomeFragment : Fragment(), BookClickListener {
             fetchBooks()
         }
 
+        // Recuperar los argumentos del mainActivity, vienen de login y register
+        username = arguments?.getString("username")
+        uid = arguments?.getString("uid")
+
+
         return view
     }
 
     suspend fun fetchBooks(){
         val bookService = ApiServiceFactory.makeBooksService()
-        var id: Int = 0
-        var title: String = ""
-        var author: String = ""
-        var price: Double = 0.0
         try {
 
             // Get the books
@@ -91,6 +100,7 @@ class HomeFragment : Fragment(), BookClickListener {
     override fun onBookClick(book: Book) {
         val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
         intent.putExtra("id_book", book.id)
+        intent.putExtra("uid", uid)
         startActivity(intent)
     }
 

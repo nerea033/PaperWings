@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -25,6 +26,7 @@ class Register : AppCompatActivity() {
     private lateinit var tbPassword: EditText
     private lateinit var btnRegister: Button
     private lateinit var linkToLogin: TextView
+    private lateinit var ivInformation: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +46,17 @@ class Register : AppCompatActivity() {
         tbPassword = findViewById(R.id.tbPswRegister)
         btnRegister = findViewById(R.id.btnRegister)
         linkToLogin = findViewById(R.id.linkToLogin)
+        ivInformation = findViewById(R.id.ivInformation)
+
 
         registerUser()
 
         linkToLogin.setOnClickListener {
             switchToLogin()
+        }
+
+        ivInformation.setOnClickListener{
+            showAlert("Información", "Escribe tu nombre")
         }
 
     }
@@ -77,7 +85,7 @@ class Register : AppCompatActivity() {
                                 // Le paso el uid del Firebase Authentication junto al username a la API para que lo inserte en la DDBB
                                 lifecycleScope.launch {
                                     addUserToDatabase(userId, username)
-                                    switchToHome(username)  // Llamada a switchToHome después de agregar al usuario a la base de datos
+                                    switchToHome(username, userId, mail)  // Llamada a switchToHome después de agregar al usuario a la base de datos
                                 }
 
                             } else {
@@ -172,10 +180,12 @@ class Register : AppCompatActivity() {
     /**
      * Método para cambiar la pestaña a la principal (Home)
      */
-    private fun switchToHome(username: String) {
+    private fun switchToHome(username: String, uid: String, mail: String) {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
             // Pasar el username a la nueva actividad
             putExtra("username", username)
+            putExtra("uid", uid)
+            putExtra("mail", mail)
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

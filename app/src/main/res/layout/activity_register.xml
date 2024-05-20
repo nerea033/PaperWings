@@ -37,19 +37,37 @@
                 android:textSize="36sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/tbUsernameRegister"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/custom_edittext_v2"
-                android:drawableStart="@drawable/ic_user"
-                android:drawableEnd="@drawable/ic_information"
-                android:paddingEnd="15dp"
-                android:drawablePadding="8dp"
-                android:hint="@string/username_txt"
-                android:padding="8dp"
-                android:textColor="@color/black" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <ImageView
+                    android:id="@+id/ivInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_information"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:paddingEnd="14dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <EditText
+                    android:id="@+id/tbUsernameRegister"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/custom_edittext_v2"
+                    android:drawableStart="@drawable/ic_user"
+                    android:paddingEnd="15dp"
+                    android:drawablePadding="8dp"
+                    android:hint="@string/username_txt"
+                    android:padding="8dp"
+                    android:textColor="@color/black"
+                    android:focusableInTouchMode="true"/>
+            </RelativeLayout>
+
 
             <EditText
                 android:id="@+id/tbMailRegister"
@@ -84,7 +102,8 @@
                 android:layout_marginTop="30dp"
                 android:backgroundTint="@color/brown_background"
                 android:text="@string/register_txt"
-                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textSize="19sp"
                 app:cornerRadius="20dp" />
 
             <TextView

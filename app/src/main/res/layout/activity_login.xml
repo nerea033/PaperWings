@@ -70,7 +70,8 @@
                 android:layout_marginTop="30dp"
                 android:backgroundTint="@color/brown_background"
                 android:text="@string/login_txt"
-                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textSize="19sp"
                 app:cornerRadius="20dp" />
 
             <TextView
