@@ -84,10 +84,12 @@ class Login : AppCompatActivity() {
 
                                 if (rolResult == "USER") {
                                     // Si el rol es "USER", cambiar a la actividad principal pasando el username
-                                    switchToHome(usernameResult, userId, mail)
+                                    saveUserToSharedPreferences(usernameResult, userId, mail)
+                                    switchToHome()
                                 } else if (rolResult == "ADMIN"){
                                     // Si el rol es "admin", cambiar a la actividad principal del administrador pasando el username
-                                    switchToHomeAdmin(usernameResult)
+                                    saveUserToSharedPreferences(usernameResult, userId, mail)
+                                    switchToHomeAdmin()
                                 }
                             }
                         }
@@ -162,6 +164,19 @@ class Login : AppCompatActivity() {
         }
     }
 
+    /**
+     * Persitir los datos localmente para poder acceder a ellos
+     */
+    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String){
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("username", username)
+            putString("uid", uid)
+            putString("mail", mail)
+            apply()
+        }
+    }
+
 
     /**
      * Método para mostrar mensaje
@@ -180,13 +195,8 @@ class Login : AppCompatActivity() {
     /**
      * Método para cambiar la pestaña a la principal (Home)
      */
-    private fun switchToHome(username: String, uid: String, mail: String) {
-        val homeIntent = Intent(this, MainActivity::class.java).apply {
-            // Pasar el username a la nueva actividad
-            putExtra("username", username)
-            putExtra("uid", uid)
-            putExtra("mail", mail)
-        }
+    private fun switchToHome() {
+        val homeIntent = Intent(this, MainActivity::class.java).apply {}
         // Comenzar la actividad.
         startActivity(homeIntent)
         // Finalizar la actividad actual.
@@ -197,11 +207,8 @@ class Login : AppCompatActivity() {
     /**
      * Método para cambiar la pestaña a la principal (HomeAdmin) del administrador
      */
-    private fun switchToHomeAdmin(username: String) {
-        val homeIntent: Intent = Intent(this, MainActivityAdmin::class.java).apply {
-            // Pasar el username a la nueva actividad
-            putExtra("username", username)
-        }
+    private fun switchToHomeAdmin() {
+        val homeIntent: Intent = Intent(this, MainActivityAdmin::class.java).apply {}
         // Comenzar la actividad.
         startActivity(homeIntent)
         // Finalizar la actividad actual.

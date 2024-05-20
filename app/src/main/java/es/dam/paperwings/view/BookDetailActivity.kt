@@ -17,5 +17,7 @@ class BookDetailActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Obtengo el id_book de HomeFragment como Intent y el uid de sharedPreferences
     }
 }

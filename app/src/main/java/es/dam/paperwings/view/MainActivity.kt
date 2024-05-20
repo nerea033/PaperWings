@@ -1,6 +1,7 @@
 package es.dam.paperwings.view
 
 import ProfileFragment
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.view.fragments.CardFragment
 import es.dam.paperwings.view.fragments.HomeFragment
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     //Inicializar el bottom navigation view
     private lateinit var bottomNavigationView: BottomNavigationView
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,10 +33,19 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Recuperar el username del intent (del login o register)
-        val username = intent.getStringExtra("username")
-        val uid = intent.getStringExtra("uid")
-        val mail = intent.getStringExtra("mail")
+
+        // Inicializar Firebase Auth
+        auth = FirebaseAuth.getInstance()
+
+        // Verificar la autenticación del usuario
+        checkUserAuthentication()
+
+
+        // Recuperar datos de SharedPreferences
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val uid = sharedPref.getString("uid", "N/A")
+        val username = sharedPref.getString("username", "N/A")
+        val mail = sharedPref.getString("mail", "N/A")
 
         if (username != null) {
             // Mostrar el nombre del usuario
@@ -45,13 +58,6 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId){
                 R.id.bottom_start -> {
                     replaceFragment(HomeFragment())
-                    val homefragment = HomeFragment()
-                    val args = Bundle()
-                    args.putString("username", username)
-                    args.putString("uid", uid)
-                    args.putString("mail", mail)
-                    homefragment.arguments = args
-                    replaceFragment(homefragment)
                     true
                 }
                 R.id.bottom_category -> {
@@ -64,11 +70,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.bottom_profile -> {
                     val profileFragment = ProfileFragment()
-                    val args = Bundle()
-                    args.putString("username", username)
-                    args.putString("uid", uid)
-                    args.putString("mail", mail)
-                    profileFragment.arguments = args
                     replaceFragment(profileFragment)
                     true
                 }
@@ -79,6 +80,16 @@ class MainActivity : AppCompatActivity() {
 
         // Fragmento inicial
         replaceFragment(HomeFragment())
+    }
+
+    private fun checkUserAuthentication() {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            // Usuario no autenticado, redirigir a la pantalla de login
+            val intent = Intent(this, Login::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun replaceFragment(fragment: Fragment) {

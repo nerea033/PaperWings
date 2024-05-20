@@ -1,3 +1,4 @@
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,9 +39,10 @@ class ProfileFragment : Fragment() {
         // Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Recuperar los argumentos del fragmento
-        username = arguments?.getString("username")
-        mail = arguments?.getString("mail")
+        // Recuperar datos de SharedPreferences
+        val sharedPref = activity?.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val username = sharedPref?.getString("username", "N/A")
+        val mail = sharedPref?.getString("mail", "N/A")
 
         showProfile(username, mail)
 

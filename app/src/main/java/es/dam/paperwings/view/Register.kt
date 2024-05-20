@@ -85,7 +85,8 @@ class Register : AppCompatActivity() {
                                 // Le paso el uid del Firebase Authentication junto al username a la API para que lo inserte en la DDBB
                                 lifecycleScope.launch {
                                     addUserToDatabase(userId, username)
-                                    switchToHome(username, userId, mail)  // Llamada a switchToHome después de agregar al usuario a la base de datos
+                                    saveUserToSharedPreferences(username, userId, mail)
+                                    switchToHome()// Llamada a switchToHome después de agregar al usuario a la base de datos
                                 }
 
                             } else {
@@ -162,6 +163,18 @@ class Register : AppCompatActivity() {
         return email.matches(emailRegex.toRegex())
     }
 
+    /**
+     * Persitir los datos localmente para poder acceder a ellos
+     */
+    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String){
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("username", username)
+            putString("uid", uid)
+            putString("mail", mail)
+            apply()
+        }
+    }
 
     /**
      * Método para mostrar mensaje
@@ -180,12 +193,10 @@ class Register : AppCompatActivity() {
     /**
      * Método para cambiar la pestaña a la principal (Home)
      */
-    private fun switchToHome(username: String, uid: String, mail: String) {
+    private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
             // Pasar el username a la nueva actividad
-            putExtra("username", username)
-            putExtra("uid", uid)
-            putExtra("mail", mail)
+            //putExtra("username", username)
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

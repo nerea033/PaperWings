@@ -26,12 +26,7 @@ class HomeFragment : Fragment(), BookClickListener {
 
     // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
-
-
-    private var uid: String? = null
-    private var username: String? = null
-
+     private val binding get() = _binding!!
 
 
     // LiveData to hold the list of books
@@ -62,11 +57,6 @@ class HomeFragment : Fragment(), BookClickListener {
         lifecycleScope.launch {
             fetchBooks()
         }
-
-        // Recuperar los argumentos del mainActivity, vienen de login y register
-        username = arguments?.getString("username")
-        uid = arguments?.getString("uid")
-
 
         return view
     }
@@ -100,7 +90,6 @@ class HomeFragment : Fragment(), BookClickListener {
     override fun onBookClick(book: Book) {
         val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
         intent.putExtra("id_book", book.id)
-        intent.putExtra("uid", uid)
         startActivity(intent)
     }
 
