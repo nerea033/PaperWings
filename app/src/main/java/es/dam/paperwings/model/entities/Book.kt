@@ -13,7 +13,7 @@ data class Book(
     val isbn: String,
     val language: String,
     val pages: Int,
-    val price: Int,
+    val price: Double,
     val publisher: String,
     val stock: Int,
     val title: String,

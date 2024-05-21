@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.Book
+import es.dam.paperwings.model.entities.Cart
 import es.dam.paperwings.view.fragments.HomeFragment
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -36,6 +38,10 @@ class BookDetailActivity : AppCompatActivity() {
     private var tvCategory: TextView? = null
     private var tvSinopsis: TextView? = null
 
+    private var bookId: Int = -1
+    private var uid: String? = null
+    private var bookPrice: Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,11 +53,11 @@ class BookDetailActivity : AppCompatActivity() {
         }
 
         // Obtengo el id_book de HomeFragment como Intent
-        val bookId = intent.getIntExtra("id_book", -1)
+        bookId = intent.getIntExtra("id_book", -1)
 
         // Obtengo el uid de sharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val uid = sharedPref.getString("uid", "N/A")
+        uid = sharedPref.getString("uid", "N/A")
 
         // Inicializo los elementos de la interfaz
         val ibGoBack: ImageButton = findViewById(R.id.ibGoBack)
@@ -71,12 +77,20 @@ class BookDetailActivity : AppCompatActivity() {
 
         // Obtengo los datos del libro por su id
         lifecycleScope.launch{
-            fetchBookById(bookId)
+            bookPrice = fetchBookById(bookId)
+
+            btnAddCart.setOnClickListener {
+                lifecycleScope.launch {
+                    addCartToDatabase(uid, bookId, bookPrice)
+                }
+            }
         }
 
         ibGoBack.setOnClickListener {
             switchToHome()
         }
+
+
 
     }
 
@@ -84,8 +98,10 @@ class BookDetailActivity : AppCompatActivity() {
      * Obtengo los datos del libro a través de su id
      *
      */
-    suspend fun fetchBookById(id: Int){
+    suspend fun fetchBookById(id: Int): Double{
         val bookservice = ApiServiceFactory.makeBooksService()
+
+        var price: Double = 0.0
         try {
 
             // Busco el libro mediante su id a través de la API
@@ -99,8 +115,9 @@ class BookDetailActivity : AppCompatActivity() {
                     // Cojo el primer y único usuario de la lista
                     val book = bookList.first()
 
-                    // Puedo guardar todos los atributos
-                    val id = book.id
+                    // Guardo todos los atributos que le voy a pasar al carrito
+                    val id_book = book.id
+                    price = book.price
 
                     // Mostrar los atributos en la interfaz
                     showBookAttributes(book)
@@ -114,18 +131,15 @@ class BookDetailActivity : AppCompatActivity() {
         } catch (e: Exception) {
             println("Error en la red o al parsear los datos: ${e.message}")
         }
+        return price
 
     }
 
     fun showBookAttributes (book: Book){
-        // Imagen
-        book.image?.let {
-            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-            ivCover?.setImageBitmap(bitmap)
-        } ?: run {
-            // Manejar el caso donde la imagen es nula
-            ivCover?.setImageResource(R.drawable.ic_book_cover2)
-        }
+        // Imagen!!!!!!!!!!!!!!!!!!!!!!!!
+        // Manejar el caso donde la imagen es nula
+        ivCover?.setImageResource(R.drawable.ic_book_cover2)
+
 
         // Título
         tvTitle?.text = book.title
@@ -201,10 +215,36 @@ class BookDetailActivity : AppCompatActivity() {
         }
     }
 
+    suspend fun addCartToDatabase(uid: String?, id_book: Int, price: Double) {
+        if (uid != null && id_book != -1 && price != 0.0) {
+            val cartService = ApiServiceFactory.makeCartsService()
+            val id = uid
+            val quantity = 0
+            val cart = Cart(id, uid, id_book, price, quantity)
+
+            try {
+                val response = cartService.addCart(cart)  // Hacer la llamada API
+                if (response.isSuccessful) {
+                    // Registro agregado con éxito
+                    println("Registro agregado con éxito al carrito")
+                } else {
+                    // Fallo al agregar el usuario, manejar error
+                    val errorResponse = response.errorBody()?.string()
+                    println("Error al agregar el registro al carrito: $errorResponse")
+                }
+            } catch (e: Exception) {
+                // Manejar excepciones, como problemas de red o configuración
+                println("Error al conectar con la API: ${e.message}")
+            }
+        } else {
+            println("Información insuficiente para añadir al carrito")
+        }
+    }
+
 
     private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
-            putExtra("FRAGMENT_TO_LOAD", "home")
+            putExtra("FRAGMENT_TO_LOAD", "home") // Cambiarlo dependiendo de la página de la que procedo
         }
         // Comenzar la actividad.
         startActivity(homeIntent)
