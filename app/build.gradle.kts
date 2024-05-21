@@ -73,4 +73,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
 
+    // Dependencia para 'java.time'
+    implementation ("org.threeten:threetenbp:1.5.1")
+
 }

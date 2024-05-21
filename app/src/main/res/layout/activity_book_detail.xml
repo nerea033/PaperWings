@@ -124,7 +124,7 @@
                         <TextView
                             android:id="@+id/tvPages"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="45dp"
                             android:text="365 páginas"
                             android:textAlignment="center"
                             android:layout_gravity="center"
@@ -154,7 +154,7 @@
                         <TextView
                             android:id="@+id/tvLanguage"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="45dp"
                             android:text="Español"
                             android:textAlignment="center"
                             android:layout_gravity="center"
@@ -184,7 +184,7 @@
                         <TextView
                             android:id="@+id/tvPublisher"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="45dp"
                             android:text="[Editorial]"
                             android:textAlignment="center"
                             android:layout_gravity="center"
@@ -213,9 +213,9 @@
                             android:layout_gravity="center"/>
 
                         <TextView
-                            android:id="@+id/ivDate"
+                            android:id="@+id/tvDate"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="45dp"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="8 de septiembre de 2024"
@@ -245,7 +245,7 @@
                         <TextView
                             android:id="@+id/tvIsbn"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="45dp"
                             android:text="978-8437604947"
                             android:textAlignment="center"
                             android:layout_gravity="center"
@@ -275,7 +275,7 @@
                         <TextView
                             android:id="@+id/tvCategory"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="45dp"
                             android:text="Novela"
                             android:textAlignment="center"
                             android:layout_gravity="center"
@@ -296,14 +296,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Descripción"
+                    android:text="Sinopsis"
                     android:textSize="17sp"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp"/>
 
                 <TextView
-                    android:id="@+id/tvDescriptionDetail"
+                    android:id="@+id/tvSinopsisDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description Place Holder"

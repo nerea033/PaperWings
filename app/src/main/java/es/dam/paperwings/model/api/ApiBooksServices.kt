@@ -15,7 +15,7 @@ interface ApiBooksServices {
     suspend fun listBooks(): Response<Structure<Book>>
 
     @GET("books/{id}")
-    suspend fun fetchBookById(@Path("id") id: String): Response<Structure<Book>>
+    suspend fun fetchBookById(@Path("id") id: Int): Response<Structure<Book>>
 
     suspend fun fetchBookByTitle()
 

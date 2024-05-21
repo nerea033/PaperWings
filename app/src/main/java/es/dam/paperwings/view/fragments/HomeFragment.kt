@@ -73,6 +73,7 @@ class HomeFragment : Fragment(), BookClickListener {
                 val booksList = response.body()!!.data
                 if (booksList != null && booksList.isNotEmpty()) {
 
+                    // Se almacenan todos los atributos de cada libro
                     _booksLiveData.postValue(booksList)
 
                 } else {
