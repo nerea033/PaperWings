@@ -22,7 +22,7 @@ object ApiServiceFactory {
     }
 
     // Método para crear una instancia del servicio de carrito
-    fun makeCartsService(): ApiCartServices {
+    fun makeCartService(): ApiCartServices {
         return  retrofit.create(ApiCartServices::class.java)
     }
 

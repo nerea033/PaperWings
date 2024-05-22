@@ -31,6 +31,7 @@ class CardViewHolder(
 
         cardCellBinding.tvTitle.text = book.title ?: "No Title"
         cardCellBinding.tvAuthor.text = book.author ?: "No Author"
+        cardCellBinding.tvPrice.text = book.price.toString() + " €" ?: "No Price"
 
         cardCellBinding.cardview.setOnClickListener{
             clickListener.onBookClick(book)

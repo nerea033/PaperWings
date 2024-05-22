@@ -1,9 +1,11 @@
 package es.dam.paperwings.model.entities
 
+import com.google.gson.annotations.SerializedName
+
 data class Cart(
-    val id: String,
     val uid: String,
-    val id_book: Int,
+    @SerializedName("id_book")
+    val idBook: Int,
     val price: Double,
     val quantity: Int,
 )

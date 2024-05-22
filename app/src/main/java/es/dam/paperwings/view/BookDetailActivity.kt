@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
+import es.dam.paperwings.model.api.UpdateCartRequest
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.model.entities.Cart
 import es.dam.paperwings.view.fragments.HomeFragment
@@ -81,7 +83,7 @@ class BookDetailActivity : AppCompatActivity() {
 
             btnAddCart.setOnClickListener {
                 lifecycleScope.launch {
-                    addCartToDatabase(uid, bookId, bookPrice)
+                    handleCart(uid, bookId, bookPrice)
                 }
             }
         }
@@ -89,8 +91,6 @@ class BookDetailActivity : AppCompatActivity() {
         ibGoBack.setOnClickListener {
             switchToHome()
         }
-
-
 
     }
 
@@ -215,18 +215,39 @@ class BookDetailActivity : AppCompatActivity() {
         }
     }
 
+    // Función principal para manejar la lógica de agregar o actualizar el carrito
+    suspend fun handleCart(uid: String?, bookId: Int, price: Double) {
+        if (uid != null && bookId != -1 && price != 0.0) {
+            // Verificar si el libro ya está en el carrito del usuario
+            val existingCartItem = checkIfBookInCart(uid, bookId)
+
+            if (existingCartItem != null) {
+                // Si el libro ya está en el carrito, actualizar la cantidad
+                updateCartRegister(uid, bookId, existingCartItem.quantity)
+            } else {
+                // Si el libro no está en el carrito, agregarlo
+                addCartToDatabase(uid, bookId, price)
+            }
+        } else {
+            println("Información insuficiente para manejar el carrito")
+        }
+    }
+
+
+
+    // Agrego un libro a una persona por primera vez
     suspend fun addCartToDatabase(uid: String?, id_book: Int, price: Double) {
         if (uid != null && id_book != -1 && price != 0.0) {
-            val cartService = ApiServiceFactory.makeCartsService()
-            val id = uid
-            val quantity = 0
-            val cart = Cart(id, uid, id_book, price, quantity)
+            val cartService = ApiServiceFactory.makeCartService()
+            val quantity = 1
+            val cart = Cart(uid, id_book, price, quantity)
 
             try {
                 val response = cartService.addCart(cart)  // Hacer la llamada API
                 if (response.isSuccessful) {
                     // Registro agregado con éxito
                     println("Registro agregado con éxito al carrito")
+                    showToast("Libro agregado al carrito")
                 } else {
                     // Fallo al agregar el usuario, manejar error
                     val errorResponse = response.errorBody()?.string()
@@ -241,6 +262,55 @@ class BookDetailActivity : AppCompatActivity() {
         }
     }
 
+    // Funcion para actualizar la cantidad si el libro ya existe para ese usuario
+    suspend fun updateCartRegister(uid: String?, id_book: Int, quantity: Int){
+        if (uid != null && id_book != -1 && quantity != -1) {
+            val cartService = ApiServiceFactory.makeCartService()
+            val updatedQuantity = quantity + 1
+
+            val updateCartRequest = UpdateCartRequest(uid, id_book, updatedQuantity)
+            try {
+                val response = cartService.updateCart(updateCartRequest)  // Hacer la llamada API
+                if (response.isSuccessful) {
+                    // Registro agregado con éxito
+                    println("Registro actualizado con éxito en el carrito")
+                    showToast("Libro agregado al carrito")
+                } else {
+                    // Fallo al agregar el usuario, manejar error
+                    val errorResponse = response.errorBody()?.string()
+                    println("Error al actualizar el registro del carrito: $errorResponse")
+                }
+            } catch (e: Exception) {
+                // Manejar excepciones, como problemas de red o configuración
+                println("Error al conectar con la API: ${e.message}")
+            }
+        } else {
+            println("Información insuficiente para actualizar el registro del carrito")
+        }
+    }
+
+    // Función para comprobar si el usuario actual tiene el libro actual en el carrito
+    suspend fun checkIfBookInCart(uid: String, bookId: Int): Cart? {
+        val cartService = ApiServiceFactory.makeCartService()
+        return try {
+            val response = cartService.fetchUserCartRegistres(uid)
+            if (response.isSuccessful && response.body() != null) {
+                val userBooks = response.body()?.data ?: emptyList()
+                userBooks.find { it.idBook == bookId }
+            } else {
+                println("Error al obtener los libros: ${response.errorBody()?.string()}")
+                null
+            }
+        } catch (e: Exception) {
+            println("Error en la red o al parsear los datos: ${e.message}")
+            null
+        }
+    }
+
+
+
+    // Función para comprobar si el usuario actual tiene el libro actual en el carrito
+
 
     private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
@@ -250,5 +320,9 @@ class BookDetailActivity : AppCompatActivity() {
         startActivity(homeIntent)
         // Finalizar la actividad actual.
         finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -2,7 +2,7 @@ package es.dam.paperwings.model.entities
 
 import com.google.gson.annotations.SerializedName
 
-data class Structure<T>(
+data class StructureFetch<T>(
     @SerializedName("body")
     val data: List<T>?, //Permite que data sea null // val userResponse: ApiResponse<User> = api.getUserList()
     @SerializedName("error")
