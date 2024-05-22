@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,12 +28,18 @@ class HomeFragment : Fragment(), BookClickListener {
 
     // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
     private var _binding: FragmentHomeBinding? = null
-     private val binding get() = _binding!!
+    private val binding get() = _binding!!
 
 
     // LiveData to hold the list of books
     private val _booksLiveData = MutableLiveData<List<Book>>()
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
+
+    // Inicializo elementos de la vista
+    private lateinit var cardAdapter: CardAdapter
+    private lateinit var searchView: SearchView
+
+    private var currentQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,8 +49,44 @@ class HomeFragment : Fragment(), BookClickListener {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        // Initialize the SearchView from the layout
+        searchView = view.findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                /**
+                 * // No se usa para la búsqueda incremental
+                 * if (query != null && query.length >= 3) {
+                 * // Iniciar la búsqueda cuando se presiona Enter y hay al menos 3 caracteres
+                 *  lifecycleScope.launch {
+                 *      searchBooks(query)
+                 * }
+                 *  return true
+                 * }
+                 */
+
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    currentQuery = newText
+                    if (newText.length >= 3) {
+                        // Iniciar la búsqueda solo si hay al menos 3 caracteres
+                        lifecycleScope.launch {
+                            searchBooks(newText)
+                        }
+                    } else {
+                        // Limpiar la lista cuando se borra el texto
+                        _booksLiveData.postValue(emptyList())
+                    }
+                }
+                return true
+            }
+        })
+
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
-        val cardAdapter = CardAdapter(emptyList(), this)
+        cardAdapter = CardAdapter(emptyList(), this)
+
         binding.recycledViewUser.apply {
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
             adapter = cardAdapter
@@ -52,6 +96,7 @@ class HomeFragment : Fragment(), BookClickListener {
         booksLiveData.observe(viewLifecycleOwner, { books ->
             cardAdapter.updateBooks(books)
         })
+
 
         // Start loading books
         lifecycleScope.launch {
@@ -86,6 +131,29 @@ class HomeFragment : Fragment(), BookClickListener {
             println("Error en la red o al parsear los datos: ${e.message}")
         }
 
+    }
+
+    private suspend fun searchBooks(query: String) {
+        val bookService = ApiServiceFactory.makeBooksService()
+        try {
+            val response = bookService.searchBooks(query, query, query, query, query)
+            if (response.isSuccessful && response.body() != null) {
+                val booksList = response.body()!!.data
+                if (booksList != null && booksList.isNotEmpty()) {
+                    _booksLiveData.postValue(booksList)
+                } else {
+                    showToast("No se encontraron libros para la búsqueda: $query")
+                }
+            } else {
+                showToast("Error al buscar los libros: ${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            showToast("Error en la red o al parsear los datos: ${e.message}")
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onBookClick(book: Book) {

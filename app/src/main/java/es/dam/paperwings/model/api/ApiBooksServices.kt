@@ -5,6 +5,7 @@ import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.model.entities.StructureFetch
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiBooksServices {
 
@@ -16,6 +17,15 @@ interface ApiBooksServices {
 
     @GET("books/{id}")
     suspend fun fetchBookById(@Path("id") id: Int): Response<StructureFetch<Book>>
+
+    @GET("books/search")
+    suspend fun searchBooks(
+        @Query("title") title: String?,
+        @Query("author") author: String?,
+        @Query("language") language: String?,
+        @Query("category") category: String?,
+        @Query("isbn") isbn: String?
+    ): Response<StructureFetch<Book>>
 
     suspend fun fetchBookByTitle()
 

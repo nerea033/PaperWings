@@ -10,6 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiCartServices {
     @POST("cart") // Parte estática de la ruta -> para obtener los registros de carrito
@@ -23,6 +24,8 @@ interface ApiCartServices {
 
     @PUT("cart/update")
     suspend fun updateCart(@Body request: UpdateCartRequest): Response<StructureUpdate>
+
+
 }
 
 // Define a data class to represent the request body
