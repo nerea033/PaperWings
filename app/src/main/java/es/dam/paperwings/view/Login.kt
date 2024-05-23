@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
+import es.dam.paperwings.model.constans.Constants
 import kotlinx.coroutines.launch
 
 class Login : AppCompatActivity() {
@@ -211,7 +212,7 @@ class Login : AppCompatActivity() {
      */
     private fun switchToHomeAdmin() {
         val homeIntent: Intent = Intent(this, MainActivityAdmin::class.java).apply {
-            putExtra("FRAGMENT_TO_LOAD", "home")
+            putExtra("FRAGMENT_TO_LOAD", Constants.ADD_FRAGMENT)
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

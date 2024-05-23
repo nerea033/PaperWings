@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.dam.paperwings.R
+import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.view.fragments.AddFragment
 import es.dam.paperwings.view.fragments.DeleteFragment
 import es.dam.paperwings.view.fragments.UpdateFragment
@@ -63,19 +64,19 @@ class MainActivityAdmin : AppCompatActivity() {
         // Verifica el fragmento que debe ser mostrado inicialmente
         val fragmentToLoad = intent.getStringExtra("FRAGMENT_TO_LOAD")
         when (fragmentToLoad) {
-            "home" -> {
+            Constants.ADD_FRAGMENT -> {
                 replaceFragment(AddFragment())
                 selectBottomNavItem(R.id.bottom_add)
             }
-            "search" -> {
+            Constants.UPDATE_FRAGMENT -> {
                 replaceFragment(UpdateFragment())
                 selectBottomNavItem(R.id.bottom_update)
             }
-            "menu" -> {
+            Constants.DELETE_FRAGMENT -> {
                 replaceFragment(DeleteFragment())
                 selectBottomNavItem(R.id.bottom_delete)
             }
-            "profile" -> {
+            Constants.PROFILE_FRAGMENT -> {
                 replaceFragment(ProfileFragment())
                 selectBottomNavItem(R.id.bottom_profile)
             }

@@ -1,11 +1,15 @@
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.android.gms.tasks.OnCompleteListener
@@ -23,6 +27,9 @@ class ProfileFragment : Fragment() {
 
     private var username: String? = null
     private var mail: String? = null
+
+    private var backPressedOnce = false
+    private val backPressHandler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +66,19 @@ class ProfileFragment : Fragment() {
                 show()
             }
         }
+
+        // Función para que solo salga si pulsa back dos veces seguidas
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedOnce) {
+                    activity?.finish()
+                } else {
+                    backPressedOnce = true
+                    Toast.makeText(context, "Haga click de nuevo para salir", Toast.LENGTH_SHORT).show()
+                    backPressHandler.postDelayed({ backPressedOnce = false }, 2000)
+                }
+            }
+        })
 
         return view
     }

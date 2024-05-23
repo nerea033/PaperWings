@@ -2,10 +2,13 @@ package es.dam.paperwings.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -16,6 +19,7 @@ import es.dam.paperwings.R
 import es.dam.paperwings.databinding.FragmentHomeBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
+import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.BookDetailActivity
 import es.dam.paperwings.view.recicledView.CardAdapterHome
@@ -37,6 +41,10 @@ class HomeFragment : Fragment(), BookClickListener {
     private lateinit var searchView: SearchView
 
     private var currentQuery: String = ""
+
+
+    private var backPressedOnce = false
+    private val backPressHandler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,6 +108,19 @@ class HomeFragment : Fragment(), BookClickListener {
             fetchBooks()
         }
 
+        // Función para que solo salga si pulsa back dos veces seguidas
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedOnce) {
+                    activity?.finish()
+                } else {
+                    backPressedOnce = true
+                    Toast.makeText(context, "Haga click de nuevo para salir", Toast.LENGTH_SHORT).show()
+                    backPressHandler.postDelayed({ backPressedOnce = false }, 2000)
+                }
+            }
+        })
+
         return view
     }
 
@@ -156,7 +177,7 @@ class HomeFragment : Fragment(), BookClickListener {
     override fun onBookClick(book: Book) {
         val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
         intent.putExtra("id_book", book.id)
-        intent.putExtra("source", "home") // Añado el extra para indicar que estoy en "home"
+        intent.putExtra("source", Constants.HOME_FRAGMENT) // Añado el extra para indicar que estoy en "home"
         startActivity(intent)
     }
 

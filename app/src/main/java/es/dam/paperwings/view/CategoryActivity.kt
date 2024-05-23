@@ -12,13 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import es.dam.paperwings.R
 import es.dam.paperwings.databinding.ActivityCategoryBinding
-import es.dam.paperwings.databinding.FragmentHomeBinding
 import es.dam.paperwings.model.BookClickListener
-import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.recicledView.CardAdapterCategoryTwo
-import es.dam.paperwings.view.recicledView.CardAdapterHome
 import kotlinx.coroutines.launch
 
 /**
@@ -46,7 +43,7 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
         super.onCreate(savedInstanceState)
         _binding = ActivityCategoryBinding.inflate((layoutInflater))
         enableEdgeToEdge()
-        setContentView(R.layout.activity_category)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -57,6 +54,18 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
         category = intent.getStringExtra("category")
         sourceFragment = intent.getStringExtra("source")
 
+        // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
+        adapter = CardAdapterCategoryTwo(emptyList(), this)
+
+        binding.rvCategoryBookUser.apply {
+            layoutManager = GridLayoutManager(this@CategoryActivity, 2)
+            adapter = this@CategoryActivity.adapter
+        }
+
+        // Observe the books LiveData and update the adapter when the data changes
+        booksLiveData.observe(this, { books ->
+            adapter.updateBooks(books)
+        })
 
         // Start loading books
         lifecycleScope.launch {
@@ -67,7 +76,6 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
     suspend fun fetchBooks(){
         val bookService = ApiServiceFactory.makeBooksService()
         try {
-
             // Get the books
             val response = bookService.listBooks()
             if (response.isSuccessful && response.body() != null) { // Si no hay error y no es null
@@ -76,8 +84,9 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
                 val booksList = response.body()!!.data
                 if (booksList != null && booksList.isNotEmpty()) {
 
-                    // Se almacenan todos los atributos de cada libro
-                    _booksLiveData.postValue(booksList)
+                    // Filtra los libros por la categoría seleccionada
+                    val filteredBooks = booksList.filter { it.category == category }
+                    _booksLiveData.postValue(filteredBooks)
 
                 } else {
                     println("Lista vacía")

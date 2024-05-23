@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
+import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.User
 import kotlinx.coroutines.launch
 
@@ -196,7 +197,7 @@ class Register : AppCompatActivity() {
     private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
             // Pasar el fragmento que quiero mostrar a la actividad
-            putExtra("FRAGMENT_TO_LOAD", "home")
+            putExtra("FRAGMENT_TO_LOAD", Constants.HOME_FRAGMENT)
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

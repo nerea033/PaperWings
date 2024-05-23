@@ -94,7 +94,7 @@ class BookDetailActivity : AppCompatActivity() {
         }
 
         ibGoBack.setOnClickListener {
-            switchToHome()
+            switchPrevios()
         }
 
     }
@@ -192,7 +192,7 @@ class BookDetailActivity : AppCompatActivity() {
                 val formattedDate = "$day de $month de $year"
                 tvDate?.text = formattedDate
             } else {
-                tvDate?.text = "Fecha no disponible"
+                tvDate?.text = "No disponible"
             }
         } ?: run {
             tvDate?.text = "Fecha no disponible"
@@ -313,18 +313,9 @@ class BookDetailActivity : AppCompatActivity() {
     }
 
 
-
-    // Función para comprobar si el usuario actual tiene el libro actual en el carrito
-
-
-    private fun switchToHome() {
-        val homeIntent = Intent(this, MainActivity::class.java).apply {
-            putExtra("FRAGMENT_TO_LOAD", sourceFragment) // Cambiarlo dependiendo de la página de la que procedo
-        }
-        // Comenzar la actividad.
-        startActivity(homeIntent)
-        // Finalizar la actividad actual.
-        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+    private fun switchPrevios() {
+        // Simula la acción de presionar el botón de retroceso utilizando onBackPressedDispatcher.
+        onBackPressedDispatcher.onBackPressed()
     }
 
     private fun showToast(message: String) {

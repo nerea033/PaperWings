@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
+import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.view.fragments.HomeFragment
 import es.dam.paperwings.view.fragments.CartFragment
 import es.dam.paperwings.view.fragments.CategoryFragment
@@ -80,19 +81,19 @@ class MainActivity : AppCompatActivity() {
         // Verifica el fragmento que debe ser mostrado inicialmente
         val fragmentToLoad = intent.getStringExtra("FRAGMENT_TO_LOAD")
         when (fragmentToLoad) {
-            "home" -> {
+            Constants.HOME_FRAGMENT -> {
                 replaceFragment(HomeFragment())
                 selectBottomNavItem(R.id.bottom_start)
             }
-            "category" -> {
+            Constants.CATEGORY_FRAGMENT -> {
                 replaceFragment(CategoryFragment())
                 selectBottomNavItem(R.id.bottom_category)
             }
-            "cart" -> {
+            Constants.CART_FRAGMENT -> {
                 replaceFragment(CartFragment())
                 selectBottomNavItem(R.id.bottom_cart)
             }
-            "profile" -> {
+            Constants.PROFILE_FRAGMENT -> {
                 replaceFragment(ProfileFragment())
                 selectBottomNavItem(R.id.bottom_profile)
             }

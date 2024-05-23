@@ -2,10 +2,13 @@ package es.dam.paperwings.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -17,6 +20,7 @@ import es.dam.paperwings.databinding.FragmentCategoryBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
+import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.BookDetailActivity
 import es.dam.paperwings.view.CategoryActivity
@@ -39,6 +43,9 @@ class CategoryFragment : Fragment(), CategoryClickListener {
 
     // Inicializo elementos de la vista
     private lateinit var cardAdapterCategory: CardAdapterCategory
+
+    private var backPressedOnce = false
+    private val backPressHandler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +74,19 @@ class CategoryFragment : Fragment(), CategoryClickListener {
         lifecycleScope.launch {
             fetchBooks()
         }
+
+        // Función para que solo salga si pulsa back dos veces seguidas
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedOnce) {
+                    activity?.finish()
+                } else {
+                    backPressedOnce = true
+                    showToast("Haga click de nuevo para salir")
+                    backPressHandler.postDelayed({ backPressedOnce = false }, 2000)
+                }
+            }
+        })
 
         return view
     }
@@ -100,13 +120,13 @@ class CategoryFragment : Fragment(), CategoryClickListener {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCategoryClick(category: String) {
         val intent = Intent(activity?.applicationContext, CategoryActivity::class.java)
         intent.putExtra("category", category)
-        intent.putExtra("source", "category") // Añado el extra para indicar que estoy en "home"
+        intent.putExtra("source", Constants.CATEGORY_FRAGMENT) // Añado el extra para indicar que estoy en "home"
         startActivity(intent)
     }
 
