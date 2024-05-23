@@ -44,6 +44,8 @@ class BookDetailActivity : AppCompatActivity() {
     private var uid: String? = null
     private var bookPrice: Double = 0.0
 
+    private var sourceFragment: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,6 +58,9 @@ class BookDetailActivity : AppCompatActivity() {
 
         // Obtengo el id_book de HomeFragment como Intent
         bookId = intent.getIntExtra("id_book", -1)
+
+        // Obtengo el fragment del que procedo
+        sourceFragment = intent.getStringExtra("source")
 
         // Obtengo el uid de sharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -314,7 +319,7 @@ class BookDetailActivity : AppCompatActivity() {
 
     private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
-            putExtra("FRAGMENT_TO_LOAD", "home") // Cambiarlo dependiendo de la página de la que procedo
+            putExtra("FRAGMENT_TO_LOAD", sourceFragment) // Cambiarlo dependiendo de la página de la que procedo
         }
         // Comenzar la actividad.
         startActivity(homeIntent)

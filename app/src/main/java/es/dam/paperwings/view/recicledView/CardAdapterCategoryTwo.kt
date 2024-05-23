@@ -1,17 +1,18 @@
-package es.dam.paperwings.view
+package es.dam.paperwings.view.recicledView
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import es.dam.paperwings.databinding.CardCellBinding
+import es.dam.paperwings.databinding.CardCellCategoryBinding
+import es.dam.paperwings.databinding.CardCellHomeBinding
 import es.dam.paperwings.model.BookClickListener
+import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.entities.Book
 
-class CardAdapter (
-
+class CardAdapterCategoryTwo (
     private var books: List<Book>,
     private var clickListener: BookClickListener)
-    : RecyclerView.Adapter<CardViewHolder>() {
+    : RecyclerView.Adapter<CardViewHolderHome>() {
 
     fun updateBooks(newBooks: List<Book>) {
         books = newBooks
@@ -25,10 +26,10 @@ class CardAdapter (
      * @param viewType The view type of the new view.
      * @return A new CardViewHolder that holds a view representing an item in the list.
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolderHome {
         val from = LayoutInflater.from(parent.context)
-        val binding = CardCellBinding.inflate(from, parent,false)
-        return CardViewHolder(binding, clickListener)
+        val binding = CardCellHomeBinding.inflate(from, parent,false)
+        return CardViewHolderHome(binding, clickListener)
     }
 
     /**
@@ -43,7 +44,7 @@ class CardAdapter (
      * @param holder The CardViewHolder representing the view of an item in the list.
      * @param position The position of the item in the list of books.
      */
-    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CardViewHolderHome, position: Int) {
         holder.findBook(books[position])
     }
 }

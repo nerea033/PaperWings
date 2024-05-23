@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.CardFragment">
+    tools:context=".view.fragments.CartFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Card Fragment"
+        android:text="Cart Fragment"
         android:textSize="36sp"
         android:textColor="@color/brown_background"
         android:gravity="center"

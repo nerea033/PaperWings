@@ -11,10 +11,9 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
-import es.dam.paperwings.view.fragments.CardFragment
 import es.dam.paperwings.view.fragments.HomeFragment
-import es.dam.paperwings.view.fragments.MenuFragment
-import es.dam.paperwings.view.fragments.SearchFragment
+import es.dam.paperwings.view.fragments.CartFragment
+import es.dam.paperwings.view.fragments.CategoryFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,11 +60,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.bottom_category -> {
-                    replaceFragment(SearchFragment())
+                    replaceFragment(CategoryFragment())
                     true
                 }
                 R.id.bottom_cart -> {
-                    replaceFragment(MenuFragment())
+                    replaceFragment(CartFragment())
                     true
                 }
                 R.id.bottom_profile -> {
@@ -85,12 +84,12 @@ class MainActivity : AppCompatActivity() {
                 replaceFragment(HomeFragment())
                 selectBottomNavItem(R.id.bottom_start)
             }
-            "search" -> {
-                replaceFragment(SearchFragment())
+            "category" -> {
+                replaceFragment(CategoryFragment())
                 selectBottomNavItem(R.id.bottom_category)
             }
-            "menu" -> {
-                replaceFragment(MenuFragment())
+            "cart" -> {
+                replaceFragment(CartFragment())
                 selectBottomNavItem(R.id.bottom_cart)
             }
             "profile" -> {

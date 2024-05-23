@@ -17,6 +17,9 @@
         android:theme="@style/Theme.PaperWings"
         tools:targetApi="31">
         <activity
+            android:name=".view.CategoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.BookDetailActivity"
             android:exported="false" />
         <activity
@@ -27,8 +30,7 @@
             android:exported="false" />
         <activity
             android:name=".view.Login"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".view.MainActivity"
             android:exported="true">

@@ -13,18 +13,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import es.dam.paperwings.R
-import es.dam.paperwings.databinding.FragmentHomeBinding
+import es.dam.paperwings.databinding.FragmentCategoryBinding
 import es.dam.paperwings.model.BookClickListener
+import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.BookDetailActivity
-import es.dam.paperwings.view.recicledView.CardAdapterHome
+import es.dam.paperwings.view.recicledView.CardAdapterCategory
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment(), BookClickListener {
+/**
+ * Clase para mostrar las categorías de los libros de la base de datos
+ */
+class CategoryFragment : Fragment(), CategoryClickListener {
 
     // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
 
 
@@ -33,65 +37,28 @@ class HomeFragment : Fragment(), BookClickListener {
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
     // Inicializo elementos de la vista
-    private lateinit var cardAdapterHome: CardAdapterHome
-    private lateinit var searchView: SearchView
-
-    private var currentQuery: String = ""
+    private lateinit var cardAdapterCategory: CardAdapterCategory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment and initialize the binding object.
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentCategoryBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // Initialize the SearchView from the layout
-        searchView = view.findViewById(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                /**
-                 * // No se usa para la búsqueda incremental
-                 * if (query != null && query.length >= 3) {
-                 * // Iniciar la búsqueda cuando se presiona Enter y hay al menos 3 caracteres
-                 *  lifecycleScope.launch {
-                 *      searchBooks(query)
-                 * }
-                 *  return true
-                 * }
-                 */
-
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    currentQuery = newText
-                    if (newText.length >= 3) {
-                        // Iniciar la búsqueda solo si hay al menos 3 caracteres
-                        lifecycleScope.launch {
-                            searchBooks(newText)
-                        }
-                    } else {
-                        // Limpiar la lista cuando se borra el texto
-                        _booksLiveData.postValue(emptyList())
-                    }
-                }
-                return true
-            }
-        })
 
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
-        cardAdapterHome = CardAdapterHome(emptyList(), this)
+        cardAdapterCategory = CardAdapterCategory(emptyList(), this)
 
-        binding.recycledViewUser.apply {
-            layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = cardAdapterHome
+        binding.recycledViewCategoryUser.apply {
+            layoutManager = GridLayoutManager(activity?.applicationContext, 1)
+            adapter = cardAdapterCategory
         }
 
         // Observe the books LiveData and update the adapter when the data changes
         booksLiveData.observe(viewLifecycleOwner, { books ->
-            cardAdapterHome.updateBooks(books)
+            cardAdapterCategory.updateBooks(books)
         })
 
 
@@ -103,6 +70,7 @@ class HomeFragment : Fragment(), BookClickListener {
         return view
     }
 
+    // Obtengo todos los libros de la base de datos
     suspend fun fetchBooks(){
         val bookService = ApiServiceFactory.makeBooksService()
         try {
@@ -130,39 +98,21 @@ class HomeFragment : Fragment(), BookClickListener {
 
     }
 
-    private suspend fun searchBooks(query: String) {
-        val bookService = ApiServiceFactory.makeBooksService()
-        try {
-            val response = bookService.searchBooks(query, query, query, query, query)
-            if (response.isSuccessful && response.body() != null) {
-                val booksList = response.body()!!.data
-                if (booksList != null && booksList.isNotEmpty()) {
-                    _booksLiveData.postValue(booksList)
-                } else {
-                    showToast("No se encontraron libros para la búsqueda: $query")
-                }
-            } else {
-                showToast("Error al buscar los libros: ${response.errorBody()?.string()}")
-            }
-        } catch (e: Exception) {
-            showToast("Error en la red o al parsear los datos: ${e.message}")
-        }
-    }
-
     private fun showToast(message: String) {
         Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onBookClick(book: Book) {
+    override fun onCategoryClick(category: String) {
         val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
-        intent.putExtra("id_book", book.id)
+        intent.putExtra("category", category)
         intent.putExtra("source", "home") // Añado el extra para indicar que estoy en "home"
         startActivity(intent)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }
