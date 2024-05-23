@@ -19,6 +19,7 @@ import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.BookDetailActivity
+import es.dam.paperwings.view.CategoryActivity
 import es.dam.paperwings.view.recicledView.CardAdapterCategory
 import kotlinx.coroutines.launch
 
@@ -103,9 +104,9 @@ class CategoryFragment : Fragment(), CategoryClickListener {
     }
 
     override fun onCategoryClick(category: String) {
-        val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
+        val intent = Intent(activity?.applicationContext, CategoryActivity::class.java)
         intent.putExtra("category", category)
-        intent.putExtra("source", "home") // Añado el extra para indicar que estoy en "home"
+        intent.putExtra("source", "category") // Añado el extra para indicar que estoy en "home"
         startActivity(intent)
     }
 

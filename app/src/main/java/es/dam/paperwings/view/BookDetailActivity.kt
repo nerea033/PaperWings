@@ -56,7 +56,7 @@ class BookDetailActivity : AppCompatActivity() {
             insets
         }
 
-        // Obtengo el id_book de HomeFragment como Intent
+        // Obtengo el id_book de los fragment como Intent
         bookId = intent.getIntExtra("id_book", -1)
 
         // Obtengo el fragment del que procedo
