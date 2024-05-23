@@ -40,8 +40,6 @@ class HomeFragment : Fragment(), BookClickListener {
     private lateinit var cardAdapterHome: CardAdapterHome
     private lateinit var searchView: SearchView
 
-    private var currentQuery: String = ""
-
 
     private var backPressedOnce = false
     private val backPressHandler = Handler(Looper.getMainLooper())
@@ -57,31 +55,32 @@ class HomeFragment : Fragment(), BookClickListener {
         // Initialize the SearchView from the layout
         searchView = view.findViewById(R.id.searchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                /**
-                 * // No se usa para la búsqueda incremental
-                 * if (query != null && query.length >= 3) {
-                 * // Iniciar la búsqueda cuando se presiona Enter y hay al menos 3 caracteres
-                 *  lifecycleScope.launch {
-                 *      searchBooks(query)
-                 * }
-                 *  return true
-                 * }
-                 */
 
+            override fun onQueryTextSubmit(newText: String?): Boolean {
+                if (newText != null && newText.length >= 3) {
+                    lifecycleScope.launch {
+                        searchBooks(newText)
+                    }
+                    return true
+                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
-                    currentQuery = newText
+
                     if (newText.length >= 3) {
                         // Iniciar la búsqueda solo si hay al menos 3 caracteres
                         lifecycleScope.launch {
                             searchBooks(newText)
                         }
+                    } else if (newText.length == 0) {
+                        // Si el texto es vacío, mostrar todos los libros nuevamente
+                        lifecycleScope.launch {
+                            fetchBooks() // Esto recuperará todos los libros nuevamente
+                        }
                     } else {
-                        // Limpiar la lista cuando se borra el texto
+                        // Si no coincide, no muestro nada
                         _booksLiveData.postValue(emptyList())
                     }
                 }
@@ -160,7 +159,7 @@ class HomeFragment : Fragment(), BookClickListener {
                 if (booksList != null && booksList.isNotEmpty()) {
                     _booksLiveData.postValue(booksList)
                 } else {
-                    showToast("No se encontraron libros para la búsqueda: $query")
+                    _booksLiveData.postValue(emptyList())
                 }
             } else {
                 showToast("Error al buscar los libros: ${response.errorBody()?.string()}")
