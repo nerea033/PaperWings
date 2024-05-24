@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardviewCart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        app:cardElevation="7dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivCoverCart"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_book_cover"
+                android:adjustViewBounds="true"
+                android:padding="25sp"
+                android:contentDescription="@string/cover"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvTitleCart"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_place_holder"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:lines="2"
+                        android:textStyle="bold"
+                        android:gravity="start|center_vertical"/>
+
+                    <TextView
+                        android:id="@+id/tvPriceCart"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0.33 €"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:lines="1"
+                        android:textStyle="bold"
+                        android:gravity="end|center_vertical"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvAuthorCart"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/author_place_holder"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:lines="2"
+                        android:gravity="start|center_vertical"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="end|center_vertical">
+
+                        <Button
+                            android:id="@+id/btnSubstractBookCart"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/custom_round_button"
+                            android:backgroundTint="@android:color/transparent"
+                            android:text="-"
+                            android:textColor="@color/black"
+                            android:textSize="8sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="500dp" />
+
+                        <TextView
+                            android:id="@+id/tvQuantityCart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:lines="1"
+                            android:textStyle="bold"
+                            android:singleLine="true"
+                            android:padding="5dp"/>
+
+                        <Button
+                            android:id="@+id/btnAddBookCart"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/custom_round_button"
+                            android:backgroundTint="@android:color/transparent"
+                            android:text="+"
+                            android:textColor="@color/black"
+                            android:textSize="8sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="500dp" />
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

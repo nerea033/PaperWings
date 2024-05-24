@@ -6,6 +6,7 @@ import es.dam.paperwings.model.entities.StructureFetch
 import es.dam.paperwings.model.entities.StructureUpdate
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -20,10 +21,13 @@ interface ApiCartServices {
     suspend fun listCart(): Response<StructureFetch<Cart>>
 
     @GET("cart/{uid}") // Ruta para obtener los registros de carrito de un usario
-    suspend fun fetchUserCartRegistres(@Path("uid") uid: String): Response<StructureFetch<Cart>>
+    suspend fun fetchUserCartRecords(@Path("uid") uid: String): Response<StructureFetch<Cart>>
 
     @PUT("cart/update")
     suspend fun updateCart(@Body request: UpdateCartRequest): Response<StructureUpdate>
+
+    @DELETE("cart/delete")
+    suspend fun deleteCart(@Body request: DeleteCartRequest): Response<StructureUpdate>
 
 
 }
@@ -34,4 +38,10 @@ data class UpdateCartRequest(
     @SerializedName("id_book")
     val idBook: Int,
     val quantity: Int
+)
+
+data class DeleteCartRequest(
+    val uid: String,
+    @SerializedName("id_book")
+    val idBook: Int
 )

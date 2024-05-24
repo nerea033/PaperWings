@@ -41,7 +41,7 @@ class CategoryFragment : Fragment(), CategoryClickListener {
     private val _booksLiveData = MutableLiveData<List<Book>>()
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
-    // Inicializo elementos de la vista
+
     private lateinit var cardAdapterCategory: CardAdapterCategory
 
     private var backPressedOnce = false

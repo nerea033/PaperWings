@@ -33,7 +33,7 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
 
-    private lateinit var adapter: CardAdapterCategoryTwo
+    private lateinit var cardAdapterCategoryTwo: CardAdapterCategoryTwo
 
     private var category: String? = null
     private var sourceFragment: String? = null
@@ -55,16 +55,16 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
         sourceFragment = intent.getStringExtra("source")
 
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
-        adapter = CardAdapterCategoryTwo(emptyList(), this)
+        cardAdapterCategoryTwo = CardAdapterCategoryTwo(emptyList(), this)
 
         binding.rvCategoryBookUser.apply {
             layoutManager = GridLayoutManager(this@CategoryActivity, 2)
-            adapter = this@CategoryActivity.adapter
+            adapter = this@CategoryActivity.cardAdapterCategoryTwo
         }
 
         // Observe the books LiveData and update the adapter when the data changes
         booksLiveData.observe(this, { books ->
-            adapter.updateBooks(books)
+            cardAdapterCategoryTwo.updateBooks(books)
         })
 
         // Start loading books

@@ -150,6 +150,7 @@ class HomeFragment : Fragment(), BookClickListener {
 
     }
 
+    // Buscar libros a través de sus atributos en el cuadro de búsqueda
     private suspend fun searchBooks(query: String) {
         val bookService = ApiServiceFactory.makeBooksService()
         try {

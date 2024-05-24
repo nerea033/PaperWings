@@ -23,4 +23,7 @@
     <color name="dark_brown_background4">#4B2620</color>
     <color name="dark_brown_background5">#562C24</color>
     <color name="dark_brown_background6">#563028</color>
+
+    <color name="grey_trasparent">#8D868686</color>
+
 </resources>

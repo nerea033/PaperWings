@@ -298,7 +298,7 @@ class BookDetailActivity : AppCompatActivity() {
     suspend fun checkIfBookInCart(uid: String, bookId: Int): Cart? {
         val cartService = ApiServiceFactory.makeCartService()
         return try {
-            val response = cartService.fetchUserCartRegistres(uid)
+            val response = cartService.fetchUserCartRecords(uid)
             if (response.isSuccessful && response.body() != null) {
                 val userBooks = response.body()?.data ?: emptyList()
                 userBooks.find { it.idBook == bookId }
