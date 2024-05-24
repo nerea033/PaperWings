@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.recicledView
+package es.dam.paperwings.view.user.recicledView
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

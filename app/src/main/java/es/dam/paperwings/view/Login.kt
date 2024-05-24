@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
+import es.dam.paperwings.view.admin.MainActivityAdmin
+import es.dam.paperwings.view.user.MainActivity
 import kotlinx.coroutines.launch
 
 class Login : AppCompatActivity() {
@@ -97,7 +99,7 @@ class Login : AppCompatActivity() {
 
                     } else {
                         // Mostrar mensaje de error
-                        showAlert("Error","Error en Firebase")
+                        showAlert("Error","Usuario o contraseña incorrectos")
                     }
                 }
             }

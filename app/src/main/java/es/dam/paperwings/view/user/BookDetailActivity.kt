@@ -1,8 +1,5 @@
-package es.dam.paperwings.view
+package es.dam.paperwings.view.user
 
-import android.content.Context
-import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -10,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,9 +16,7 @@ import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.api.UpdateCartRequest
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.model.entities.Cart
-import es.dam.paperwings.view.fragments.HomeFragment
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 

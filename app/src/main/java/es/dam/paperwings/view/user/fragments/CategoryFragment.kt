@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.fragments
+package es.dam.paperwings.view.user.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,22 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.widget.SearchView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import es.dam.paperwings.R
 import es.dam.paperwings.databinding.FragmentCategoryBinding
-import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
-import es.dam.paperwings.view.BookDetailActivity
-import es.dam.paperwings.view.CategoryActivity
-import es.dam.paperwings.view.recicledView.CardAdapterCategory
+import es.dam.paperwings.view.user.CategoryActivity
+import es.dam.paperwings.view.user.recicledView.CardAdapterCategory
 import kotlinx.coroutines.launch
 
 /**

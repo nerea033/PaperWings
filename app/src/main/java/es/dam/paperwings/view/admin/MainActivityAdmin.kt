@@ -1,6 +1,6 @@
-package es.dam.paperwings.view
+package es.dam.paperwings.view.admin
 
-import ProfileFragment
+import es.dam.paperwings.view.ProfileFragment
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.dam.paperwings.R
 import es.dam.paperwings.model.constans.Constants
-import es.dam.paperwings.view.fragments.AddFragment
-import es.dam.paperwings.view.fragments.DeleteFragment
-import es.dam.paperwings.view.fragments.UpdateFragment
+import es.dam.paperwings.view.admin.fragments.AddFragment
+import es.dam.paperwings.view.admin.fragments.DeleteFragment
+import es.dam.paperwings.view.admin.fragments.UpdateFragment
 
 class MainActivityAdmin : AppCompatActivity() {
 

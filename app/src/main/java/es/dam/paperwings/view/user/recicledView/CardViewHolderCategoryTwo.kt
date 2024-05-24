@@ -1,17 +1,19 @@
-package es.dam.paperwings.view.recicledView
+package es.dam.paperwings.view.user.recicledView
 
 import android.graphics.BitmapFactory
 import androidx.recyclerview.widget.RecyclerView
 import es.dam.paperwings.R
+import es.dam.paperwings.databinding.CardCellCategoryBinding
 import es.dam.paperwings.databinding.CardCellHomeBinding
 import es.dam.paperwings.model.BookClickListener
+import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.entities.Book
 
 /**
  * ViewHolder class for holding views of a card in a RecyclerView.
- * This class binds the views using data binding to display information about a book.
+ * This class binds the views using data binding to display categories.
  */
-class CardViewHolderHome(
+class CardViewHolderCategoryTwo(
     private val cardCellBinding: CardCellHomeBinding,
     private val clickListener: BookClickListener
 ) : RecyclerView.ViewHolder(cardCellBinding.root) {

@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.recicledView
+package es.dam.paperwings.view.user.recicledView
 
 import androidx.recyclerview.widget.RecyclerView
 import es.dam.paperwings.databinding.CardCellCategoryBinding

@@ -17,6 +17,7 @@ import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.User
+import es.dam.paperwings.view.user.MainActivity
 import kotlinx.coroutines.launch
 
 class Register : AppCompatActivity() {

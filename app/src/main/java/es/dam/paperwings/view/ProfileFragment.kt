@@ -1,3 +1,5 @@
+package es.dam.paperwings.view
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,10 +14,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
-import es.dam.paperwings.view.Login
 
 class ProfileFragment : Fragment() {
 
@@ -48,8 +48,8 @@ class ProfileFragment : Fragment() {
 
         // Recuperar datos de SharedPreferences
         val sharedPref = activity?.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val username = sharedPref?.getString("username", "N/A")
-        val mail = sharedPref?.getString("mail", "N/A")
+        username = sharedPref?.getString("username", "N/A")
+        mail = sharedPref?.getString("mail", "N/A")
 
         showProfile(username, mail)
 

@@ -1,6 +1,6 @@
-package es.dam.paperwings.view
+package es.dam.paperwings.view.user
 
-import ProfileFragment
+import es.dam.paperwings.view.ProfileFragment
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -12,9 +12,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.constans.Constants
-import es.dam.paperwings.view.fragments.HomeFragment
-import es.dam.paperwings.view.fragments.CartFragment
-import es.dam.paperwings.view.fragments.CategoryFragment
+import es.dam.paperwings.view.Login
+import es.dam.paperwings.view.user.fragments.HomeFragment
+import es.dam.paperwings.view.user.fragments.CartFragment
+import es.dam.paperwings.view.user.fragments.CategoryFragment
 
 class MainActivity : AppCompatActivity() {
 

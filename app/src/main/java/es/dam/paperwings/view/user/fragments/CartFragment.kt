@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.fragments
+package es.dam.paperwings.view.user.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,17 +17,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import es.dam.paperwings.databinding.FragmentCartBinding
-import es.dam.paperwings.databinding.FragmentCategoryBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.api.DeleteCartRequest
 import es.dam.paperwings.model.api.UpdateCartRequest
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
-import es.dam.paperwings.model.entities.Cart
 import es.dam.paperwings.model.entities.CartData
-import es.dam.paperwings.view.BookDetailActivity
-import es.dam.paperwings.view.recicledView.CardAdapterCart
+import es.dam.paperwings.view.user.BookDetailActivity
+import es.dam.paperwings.view.user.recicledView.CardAdapterCart
 import kotlinx.coroutines.launch
 
 

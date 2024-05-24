@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.recicledView
+package es.dam.paperwings.view.user.recicledView
 
 import android.os.Handler
 import android.os.Looper

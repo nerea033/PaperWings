@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.fragments
+package es.dam.paperwings.view.user.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,8 +21,8 @@ import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
-import es.dam.paperwings.view.BookDetailActivity
-import es.dam.paperwings.view.recicledView.CardAdapterHome
+import es.dam.paperwings.view.user.BookDetailActivity
+import es.dam.paperwings.view.user.recicledView.CardAdapterHome
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment(), BookClickListener {
