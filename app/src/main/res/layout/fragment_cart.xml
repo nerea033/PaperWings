@@ -29,7 +29,7 @@
             android:id="@+id/rvCart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvDetailsCart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +44,72 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvDetailsCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/cardviewCart"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Detalles del pedido"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:singleLine="true"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingStart="15dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardviewCart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:cardCornerRadius="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:clickable="true"
+            app:cardElevation="7dp"
+            android:layout_marginBottom="110dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Total: "
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:singleLine="true"
+                    android:textStyle="bold"
+                    android:padding="15dp"
+                    android:gravity="start|center_vertical"/>
+
+                <TextView
+                    android:id="@+id/tvFinalPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0.00 €"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:singleLine="true"
+                    android:textStyle="bold"
+                    android:padding="15dp"
+                    android:gravity="end|center_vertical"/>
+
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +17,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import es.dam.paperwings.R
 import es.dam.paperwings.databinding.FragmentCartBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.CartClickListener
@@ -49,6 +51,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     private var uid: String? = null
 
+    // Elementos de la interfaz
+    var tvFinalPrice: TextView? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +66,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         // Obtengo el uid de sharedPreferences
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
         uid = sharedPref.getString("uid", "N/A")
+
+        // Inicializa tvFinalPrice usando binding
+        tvFinalPrice = binding.tvFinalPrice
 
 
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
@@ -76,6 +84,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         cartLiveData.observe(viewLifecycleOwner, { cartData ->
             cartData?.let {
                 cardAdapterCart.updateBooks(it.books, it.quantities)
+                calculateFinalPrice(it.books, it.quantities)  // Calcular el precio total cuando los datos cambian
             }
         })
 
@@ -165,7 +174,8 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     }
 
-    // Obtiene el id de los libros del usuario para obtener los datos de cada libro
+
+    // Almaceno en el LiveData los libros y las cantidades de estos que tiene el usuario en la cesta
     suspend fun getCartBooks() {
         val results = uid?.let { fetchCartRecords(it) }
         val bookIds = results?.first ?: emptyList()
@@ -252,10 +262,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
     suspend fun deleteCartRegister(uid: String?, id_book: Int) {
         if (uid != null && id_book != -1) {
             val cartService = ApiServiceFactory.makeCartService()
-            val deleteCartRequest = DeleteCartRequest(uid, id_book)
 
             try {
-                val response = cartService.deleteCart(deleteCartRequest)  // Make the API call
+                val response = cartService.deleteCart(uid, id_book)  // Make the API call
                 if (response.isSuccessful) {
                     // Successfully deleted the record
                     println("Registro del Carrito eliminado con éxito")
@@ -272,6 +281,15 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         } else {
             println("Información insuficiente para realizar eliminar el registro del carrito")
         }
+    }
+
+    // Función para calcular el precio final
+    private fun calculateFinalPrice(books: List<Book>, quantities: List<Int>) {
+        var finalPrice: Double = 0.0
+        for ((index, book) in books.withIndex()) {
+            finalPrice += book.price * quantities[index]
+        }
+        tvFinalPrice?.text = finalPrice.toString()
     }
 
     private fun showToast(message: String) {

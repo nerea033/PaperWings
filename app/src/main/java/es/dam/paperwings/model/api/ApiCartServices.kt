@@ -26,9 +26,11 @@ interface ApiCartServices {
     @PUT("cart/update")
     suspend fun updateCart(@Body request: UpdateCartRequest): Response<StructureUpdate>
 
-    @DELETE("cart/delete")
-    suspend fun deleteCart(@Body request: DeleteCartRequest): Response<StructureUpdate>
-
+    @DELETE("cart/delete/{uid}/{id_book}")
+    suspend fun deleteCart(
+        @Path("uid") uid: String,
+        @Path("id_book") idBook: Int
+    ): Response<StructureUpdate>
 
 }
 
