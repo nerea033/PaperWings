@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import es.dam.paperwings.databinding.FragmentCartBinding
 import es.dam.paperwings.model.BookClickListener
+import es.dam.paperwings.model.CartClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.api.DeleteCartRequest
 import es.dam.paperwings.model.api.UpdateCartRequest
@@ -29,7 +30,7 @@ import es.dam.paperwings.view.user.recicledView.CardAdapterCart
 import kotlinx.coroutines.launch
 
 
-class CartFragment : Fragment(), BookClickListener {
+class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
     private var _binding: FragmentCartBinding? = null
@@ -63,7 +64,7 @@ class CartFragment : Fragment(), BookClickListener {
 
 
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
-        cardAdapterCart = CardAdapterCart(emptyList(), emptyList(), this)
+        cardAdapterCart = CardAdapterCart(emptyList(), emptyList(), this, this)
 
         binding.rvCart.apply {
             layoutManager = GridLayoutManager(activity?.applicationContext, 1)
@@ -273,19 +274,8 @@ class CartFragment : Fragment(), BookClickListener {
         }
     }
 
-
-
-
-
     private fun showToast(message: String) {
         Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onBookClick(book: Book) {
-        val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
-        intent.putExtra("id_book", book.id)
-        intent.putExtra("source", Constants.CART_FRAGMENT) // Añado el extra para indicar que estoy en "home"
-        startActivity(intent)
     }
 
     fun showDeleteConfirmationDialog(onConfirm: () -> Unit) {
@@ -303,13 +293,32 @@ class CartFragment : Fragment(), BookClickListener {
         }
     }
 
+    override fun onBookClick(book: Book) {
+        val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
+        intent.putExtra("id_book", book.id)
+        intent.putExtra("source", Constants.CART_FRAGMENT) // Añado el extra para indicar que estoy en "home"
+        startActivity(intent)
+    }
 
+    override fun onAddClick(idBook: Int, quantity: Int) {
+        lifecycleScope.launch {
+            addCartQuantity(uid, idBook, quantity )
+        }
 
+    }
 
+    override fun onSubstractClick(idBook: Int, quantity: Int) {
+        lifecycleScope.launch {
+            subtractCartQuantity(uid, idBook, quantity )
+        }
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 }

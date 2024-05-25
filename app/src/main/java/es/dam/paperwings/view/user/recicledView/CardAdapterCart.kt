@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import es.dam.paperwings.R
 import es.dam.paperwings.databinding.CardCellCartBinding
 import es.dam.paperwings.model.BookClickListener
+import es.dam.paperwings.model.CartClickListener
 import es.dam.paperwings.model.entities.Book
 
 class CardAdapterCart (
 
     private var books: List<Book>,
     private var quantities: List<Int>,
-    private var clickListener: BookClickListener)
+    private var clickListener: BookClickListener,
+    private var updateClickListener: CartClickListener)
 
     : RecyclerView.Adapter<CardViewHolderCart>() {
 
@@ -37,7 +39,7 @@ class CardAdapterCart (
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolderCart {
         val from = LayoutInflater.from(parent.context)
         val binding = CardCellCartBinding.inflate(from, parent,false)
-        return CardViewHolderCart(binding, clickListener)
+        return CardViewHolderCart(binding, clickListener, updateClickListener)
     }
 
     // Método llamado cuando se adjunta el adaptador al RecyclerView -> para mostrar cuando la lista está vacía

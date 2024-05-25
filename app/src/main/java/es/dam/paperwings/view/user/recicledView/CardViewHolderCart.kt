@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import es.dam.paperwings.R
 import es.dam.paperwings.databinding.CardCellCartBinding
 import es.dam.paperwings.model.BookClickListener
+import es.dam.paperwings.model.CartClickListener
 import es.dam.paperwings.model.entities.Book
 
 /**
@@ -13,7 +14,9 @@ import es.dam.paperwings.model.entities.Book
  */
 class CardViewHolderCart(
     private val cardCellBinding: CardCellCartBinding,
-    private val clickListener: BookClickListener
+    private val clickListener: BookClickListener,
+    private val updateClickListener: CartClickListener
+
 ) : RecyclerView.ViewHolder(cardCellBinding.root) {
 
 
@@ -30,6 +33,13 @@ class CardViewHolderCart(
         cardCellBinding.tvAuthorCart.text = book.author ?: "No Author"
         cardCellBinding.tvPriceCart.text = book.price.toString() + " €" ?: "No Price"
         cardCellBinding.tvQuantityCart.text = quantity.toString()
+
+        cardCellBinding.btnAddBookCart.setOnClickListener {
+            updateClickListener.onAddClick(book.id, quantity)
+        }
+        cardCellBinding.btnSubstractBookCart.setOnClickListener {
+            updateClickListener.onSubstractClick(book.id, quantity)
+        }
 
         cardCellBinding.cardviewCart.setOnClickListener{
             clickListener.onBookClick(book)
