@@ -7,249 +7,338 @@
     android:layout_height="match_parent"
     tools:context=".view.admin.fragments.AddFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_margin="20dp">
-
-        <TextView
-            android:id="@+id/tvCategoryTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Agregar"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilTitleAdd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="20"
-            app:counterTextColor="@color/black"
-            app:cursorColor="@color/black"
-            app:endIconMode="clear_text"
-
-            app:endIconTint="@color/black"
-            app:hintTextColor="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtInsertarNombrePiloto"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:drawablePadding="10dp"
-                android:hint="Título"
-                android:maxLength="20"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
-
+        android:layout_marginBottom="110dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txtLayoutInsertarNumeroPiloto"
-                android:layout_width="137dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:orientation="vertical"
-                app:counterEnabled="true"
-                app:counterMaxLength="2"
-                app:counterTextColor="@color/black"
-                app:cursorColor="@color/black"
-                app:endIconMode="clear_text"
-
-                app:endIconTint="@color/black"
-                app:hintTextColor="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtInsertarNumeroPiloto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
-                    android:hint="Nº"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txtLayoutInsertarPuntos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:counterEnabled="true"
-                app:counterMaxLength="4"
-                app:counterTextColor="@color/black"
-                app:cursorColor="@color/black"
-                app:endIconMode="clear_text"
-
-                app:endIconTint="@color/black"
-                app:hintTextColor="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtInsertarPuntosPiloto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
-                    android:hint="Puntos"
-                    android:inputType="numberDecimal"
-                    android:maxLength="4"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtLayoutInsertarCampeonatosPiloto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            app:counterEnabled="true"
-            app:counterMaxLength="2"
-            app:counterTextColor="@color/black"
-            app:cursorColor="@color/black"
-            app:endIconMode="clear_text"
+            android:layout_margin="20dp">
 
-            app:endIconTint="@color/black"
-            app:hintTextColor="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtInsertarCampeonatosPiloto"
+            <TextView
+                android:id="@+id/tvCategoryTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="10dp"
-                android:hint="Campeonatos"
-                android:inputType="number"
-                android:maxLength="2"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txtLayoutInsertarVictorias"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:counterEnabled="true"
-                app:counterMaxLength="3"
-                app:counterTextColor="@color/black"
-                app:cursorColor="@color/black"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/black"
-                android:layout_marginEnd="5dp"
-
-                app:hintTextColor="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtInsertarVictoriasPiloto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
-                    android:hint="Victorias"
-                    android:inputType="number"
-                    android:maxLength="3"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txtLayoutInsertarPodios"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:counterEnabled="true"
-                app:counterMaxLength="3"
-                app:counterTextColor="@color/black"
-                app:cursorColor="@color/black"
-                app:endIconMode="clear_text"
-
-                app:endIconTint="@color/black"
-                app:hintTextColor="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txtInsertarPodiosPiloto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
-                    android:hint="Podios"
-                    android:inputType="number"
-                    android:maxLength="3"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtLayoutInsertarGPPiloto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:counterEnabled="true"
-            app:counterMaxLength="4"
-            app:counterTextColor="@color/black"
-            app:cursorColor="@color/black"
-            app:endIconMode="clear_text"
-
-            app:endIconTint="@color/black"
-            app:hintTextColor="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtInsertarGPPiloto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="10dp"
-                android:hint="Grandes Premios"
-                android:inputType="number"
-                android:maxLength="4"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
-
-            <AutoCompleteTextView
-                android:id="@+id/selectInsertTeamDriver"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:inputType="none"
-                android:text="Huola"
-                android:textSize="15sp"
+                android:text="Agregar"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilTitleAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
+                app:counterTextColor="@color/black"
+                app:cursorColor="@color/black"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black"
+                app:hintTextColor="@color/black">
 
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="30dp"
-            android:backgroundTint="@color/brown_background"
-            android:text="Agregar Libro"
-            android:textStyle="bold"
-            android:textSize="19sp"
-            app:cornerRadius="20dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tieTitleAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:drawablePadding="10dp"
+                    android:hint="Título*"
+                    android:maxLength="100"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilAuthorAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:counterEnabled="true"
+                app:counterMaxLength="80"
+                app:counterTextColor="@color/black"
+                app:cursorColor="@color/black"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black"
+                app:hintTextColor="@color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tieAuthorAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:drawablePadding="10dp"
+                    android:hint="Autor"
+                    android:maxLength="80"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPublisherAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:counterEnabled="true"
+                app:counterMaxLength="80"
+                app:counterTextColor="@color/black"
+                app:cursorColor="@color/black"
+                app:endIconMode="clear_text"
+
+                app:endIconTint="@color/black"
+                app:hintTextColor="@color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiePublisherAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:drawablePadding="10dp"
+                    android:hint="Editorial"
+                    android:maxLength="80"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilIsbnAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="17"
+                    app:counterTextColor="@color/black"
+                    app:cursorColor="@color/black"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:layout_marginEnd="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tieIsbnAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:drawablePadding="10dp"
+                        android:hint="ISBN"
+                        android:inputType="number"
+                        android:maxLength="17"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPagesAdd"
+                    android:layout_width="137dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="4"
+                    app:counterTextColor="@color/black"
+                    app:cursorColor="@color/black"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiePagesAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:drawablePadding="10dp"
+                        android:hint="Páginas*"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDateAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.9"
+                    android:orientation="vertical"
+                    app:counterTextColor="@color/black"
+                    app:cursorColor="@color/black"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:layout_marginEnd="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tieDateAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:drawablePadding="10dp"
+                        android:hint="Fecha publicación"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPriceAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    app:counterTextColor="@color/black"
+                    app:cursorColor="@color/black"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black"
+                    app:hintTextColor="@color/black"
+                    android:layout_marginEnd="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiePriceAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:drawablePadding="10dp"
+                        android:hint="Precio*"
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilImageAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.1"
+                    android:orientation="vertical"
+                    app:counterTextColor="@color/black"
+                    app:cursorColor="@color/black"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black"
+                    app:hintTextColor="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tieImageAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:drawablePadding="10dp"
+                        android:hint="Portada"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:longClickable="false"
+                        android:maxLength="20"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    android:layout_marginEnd="5dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/actCategoryAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:text="Categoría*"
+                        android:textSize="15sp"/>
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/actLanguageAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:text="Idioma*"
+                        android:textSize="15sp"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDescriptionAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:counterEnabled="true"
+                app:counterMaxLength="500"
+                app:counterTextColor="@color/black"
+                app:cursorColor="@color/black"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black"
+                app:hintTextColor="@color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tieDescriptionAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:hint="Sinopsis"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:maxLength="500"
+                    android:minLines="6"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/btnAddBook"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/brown_background"
+                android:text="Agregar Libro"
+                android:textStyle="bold"
+                android:textSize="19sp"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

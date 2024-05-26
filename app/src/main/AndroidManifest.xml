@@ -24,16 +24,19 @@
             android:exported="false" />
         <activity
             android:name=".view.admin.MainActivityAdmin"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/><!-- El layout se desplaza hacia arriba para que el campo de texto visible no sea ocultado por el teclado. El contenido del layout no se redimensiona, solo se desplaza.-->
         <activity
             android:name=".view.Register"
             android:exported="false" />
         <activity
             android:name=".view.Login"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
             android:name=".view.user.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

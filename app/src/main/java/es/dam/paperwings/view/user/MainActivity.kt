@@ -41,16 +41,12 @@ class MainActivity : AppCompatActivity() {
         // Verificar la autenticación del usuario
         checkUserAuthentication()
 
-
         // Recuperar datos de SharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val uid = sharedPref.getString("uid", "N/A")
         val username = sharedPref.getString("username", "N/A")
         val mail = sharedPref.getString("mail", "N/A")
 
-        if (username != null) {
-            // Mostrar el nombre del usuario
-        }
 
         bottomNavigationView = findViewById(R.id.botton_navigation)
 

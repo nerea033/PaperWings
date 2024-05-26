@@ -9,7 +9,7 @@ data class Book(
     val description: String,
     val discount: Double,
     val id: Int,
-    val image: ByteArray, // Change it to Bitmap
+    val image: ByteArray?, // Change it to Bitmap
     val isbn: String,
     val language: String,
     val pages: Int,
@@ -19,6 +19,23 @@ data class Book(
     val title: String,
     val date: String,
 ) {
+    // Constructor secundario sin 'id'
+    constructor(
+        author: String,
+        category: String,
+        description: String,
+        discount: Double,
+        image: ByteArray?,
+        isbn: String,
+        language: String,
+        pages: Int,
+        price: Double,
+        publisher: String,
+        stock: Int,
+        title: String,
+        date: String
+    ) : this(author, category, description, discount, 0, image, isbn, language, pages, price, publisher, stock, title, date)
+
     // Function to convert date string to LocalDate
     fun getLocalDate(): LocalDate? {
         return try {

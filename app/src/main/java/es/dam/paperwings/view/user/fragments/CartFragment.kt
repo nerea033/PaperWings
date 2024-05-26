@@ -17,12 +17,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import es.dam.paperwings.R
 import es.dam.paperwings.databinding.FragmentCartBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.CartClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
-import es.dam.paperwings.model.api.DeleteCartRequest
 import es.dam.paperwings.model.api.UpdateCartRequest
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
@@ -194,6 +192,14 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
+    // Se ejecuta el volver a este fragmento
+    override fun onResume() {
+        super.onResume()
+        // Recargar los datos del carrito al volver a este fragmento
+        lifecycleScope.launch {
+            getCartBooks()
+        }
+    }
 
 
     suspend fun addCartQuantity(uid: String?, id_book: Int, quantity: Int) {
@@ -207,7 +213,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
                 if (response.isSuccessful) {
                     // Registro agregado con éxito
                     println("Registro actualizado con éxito en el carrito")
-                    showToast("Libro agregado al carrito")
+                    println("Libro agregado al carrito")
                 } else {
                     // Fallo al actualizar el registro, manejar error
                     val errorResponse = response.errorBody()?.string()
@@ -235,7 +241,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
                     if (response.isSuccessful) {
                         // Successfully updated the record
                         println("Registro del carito actualizado con éxito")
-                        showToast("Cantidad de libros reducida")
+                        println("Cantidad de libros reducida")
                     } else {
                         // Failed to update the record, handle error
                         val errorResponse = response.errorBody()?.string()
@@ -321,6 +327,8 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
     override fun onAddClick(idBook: Int, quantity: Int) {
         lifecycleScope.launch {
             addCartQuantity(uid, idBook, quantity )
+            // Actualizar la vista después de agregar cantidad
+            getCartBooks()
         }
 
     }
@@ -328,6 +336,8 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
     override fun onSubstractClick(idBook: Int, quantity: Int) {
         lifecycleScope.launch {
             subtractCartQuantity(uid, idBook, quantity )
+            // Actualizar la vista después de agregar cantidad
+            getCartBooks()
         }
 
     }
