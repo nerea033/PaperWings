@@ -8,10 +8,7 @@
         android:id="@+id/bottom_update"
         android:title="Modificar"
         android:icon="@drawable/ic_update"/>
-    <item
-        android:id="@+id/bottom_delete"
-        android:title="Eliminar"
-        android:icon="@drawable/ic_delete"/>
+
     <item
         android:id="@+id/bottom_profile"
         android:title="Perfil"

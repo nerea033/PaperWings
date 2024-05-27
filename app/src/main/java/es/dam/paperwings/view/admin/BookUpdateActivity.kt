@@ -21,12 +21,8 @@ import es.dam.paperwings.model.api.UpdateRequest
 import es.dam.paperwings.model.entities.Book
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.Locale
 
 class BookUpdateActivity : AppCompatActivity() {
 

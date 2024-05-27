@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,9 @@ import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.admin.BookUpdateActivity
 import es.dam.paperwings.view.user.BookDetailActivity
 import es.dam.paperwings.view.user.recicledView.CardAdapterHome
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * A simple [Fragment] subclass.
@@ -139,7 +142,7 @@ class UpdateFragment : Fragment(), BookClickListener {
     suspend fun fetchBooks(){
         val bookService = ApiServiceFactory.makeBooksService()
         try {
-
+            Log.d("FetchBooks", "Iniciando la solicitud de libros")
             // Get the books
             val response = bookService.listBooks()
             if (response.isSuccessful && response.body() != null) { // Si no hay error y no es null
@@ -147,7 +150,7 @@ class UpdateFragment : Fragment(), BookClickListener {
                 // Store the books in the LiveData
                 val booksList = response.body()!!.data
                 if (booksList != null && booksList.isNotEmpty()) {
-
+                    Log.d("FetchBooks", "Lista de libros obtenida: $booksList")
                     // Se almacenan todos los atributos de cada libro
                     _booksLiveData.postValue(booksList)
 
@@ -176,10 +179,17 @@ class UpdateFragment : Fragment(), BookClickListener {
                     _booksLiveData.postValue(emptyList())
                 }
             } else {
-                showToast("Error al buscar los libros: ${response.errorBody()?.string()}")
+                Log.d("DeleteBook", "Respuesta fallida")
+                val errorResponse = response.errorBody()?.string()
+                withContext(Dispatchers.Main) {
+                    showAlert("Error", "Error al eliminar el libro: $errorResponse")
+                }
             }
         } catch (e: Exception) {
-            showToast("Error en la red o al parsear los datos: ${e.message}")
+            Log.e("DeleteBook", "Excepción atrapada: ${e.message}")
+            withContext(Dispatchers.Main) {
+                showAlert("Error", "Error al conectar con la API: ${e.message}")
+            }
         }
     }
 
@@ -189,10 +199,14 @@ class UpdateFragment : Fragment(), BookClickListener {
         try {
             val response = bookService.deleteBook(book.id)
             if (response.isSuccessful) {
-                // Usuario agregado con éxito
-                showAlert("Información","Libro eliminado con éxito.")
-                // Actualizar la vista después de agregar cantidad
-                fetchBooks()
+                Log.d("DeleteBook", "Respuesta exitosa")
+                withContext(Dispatchers.Main) {// asegurarse de que el código que actualiza la interfaz de usuario se ejecute en el hilo principal
+                    Log.d("DeleteBook", "Actualizando la UI en el hilo principal")
+                    // Usuario agregado con éxito
+                    showAlert("Información", "Libro eliminado con éxito.")
+                    // Actualizar la vista después de eliminar el libro
+                    fetchBooks()
+                }
 
             } else {
                 // Fallo al agregar el lirbo, manejar error
@@ -255,15 +269,18 @@ class UpdateFragment : Fragment(), BookClickListener {
     }
 
     fun showAlert(title: String, message: String) {
-        if (activity?.isFinishing() == true) { // Verificar si la actividad no está en proceso de finalización
+        if (activity != null && !requireActivity().isFinishing) { // Verificar si la actividad no está en proceso de finalización
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(title)
             builder.setMessage(message)
             builder.setPositiveButton("Aceptar", null)
             val dialog: AlertDialog = builder.create()
             dialog.show()
+        } else {
+            Log.d("ShowAlert", "Actividad no disponible para mostrar la alerta")
         }
     }
+
 
 
     override fun onDestroyView() {

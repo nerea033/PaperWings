@@ -132,6 +132,7 @@ class AddFragment : Fragment() {
                     if (book != null) {
                         lifecycleScope.launch {
                             addBookApi(book)
+                            clearFields()
                         }
                     }
                 }
@@ -144,6 +145,7 @@ class AddFragment : Fragment() {
             lifecycleScope.launch {
                 if (book != null) {
                     addBookApi(book)
+                    clearFields()
                 }
             }
         }
@@ -167,6 +169,20 @@ class AddFragment : Fragment() {
             // Manejar excepciones, como problemas de red o configuración
             showAlert("Error","Error al conectar con la API: ${e.message}")
         }
+    }
+
+    private fun clearFields() {
+        tieTitleAdd.text?.clear()
+        actCategoryAdd.setText("Categoría*")
+        tiePriceAdd.text?.clear()
+        tiePagesAdd.text?.clear()
+        actLanguage.setText("Idioma*")
+        tieAuthorAdd.text?.clear()
+        tieIsbnAdd.text?.clear()
+        tiePublisherAdd.text?.clear()
+        tieDescriptionAdd.text?.clear()
+        tieDateAdd.text?.clear()
+        tieImageAdd.text?.clear()
     }
 
     // Mostrar calendario para la fecha

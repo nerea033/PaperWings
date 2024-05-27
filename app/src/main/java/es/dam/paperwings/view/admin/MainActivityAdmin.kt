@@ -58,10 +58,6 @@ class MainActivityAdmin : AppCompatActivity() {
                     replaceFragment(UpdateFragment())
                     true
                 }
-                R.id.bottom_delete -> {
-                    replaceFragment(DeleteFragment())
-                    true
-                }
                 R.id.bottom_profile -> {
                     replaceFragment(ProfileFragment())
                     true
@@ -81,10 +77,6 @@ class MainActivityAdmin : AppCompatActivity() {
             Constants.UPDATE_FRAGMENT -> {
                 replaceFragment(UpdateFragment())
                 selectBottomNavItem(R.id.bottom_update)
-            }
-            Constants.DELETE_FRAGMENT -> {
-                replaceFragment(DeleteFragment())
-                selectBottomNavItem(R.id.bottom_delete)
             }
             Constants.PROFILE_FRAGMENT -> {
                 replaceFragment(ProfileFragment())
