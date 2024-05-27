@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.view.Login
+import es.dam.paperwings.view.admin.MainActivityAdmin
 import es.dam.paperwings.view.user.fragments.HomeFragment
 import es.dam.paperwings.view.user.fragments.CartFragment
 import es.dam.paperwings.view.user.fragments.CategoryFragment
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
 
     private lateinit var auth: FirebaseAuth
+
+    private var rol: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,14 +41,16 @@ class MainActivity : AppCompatActivity() {
         // Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Verificar la autenticación del usuario
-        checkUserAuthentication()
 
         // Recuperar datos de SharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val uid = sharedPref.getString("uid", "N/A")
+        rol = sharedPref.getString("rol", "N/A")
         val username = sharedPref.getString("username", "N/A")
         val mail = sharedPref.getString("mail", "N/A")
+
+        // Verificar la autenticación del usuario
+        checkUserAuthentication()
 
 
         bottomNavigationView = findViewById(R.id.botton_navigation)
@@ -110,8 +115,19 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
             finish()
+        } else {
+            // Usuario autenticado, verificar el rol
+            if (rol == "ADMIN") {
+                // Si es ADMIN, redirigir a MainActivityAdmin
+                val intent = Intent(this, MainActivityAdmin::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                // Lógica adicional
+            }
         }
     }
+
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()

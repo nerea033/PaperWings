@@ -16,12 +16,15 @@ import es.dam.paperwings.view.Login
 import es.dam.paperwings.view.admin.fragments.AddFragment
 import es.dam.paperwings.view.admin.fragments.DeleteFragment
 import es.dam.paperwings.view.admin.fragments.UpdateFragment
+import es.dam.paperwings.view.user.MainActivity
 
 class MainActivityAdmin : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
     private lateinit var auth: FirebaseAuth
+
+    private var rol: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,14 +39,16 @@ class MainActivityAdmin : AppCompatActivity() {
         // Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Verificar la autenticación del usuario
-        checkUserAuthentication()
 
         // Recuperar datos de SharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val uid = sharedPref.getString("uid", "N/A")
+        rol = sharedPref.getString("rol", "N/A")
         val username = sharedPref.getString("username", "N/A")
         val mail = sharedPref.getString("mail", "N/A")
+
+        // Verificar la autenticación del usuario
+        checkUserAuthentication()
 
         bottomNavigationView = findViewById(R.id.botton_navigation_admin)
 
@@ -97,6 +102,16 @@ class MainActivityAdmin : AppCompatActivity() {
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
             finish()
+        } else {
+            // Usuario autenticado, verificar el rol
+            if (rol == "USER") {
+                // Si es USER, redirigir a MainActivity
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                // Lógica adicional
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import es.dam.paperwings.R
 import es.dam.paperwings.databinding.CardCellCartBinding
@@ -23,6 +24,7 @@ class CardAdapterCart (
 
     private lateinit var recyclerView: RecyclerView  // Para referencia al RecyclerView
     private lateinit var emptyView: View  // Para referencia al empty_view
+    private lateinit var detailsPrice: LinearLayout
     private val handler = Handler(Looper.getMainLooper())  // Handler para manejar el retraso
     private val emptyCheckRunnable = Runnable { checkEmptyImmediate() }  // Runnable para la comprobación inmediata
 
@@ -47,21 +49,24 @@ class CardAdapterCart (
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
         emptyView = recyclerView.rootView.findViewById(R.id.empty_view)
+        detailsPrice = recyclerView.rootView.findViewById(R.id.LlDetailsPrice)
         checkEmptyWithDelay()
     }
 
     private fun checkEmptyWithDelay() {
         handler.removeCallbacks(emptyCheckRunnable)  // Eliminar cualquier llamada previa
-        handler.postDelayed(emptyCheckRunnable, 1000)  // Postponer la comprobación  segundo
+        handler.postDelayed(emptyCheckRunnable, 1000)  // Postponer la comprobación 1 segundo
     }
 
     private fun checkEmptyImmediate() {
         if (books.isEmpty()) {
             emptyView.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
+            detailsPrice.visibility = View.GONE
         } else {
             emptyView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
+            detailsPrice.visibility = View.VISIBLE
         }
     }
 

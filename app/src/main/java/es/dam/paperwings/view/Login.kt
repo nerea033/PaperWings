@@ -87,11 +87,11 @@ class Login : AppCompatActivity() {
 
                                 if (rolResult == "USER") {
                                     // Si el rol es "USER", cambiar a la actividad principal pasando el username
-                                    saveUserToSharedPreferences(usernameResult, userId, mail)
+                                    saveUserToSharedPreferences(usernameResult, userId, mail, rolResult)
                                     switchToHome()
                                 } else if (rolResult == "ADMIN"){
                                     // Si el rol es "admin", cambiar a la actividad principal del administrador pasando el username
-                                    saveUserToSharedPreferences(usernameResult, userId, mail)
+                                    saveUserToSharedPreferences(usernameResult, userId, mail, rolResult)
                                     switchToHomeAdmin()
                                 }
                             }
@@ -170,12 +170,13 @@ class Login : AppCompatActivity() {
     /**
      * Persitir los datos localmente para poder acceder a ellos
      */
-    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String){
+    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String, rol: String){
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("username", username)
             putString("uid", uid)
             putString("mail", mail)
+            putString("rol", rol)
             apply()
         }
     }

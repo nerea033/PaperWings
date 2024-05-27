@@ -136,7 +136,7 @@ class Register : AppCompatActivity() {
      * Método para pasar el usuario a la API y de esta a la DDBB
      */
     suspend fun addUserToDatabase(uid: String, username: String) {
-        val user = User(uid, username)  // Crear el objeto usuario
+        val user = User(uid, username, "USER")  // Crear el objeto usuario
         val userService = ApiServiceFactory.makeUsersService()  // Obtener la instancia del servicio API
 
         try {
