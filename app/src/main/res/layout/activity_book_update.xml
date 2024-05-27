@@ -1,34 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.admin.fragments.AddFragment">
-
+    tools:context=".view.admin.BookUpdateActivity">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginBottom="110dp">
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_margin="20dp">
 
-            <TextView
-                android:id="@+id/tvAddTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Agregar"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"> <!-- Esto asegura que ambos elementos estén alineados verticalmente en el centro -->
+
+                <TextView
+                    android:id="@+id/tvUpdateTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Modificar"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <!-- Un view invisible para empujar el ImageButton a la derecha -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/ibCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_close"
+                    android:layout_marginEnd="5dp"/>
+
+            </LinearLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilTitleAdd"
+                android:id="@+id/tilTitleUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -42,7 +63,7 @@
                 app:hintTextColor="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tieTitleAdd"
+                    android:id="@+id/tieTitleUpdate"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:drawablePadding="10dp"
@@ -53,7 +74,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilAuthorAdd"
+                android:id="@+id/tilAuthorUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -66,7 +87,7 @@
                 app:hintTextColor="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tieAuthorAdd"
+                    android:id="@+id/tieAuthorUpdate"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:drawablePadding="10dp"
@@ -77,7 +98,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPublisherAdd"
+                android:id="@+id/tilPublisherUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -91,7 +112,7 @@
                 app:hintTextColor="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tiePublisherAdd"
+                    android:id="@+id/tiePublisherUpdate"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:drawablePadding="10dp"
@@ -107,7 +128,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilIsbnAdd"
+                    android:id="@+id/tilIsbnUpdate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -122,7 +143,7 @@
                     android:layout_marginEnd="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tieIsbnAdd"
+                        android:id="@+id/tieIsbnUpdate"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:drawablePadding="10dp"
@@ -136,7 +157,7 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilPagesAdd"
+                    android:id="@+id/tilPagesUpdate"
                     android:layout_width="137dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -149,7 +170,7 @@
                     app:hintTextColor="@color/black">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiePagesAdd"
+                        android:id="@+id/tiePagesUpdate"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:drawablePadding="10dp"
@@ -168,7 +189,7 @@
                 android:layout_marginBottom="10dp">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilDateAdd"
+                    android:id="@+id/tilDateUpdate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.9"
@@ -181,7 +202,7 @@
                     android:layout_marginEnd="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tieDateAdd"
+                        android:id="@+id/tieDateUpdate"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:drawablePadding="10dp"
@@ -196,7 +217,7 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilPriceAdd"
+                    android:id="@+id/tilPriceUpdate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -209,7 +230,7 @@
                     android:layout_marginEnd="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiePriceAdd"
+                        android:id="@+id/tiePriceUpdate"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:drawablePadding="10dp"
@@ -220,7 +241,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilImageAdd"
+                    android:id="@+id/tilImageUpdate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.1"
@@ -232,7 +253,7 @@
                     app:hintTextColor="@color/black">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tieImageAdd"
+                        android:id="@+id/tieImageUpdate"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:drawablePadding="10dp"
@@ -264,7 +285,7 @@
                     android:layout_marginEnd="5dp">
 
                     <AutoCompleteTextView
-                        android:id="@+id/actCategoryAdd"
+                        android:id="@+id/actCategoryUpdate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
@@ -284,7 +305,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView2">
 
                     <AutoCompleteTextView
-                        android:id="@+id/actLanguageAdd"
+                        android:id="@+id/actLanguageUpdate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
@@ -297,7 +318,7 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDescriptionAdd"
+                android:id="@+id/tilDescriptionUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -310,7 +331,7 @@
                 app:hintTextColor="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tieDescriptionAdd"
+                    android:id="@+id/tieDescriptionUpdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
@@ -326,20 +347,19 @@
 
 
             <Button
-                android:id="@+id/btnAddBook"
+                android:id="@+id/btnUpdateBook"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="40dp"
                 android:backgroundTint="@color/brown_background"
-                android:text="Agregar Libro"
+                android:text="Guardar Cambios"
                 android:textStyle="bold"
                 android:textSize="19sp"
                 app:cornerRadius="20dp" />
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

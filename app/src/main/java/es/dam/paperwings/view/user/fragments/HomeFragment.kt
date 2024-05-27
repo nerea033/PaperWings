@@ -36,8 +36,10 @@ class HomeFragment : Fragment(), BookClickListener {
     private val _booksLiveData = MutableLiveData<List<Book>>()
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
-    // Inicializo elementos de la vista
+
     private lateinit var cardAdapterHome: CardAdapterHome
+
+    // Elementos de la vista
     private lateinit var searchView: SearchView
 
 

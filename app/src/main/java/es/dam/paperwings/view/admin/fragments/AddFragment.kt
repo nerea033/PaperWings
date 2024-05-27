@@ -123,7 +123,7 @@ class AddFragment : Fragment() {
         if (title.isEmpty() || category.isEmpty() || price == 0.0|| pages == 0|| language.isEmpty()) {
             showAlert("Atención", "Debe rellenar todos los campos marcados con un asterisco*")
         } else if (author.isEmpty() || isbn.isEmpty() || publisher.isEmpty() || description.isEmpty() || date.isEmpty() || image == null ) {
-            showAlert("Atención", "¿Seguro que quiere dejar campos vacíos?", true) { confirmed ->
+            showAlertOkCancel("Atención", "¿Seguro que quiere dejar campos vacíos?", true) { confirmed ->
                 if (confirmed) {
                     val book =
                         Book(author, category, description, discount,
@@ -200,7 +200,7 @@ class AddFragment : Fragment() {
         return dateFormat.format(calendar.time)
     }
 
-    fun showAlert(title: String, message: String, showCancel: Boolean = false, onResult: ((Boolean) -> Unit)? = null) {
+    fun showAlertOkCancel(title: String, message: String, showCancel: Boolean = false, onResult: ((Boolean) -> Unit)? = null) {
         // Verificar si la actividad no está en proceso de finalización
         if (activity?.isFinishing == false) {
             // Usar el contexto de la actividad para construir el AlertDialog
@@ -215,6 +215,16 @@ class AddFragment : Fragment() {
                     onResult?.invoke(false)
                 }
             }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+    }
+    fun showAlert(title: String, message: String) {
+        if (activity?.isFinishing == false) { // Verificar si la actividad no está en proceso de finalización
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(title)
+            builder.setMessage(message)
+            builder.setPositiveButton("Aceptar", null)
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }

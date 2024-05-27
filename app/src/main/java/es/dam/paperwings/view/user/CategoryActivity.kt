@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  */
 class CategoryActivity : AppCompatActivity(), BookClickListener {
 
-    // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
+    // This property holds the binding object that provides access to the views
     private var _binding: ActivityCategoryBinding? = null
     private val binding get() = _binding!!
 
