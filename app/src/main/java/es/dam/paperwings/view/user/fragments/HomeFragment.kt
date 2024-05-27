@@ -22,7 +22,7 @@ import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.user.BookDetailActivity
-import es.dam.paperwings.view.user.recicledView.CardAdapterHome
+import es.dam.paperwings.view.user.recicledView.CardAdapter
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment(), BookClickListener {
@@ -37,7 +37,7 @@ class HomeFragment : Fragment(), BookClickListener {
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
 
-    private lateinit var cardAdapterHome: CardAdapterHome
+    private lateinit var cardAdapter: CardAdapter
 
     // Elementos de la vista
     private lateinit var searchView: SearchView
@@ -91,16 +91,16 @@ class HomeFragment : Fragment(), BookClickListener {
         })
 
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
-        cardAdapterHome = CardAdapterHome(emptyList(), this)
+        cardAdapter = CardAdapter(emptyList(), this)
 
         binding.recycledViewUser.apply {
             layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = cardAdapterHome
+            adapter = cardAdapter
         }
 
         // Observe the books LiveData and update the adapter when the data changes
         booksLiveData.observe(viewLifecycleOwner, { books ->
-            cardAdapterHome.updateBooks(books)
+            cardAdapter.updateBooks(books)
         })
 
 

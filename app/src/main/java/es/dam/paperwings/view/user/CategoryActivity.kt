@@ -15,7 +15,7 @@ import es.dam.paperwings.databinding.ActivityCategoryBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.Book
-import es.dam.paperwings.view.user.recicledView.CardAdapterCategoryTwo
+import es.dam.paperwings.view.user.recicledView.CardAdapter
 import kotlinx.coroutines.launch
 
 /**
@@ -33,7 +33,7 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
 
-    private lateinit var cardAdapterCategoryTwo: CardAdapterCategoryTwo
+    private lateinit var cardAdapter: CardAdapter
 
     private var category: String? = null
     private var sourceFragment: String? = null
@@ -55,16 +55,16 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
         sourceFragment = intent.getStringExtra("source")
 
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
-        cardAdapterCategoryTwo = CardAdapterCategoryTwo(emptyList(), this)
+        cardAdapter = CardAdapter(emptyList(), this)
 
         binding.rvCategoryBookUser.apply {
             layoutManager = GridLayoutManager(this@CategoryActivity, 2)
-            adapter = this@CategoryActivity.cardAdapterCategoryTwo
+            adapter = this@CategoryActivity.cardAdapter
         }
 
         // Observe the books LiveData and update the adapter when the data changes
         booksLiveData.observe(this, { books ->
-            cardAdapterCategoryTwo.updateBooks(books)
+            cardAdapter.updateBooks(books)
         })
 
         // Start loading books

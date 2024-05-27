@@ -87,7 +87,7 @@ class Register : AppCompatActivity() {
                                 // Le paso el uid del Firebase Authentication junto al username a la API para que lo inserte en la DDBB
                                 lifecycleScope.launch {
                                     addUserToDatabase(userId, username)
-                                    saveUserToSharedPreferences(username, userId, mail)
+                                    saveUserToSharedPreferences(username, userId, mail, "USER")
                                     switchToHome()// Llamada a switchToHome después de agregar al usuario a la base de datos
                                 }
 
@@ -168,12 +168,13 @@ class Register : AppCompatActivity() {
     /**
      * Persitir los datos localmente para poder acceder a ellos
      */
-    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String){
+    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String, rol: String){
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("username", username)
             putString("uid", uid)
             putString("mail", mail)
+            putString("rol", rol)
             apply()
         }
     }

@@ -34,7 +34,22 @@ data class Book(
         stock: Int,
         title: String,
         date: String
-    ) : this(author, category, description, discount, 0, image, isbn, language, pages, price, publisher, stock, title, date)
+    ) : this(
+        author = author,
+        category = category,
+        description = description,
+        discount = discount,
+        image = image,
+        isbn = isbn,
+        language = language,
+        pages = pages,
+        price = price,
+        publisher = publisher,
+        stock = stock,
+        title = title,
+        date = date,
+        id = 0 // Valor predeterminado para id
+        )
 
     // Function to convert date string to LocalDate
     fun getLocalDate(): LocalDate? {

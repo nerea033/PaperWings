@@ -162,7 +162,7 @@ class BookUpdateActivity : AppCompatActivity() {
             showAlertOkCancel("Atención", "¿Seguro que quiere dejar campos vacíos?", true) { confirmed ->
                 if (confirmed) {
                     val book =
-                        Book(author, category, description, discount,
+                        Book(author, category, description, discount, bookId,
                             image, isbn, language, pages, price, publisher, stock, title, date)
 
                     if (book != null) {
@@ -174,8 +174,8 @@ class BookUpdateActivity : AppCompatActivity() {
             }
         } else {
             val book = image?.let {
-                Book(author, category, description, discount,
-                    it, isbn, language, pages, price, publisher, stock, title, date)
+                Book(author, category, description, discount, bookId,
+                    image, isbn, language, pages, price, publisher, stock, title, date)
             }
             lifecycleScope.launch {
                 if (book != null) {

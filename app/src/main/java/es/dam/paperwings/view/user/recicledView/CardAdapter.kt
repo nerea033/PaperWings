@@ -7,11 +7,11 @@ import es.dam.paperwings.databinding.CardCellHomeBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.entities.Book
 
-class CardAdapterHome (
+class CardAdapter (
 
     private var books: List<Book>,
     private var clickListener: BookClickListener)
-    : RecyclerView.Adapter<CardViewHolderHome>() {
+    : RecyclerView.Adapter<CardViewHolder>() {
 
     fun updateBooks(newBooks: List<Book>) {
         books = newBooks
@@ -25,10 +25,10 @@ class CardAdapterHome (
      * @param viewType The view type of the new view.
      * @return A new CardViewHolder that holds a view representing an item in the list.
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolderHome {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val from = LayoutInflater.from(parent.context)
         val binding = CardCellHomeBinding.inflate(from, parent,false)
-        return CardViewHolderHome(binding, clickListener)
+        return CardViewHolder(binding, clickListener)
     }
 
     /**
@@ -43,7 +43,7 @@ class CardAdapterHome (
      * @param holder The CardViewHolder representing the view of an item in the list.
      * @param position The position of the item in the list of books.
      */
-    override fun onBindViewHolder(holder: CardViewHolderHome, position: Int) {
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         holder.findBook(books[position])
     }
 }
