@@ -138,6 +138,7 @@ class UpdateFragment : Fragment(), BookClickListener {
 
     suspend fun fetchBooks(){
         val bookService = ApiServiceFactory.makeBooksService()
+        _booksLiveData.postValue(emptyList())
         try {
             Log.d("FetchBooks", "Iniciando la solicitud de libros")
             // Get the books
