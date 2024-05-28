@@ -118,6 +118,7 @@ class BookUpdateActivity : AppCompatActivity() {
         val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
         val languageAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, languages)
 
+
         // Asigno el ArrayAdapter al AutoCompleteTextView
         actCategory.setAdapter(categoryAdapter)
         actLanguage.setAdapter(languageAdapter)
@@ -250,7 +251,7 @@ class BookUpdateActivity : AppCompatActivity() {
             tiePagesUpdate.setText(book.pages.toString())
 
             // Idioma
-            actLanguage.setText(book.language ?: "")
+            actLanguage.setHint(book.language ?: "")
 
             // Editorial
             tiePublisherUpdate.setText(book.publisher ?: "")
@@ -269,7 +270,7 @@ class BookUpdateActivity : AppCompatActivity() {
             tieIsbnUpdate.setText(book.isbn ?: "")
 
             // Categoría
-            actCategory.setText(book.category)
+            actCategory.setHint(book.category)
 
             // Sinopsis
             tieDescriptionUpdate.setText(book.description ?: "")
