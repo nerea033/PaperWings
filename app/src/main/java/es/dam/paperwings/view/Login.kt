@@ -47,9 +47,9 @@ class Login : AppCompatActivity() {
         tbPassword = findViewById(R.id.tbPswLogin)
         btnLogin = findViewById(R.id.btnLogin)
         linkRegister = findViewById(R.id.linkToRegister)
-        btnGoogle = findViewById(R.id.btnGoogle)
+        /**btnGoogle = findViewById(R.id.btnGoogle)
         btnFacebook = findViewById(R.id.btnFacebook)
-        btnTwitter = findViewById(R.id.btnTwitter)
+        btnTwitter = findViewById(R.id.btnTwitter)*/
 
         loginUser()
 

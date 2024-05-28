@@ -34,14 +34,14 @@ interface ApiBooksServices {
     ): Response<StructureFetch<Book>>
 
     @PUT("books/update")
-    suspend fun updateBook(@Body updateRequest: UpdateRequest<Book>): Response<StructureUpdate>
+    suspend fun updateBook(@Body updateRequest: UpdateRequest): Response<StructureUpdate>
 
     @DELETE("books/{id}")
     suspend fun deleteBook(@Path("id") id: Int): Response<StructureUpdate>
 
 }
-data class UpdateRequest<T>(
+data class UpdateRequest(
     val idField: String,
     val id: Int,
-    val updateData: List<T>?, //Permite que data sea null
+    val updateData: Book,
 )

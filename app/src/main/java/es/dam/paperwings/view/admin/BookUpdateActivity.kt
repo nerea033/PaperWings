@@ -191,17 +191,17 @@ class BookUpdateActivity : AppCompatActivity() {
         val idField = "id"
 
         // Create UpdateRequest instance
-        val updateRequest = UpdateRequest(idField, id, listOf(book))
+        val updateRequest = UpdateRequest(idField, id, book)
         try {
             val response = bookService.updateBook(updateRequest)
             if (response.isSuccessful) {
                 // Usuario agregado con éxito
-                showAlert("Información","Libro agregado con éxito.")
+                showAlert("Información","Libro modificado con éxito.")
 
             } else {
                 // Fallo al agregar el lirbo, manejar error
                 val errorResponse = response.errorBody()?.string()
-                showAlert("Error","Error al agregar el libro: $errorResponse")
+                showAlert("Error","Error al modificar el libro: $errorResponse")
             }
         }  catch (e: Exception) {
             // Manejar excepciones, como problemas de red o configuración
