@@ -80,9 +80,21 @@ class AddFragment : Fragment() {
         }
 
         // Defino las categorías y los idiomas
-        val categories = listOf("Ficción", "No Ficción", "Misterio", "Biografía", "Ciencia", "Fantasía", "Historia")
-        val languages = listOf("Español", "Inglés", "Francés", "Alemán")
+        val categories = listOf(
+            "Ficción", "No Ficción", "Misterio", "Biografía", "Ciencia",
+            "Fantasía", "Historia", "Romance", "Terror", "Aventura",
+            "Ciencia Ficción", "Autoayuda", "Poesía", "Infantil",
+            "Juvenil", "Ensayo", "Drama", "Viajes",
+            "Cómics y Novelas Gráficas", "Humor"
+        )
 
+        val languages = listOf(
+            "Español", "Inglés", "Francés", "Alemán",
+            "Italiano", "Portugués", "Ruso", "Chino",
+            "Japonés", "Árabe", "Coreano", "Holandés",
+            "Sueco", "Hindi", "Griego", "Danés",
+            "Finlandés", "Noruego", "Polaco", "Turco"
+        )
 
         // Creo un ArrayAdapter usando las categorías y el layout de lista predeterminado
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)

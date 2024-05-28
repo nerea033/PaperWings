@@ -4,6 +4,7 @@ package es.dam.paperwings.view.admin
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageButton
@@ -35,7 +36,7 @@ class BookUpdateActivity : AppCompatActivity() {
     private lateinit var tiePriceUpdate: TextInputEditText
     private lateinit var tieImageUpdate: TextInputEditText
     private lateinit var tieDescriptionUpdate: TextInputEditText
-    private lateinit var actCategoryUpdate: AutoCompleteTextView
+    private lateinit var actCategory: AutoCompleteTextView
     private lateinit var actLanguage: AutoCompleteTextView
     private lateinit var btnUpdateBook: Button
     private lateinit var ibCancel: ImageButton
@@ -75,7 +76,7 @@ class BookUpdateActivity : AppCompatActivity() {
         tiePriceUpdate = findViewById(R.id.tiePriceUpdate)
         tieImageUpdate = findViewById(R.id.tieImageUpdate)
         tieDescriptionUpdate = findViewById(R.id.tieDescriptionUpdate)
-        actCategoryUpdate = findViewById(R.id.actCategoryUpdate)
+        actCategory = findViewById(R.id.actCategoryUpdate)
         actLanguage = findViewById(R.id.actLanguageUpdate)
         btnUpdateBook = findViewById(R.id.btnUpdateBook)
         ibCancel = findViewById(R.id.ibCancel)
@@ -95,6 +96,31 @@ class BookUpdateActivity : AppCompatActivity() {
                 updateBook()
             }
         }
+
+        // Defino las categorías y los idiomas
+        val categories = arrayListOf(
+            "Ficción", "No Ficción", "Misterio", "Biografía", "Ciencia",
+            "Fantasía", "Historia", "Romance", "Terror", "Aventura",
+            "Ciencia Ficción", "Autoayuda", "Poesía", "Infantil",
+            "Juvenil", "Ensayo", "Drama", "Viajes",
+            "Cómics y Novelas Gráficas", "Humor"
+        )
+
+        val languages = listOf(
+            "Español", "Inglés", "Francés", "Alemán",
+            "Italiano", "Portugués", "Ruso", "Chino",
+            "Japonés", "Árabe", "Coreano", "Holandés",
+            "Sueco", "Hindi", "Griego", "Danés",
+            "Finlandés", "Noruego", "Polaco", "Turco"
+        )
+
+        // Creo un ArrayAdapter usando las categorías y el layout de lista predeterminado
+        val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
+        val languageAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, languages)
+
+        // Asigno el ArrayAdapter al AutoCompleteTextView
+        actCategory.setAdapter(categoryAdapter)
+        actLanguage.setAdapter(languageAdapter)
         
     }
 
@@ -136,7 +162,7 @@ class BookUpdateActivity : AppCompatActivity() {
 
     fun updateBook() {
         val title = tieTitleUpdate.text.toString()
-        val category = actCategoryUpdate.text.toString()
+        val category = actCategory.text.toString()
         val price = tiePriceUpdate.text.toString().toDoubleOrNull() ?: 0.0
         val pages = tiePagesUpdate.text.toString().toIntOrNull() ?: 0
         val language = actLanguage.text.toString()
@@ -243,7 +269,7 @@ class BookUpdateActivity : AppCompatActivity() {
             tieIsbnUpdate.setText(book.isbn ?: "")
 
             // Categoría
-            actCategoryUpdate.setText(book.category)
+            actCategory.setText(book.category)
 
             // Sinopsis
             tieDescriptionUpdate.setText(book.description ?: "")
