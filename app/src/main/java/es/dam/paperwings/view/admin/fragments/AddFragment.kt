@@ -185,10 +185,12 @@ class AddFragment : Fragment() {
 
     private fun clearFields() {
         tieTitleAdd.text?.clear()
-        actCategoryAdd.setText("Categoría*")
+        actCategoryAdd.setHint("Categoría*")
+        actCategoryAdd.setText("")
         tiePriceAdd.text?.clear()
         tiePagesAdd.text?.clear()
-        actLanguage.setText("Idioma*")
+        actLanguage.setHint("Idioma*")
+        actLanguage.setText("")
         tieAuthorAdd.text?.clear()
         tieIsbnAdd.text?.clear()
         tiePublisherAdd.text?.clear()

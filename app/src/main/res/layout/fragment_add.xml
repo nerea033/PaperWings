@@ -10,8 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginBottom="110dp">
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -214,7 +213,7 @@
                         android:layout_height="52dp"
                         android:drawablePadding="10dp"
                         android:hint="Precio*"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -268,7 +267,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
-                        android:text="Categoría*"
+                        android:hint="Categoría*"
                         android:textSize="15sp"/>
 
 
@@ -288,7 +287,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
-                        android:text="Idioma*"
+                        android:hint="Idioma*"
                         android:textSize="15sp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -330,7 +329,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="40dp"
                 android:backgroundTint="@color/brown_background"
                 android:text="Agregar Libro"
                 android:textStyle="bold"

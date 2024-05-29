@@ -177,14 +177,14 @@ class UpdateFragment : Fragment(), BookClickListener {
                     _booksLiveData.postValue(emptyList())
                 }
             } else {
-                Log.d("DeleteBook", "Respuesta fallida")
+                Log.d("SearchBook", "Respuesta fallida")
                 val errorResponse = response.errorBody()?.string()
                 withContext(Dispatchers.Main) {
-                    showAlert("Error", "Error al eliminar el libro: $errorResponse")
+                    showAlert("Error", "Error al buscar el libro: $errorResponse")
                 }
             }
         } catch (e: Exception) {
-            Log.e("DeleteBook", "Excepción atrapada: ${e.message}")
+            Log.e("SearchBook", "Excepción atrapada: ${e.message}")
             withContext(Dispatchers.Main) {
                 showAlert("Error", "Error al conectar con la API: ${e.message}")
             }
@@ -237,7 +237,7 @@ class UpdateFragment : Fragment(), BookClickListener {
                     }
                     1 -> {
                         // Eliminar
-                        showDeleteConfirmationDialog(book)
+                        showConfirmationDialog(book)
                     }
                     // No se hace nada si elige Cancelar, simplemente se cierra el diálogo
                 }
@@ -253,7 +253,7 @@ class UpdateFragment : Fragment(), BookClickListener {
         }
     }
 
-    private fun showDeleteConfirmationDialog(book: Book) {
+    private fun showConfirmationDialog(book: Book) {
         AlertDialog.Builder(requireContext())
             .setTitle("¿Está seguro que desea eliminar este libro?")
             .setPositiveButton("Eliminar") { _, _ ->

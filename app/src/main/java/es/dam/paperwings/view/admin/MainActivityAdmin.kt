@@ -14,7 +14,6 @@ import es.dam.paperwings.R
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.view.Login
 import es.dam.paperwings.view.admin.fragments.AddFragment
-import es.dam.paperwings.view.admin.fragments.DeleteFragment
 import es.dam.paperwings.view.admin.fragments.UpdateFragment
 import es.dam.paperwings.view.user.MainActivity
 

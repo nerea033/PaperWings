@@ -235,7 +235,7 @@
                         android:layout_height="52dp"
                         android:drawablePadding="10dp"
                         android:hint="Precio*"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>

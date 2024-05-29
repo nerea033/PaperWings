@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -27,7 +30,9 @@ import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.model.entities.CartData
 import es.dam.paperwings.view.user.BookDetailActivity
 import es.dam.paperwings.view.user.recicledView.CardAdapterCart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class CartFragment : Fragment(), BookClickListener, CartClickListener {
@@ -53,6 +58,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
     var tvFinalPrice: TextView? = null
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +73,8 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
         // Inicializa tvFinalPrice usando binding
         tvFinalPrice = binding.tvFinalPrice
+        val ibDeleteAllCart: ImageButton =  binding.ibDeleteAllCart
+        val btnBuyAll: Button =  binding.btnBuyAll
 
 
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
@@ -92,7 +100,26 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
             getCartBooks()
         }
 
-        // Función para que solo salga si pulsa back dos veces seguidas
+        if (ibDeleteAllCart != null) {
+            ibDeleteAllCart.setOnClickListener{
+                lifecycleScope.launch {
+                    // Vaciar carrito del ususario
+                    uid?.let { it1 -> showConfirmationDialog(it1,"¿Está seguro que desea vaciar el carrito?","Vaciar") }
+                }
+
+            }
+        }
+
+        btnBuyAll.setOnClickListener {
+            lifecycleScope.launch {
+                uid?.let { it1 -> deleteAllCart(it1) }
+                Toast.makeText(context, "Compra ralizada con éxito", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+        // Función para que solo salga de la app si pulsa back dos veces seguidas
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (backPressedOnce) {
@@ -172,6 +199,33 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     }
 
+    suspend fun deleteAllCart(uid: String) {
+        val cartService = ApiServiceFactory.makeCartService()
+        getCartBooks()
+
+        try {
+            val response = cartService.deleteAllCart(uid)
+            if (response.isSuccessful) {
+                Log.d("DeleteAllCart", "Respuesta exitosa")
+                withContext(Dispatchers.Main) {// asegurarse de que el código que actualiza la interfaz de usuario se ejecute en el hilo principal
+                    Log.d("DeleteAllCart", "Actualizando la UI en el hilo principal")
+                    // Usuario agregado con éxito
+                    Log.i("Información", "Carrito vaciado con éxito.");
+                    // Actualizar la vista después de vaciar el carrito
+                    getCartBooks()
+                }
+
+            } else {
+                // Fallo al agregar el lirbo, manejar error
+                val errorResponse = response.errorBody()?.string()
+                showAlert("Error","Error al vaciar el carrito: $errorResponse")
+            }
+        }  catch (e: Exception) {
+            // Manejar excepciones, como problemas de red o configuración
+            showAlert("Error","Error al conectar con la API: ${e.message}")
+        }
+    }
+
 
     // Almaceno en el LiveData los libros y las cantidades de estos que tiene el usuario en la cesta
     suspend fun getCartBooks() {
@@ -202,6 +256,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
     }
 
 
+    // Aumentar la cantidad de un libro en el carrito del usuario
     suspend fun addCartQuantity(uid: String?, id_book: Int, quantity: Int) {
         if (uid != null && id_book != -1 && quantity >= 1) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -228,6 +283,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
+    // Disminuir la cantidad de un libro en el carrito del usuario
     suspend fun subtractCartQuantity(uid: String?, id_book: Int, quantity: Int) {
         if (uid != null && id_book != -1 && quantity >= 1) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -265,6 +321,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
+    // Eliminar un reguistro del carrito
     suspend fun deleteCartRegister(uid: String?, id_book: Int) {
         if (uid != null && id_book != -1) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -289,7 +346,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
-    // Función para calcular el precio final
+    // Función para calcular el precio final (todos los libros del carrito)
     private fun calculateFinalPrice(books: List<Book>, quantities: List<Int>) {
         var finalPrice: Double = 0.0
         for ((index, book) in books.withIndex()) {
@@ -298,10 +355,12 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         tvFinalPrice?.text = finalPrice.toString()
     }
 
+    // Mostrar un mensaje temporal
     private fun showToast(message: String) {
         Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
+    // Mostrar un mensaje para continuar o terminar con una operación
     fun showDeleteConfirmationDialog(onConfirm: () -> Unit) {
         val activity = activity
         if (activity != null && !activity.isFinishing) { // Verificar si la actividad no está en proceso de finalización
@@ -317,6 +376,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
+    // Cuando clico un libro cambio a una actividad
     override fun onBookClick(book: Book) {
         val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
         intent.putExtra("id_book", book.id)
@@ -324,6 +384,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         startActivity(intent)
     }
 
+    // Aumentar la cantidad a través del botón de la card
     override fun onAddClick(idBook: Int, quantity: Int) {
         lifecycleScope.launch {
             addCartQuantity(uid, idBook, quantity )
@@ -333,6 +394,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     }
 
+    // Disminuir la cantidad a través del botón de la card
     override fun onSubstractClick(idBook: Int, quantity: Int) {
         lifecycleScope.launch {
             subtractCartQuantity(uid, idBook, quantity )
@@ -340,6 +402,32 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
             getCartBooks()
         }
 
+    }
+
+    fun showAlert(title: String, message: String) {
+        if (activity != null && !requireActivity().isFinishing) { // Verificar si la actividad no está en proceso de finalización
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(title)
+            builder.setMessage(message)
+            builder.setPositiveButton("Aceptar", null)
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        } else {
+            Log.d("ShowAlert", "Actividad no disponible para mostrar la alerta")
+        }
+    }
+
+    private fun showConfirmationDialog(uid: String, title: String, positiveButton: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setPositiveButton(positiveButton) { _, _ ->
+                lifecycleScope.launch {
+                     deleteAllCart(uid)
+                }
+
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     override fun onDestroyView() {

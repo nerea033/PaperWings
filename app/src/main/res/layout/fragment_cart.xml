@@ -13,17 +13,29 @@
 
         <TextView
             android:id="@+id/tvCartTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:paddingStart="17dp"
             android:text="Carrito"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/black"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/black"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/ibDeleteAllCart"/>
+
+        <ImageButton
+            android:id="@+id/ibDeleteAllCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:backgroundTint="@color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tvCartTitle"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"/>
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -65,16 +77,15 @@
             android:id="@+id/cardviewDetailCart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:cardCornerRadius="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="10dp"
             android:clickable="true"
+            app:cardCornerRadius="15dp"
             app:cardElevation="7dp"
-            android:layout_marginBottom="110dp">
+            app:layout_constraintBottom_toTopOf="@+id/btnBuyAll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
 
             <LinearLayout
@@ -87,31 +98,49 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:padding="15dp"
+                    android:singleLine="true"
                     android:text="Total: "
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:singleLine="true"
-                    android:textStyle="bold"
-                    android:padding="15dp"
-                    android:gravity="start|center_vertical"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvFinalPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="end|center_vertical"
+                    android:padding="15dp"
+                    android:singleLine="true"
                     android:text="0.00 €"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:singleLine="true"
-                    android:textStyle="bold"
-                    android:padding="15dp"
-                    android:gravity="end|center_vertical"/>
+                    android:textStyle="bold" />
 
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/btnBuyAll"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="25dp"
+            android:backgroundTint="@color/brown_background"
+            android:text="Comprar"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            app:cornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

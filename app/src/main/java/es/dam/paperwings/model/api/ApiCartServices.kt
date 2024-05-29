@@ -32,6 +32,9 @@ interface ApiCartServices {
         @Path("id_book") idBook: Int
     ): Response<StructureUpdate>
 
+    @DELETE("cart/delete/{uid}")
+    suspend fun deleteAllCart(@Path("uid") uid: String): Response<StructureUpdate>
+
 }
 
 // Define a data class to represent the request body
