@@ -1,4 +1,4 @@
-package es.dam.paperwings.view
+package es.dam.paperwings.view.fragments
 
 import android.content.Context
 import android.content.Intent
@@ -14,13 +14,12 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.api.UpdateUserRequest
 import es.dam.paperwings.model.entities.User
-import kotlinx.coroutines.launch
+import es.dam.paperwings.view.activities.LoginActivity
 
 class ProfileFragment : Fragment() {
 
@@ -59,12 +58,6 @@ class ProfileFragment : Fragment() {
         mail = sharedPref?.getString("mail", "N/A")
         uid = sharedPref?.getString("uid", "N/A")
         rol = sharedPref?.getString("rol", "N/A")
-
-
-        ////!!!!!!!!!!!!!! Eto irá en el botón de editar
-        lifecycleScope.launch {
-            updateUserApi()
-        }
 
 
         showProfile(username, mail)
@@ -118,11 +111,12 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    // Editar el username del usuario registrado
     suspend fun updateUserApi(){
         val userService = ApiServiceFactory.makeUsersService()
         val id = uid
         val idField = "uid"
-        val nombre = "Nombre"
+        val nombre = "Usuario" // Cambiarlo por el que introduzca el user
         var user = uid?.let { rol?.let { it1 -> User(it, nombre, it1) } }
 
         // Create UpdateRequest instance
@@ -154,7 +148,7 @@ class ProfileFragment : Fragment() {
      * Método para cambiar la pestaña de Login
      */
     private fun switchToLogin() {
-        val loginIntent = Intent(requireActivity(), Login::class.java)
+        val loginIntent = Intent(requireActivity(), LoginActivity::class.java)
         // Comenzar la actividad.
         startActivity(loginIntent)
         // Finalizar la actividad actual.

@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.user
+package es.dam.paperwings.view.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,7 +15,7 @@ import es.dam.paperwings.databinding.ActivityCategoryBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.Book
-import es.dam.paperwings.view.user.recicledView.CardAdapter
+import es.dam.paperwings.view.adapters.CardAdapter
 import kotlinx.coroutines.launch
 
 /**

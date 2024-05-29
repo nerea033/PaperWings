@@ -1,11 +1,10 @@
-package es.dam.paperwings.view.user.recicledView
+package es.dam.paperwings.view.adapters
 
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import es.dam.paperwings.R
@@ -13,6 +12,7 @@ import es.dam.paperwings.databinding.CardCellCartBinding
 import es.dam.paperwings.model.BookClickListener
 import es.dam.paperwings.model.CartClickListener
 import es.dam.paperwings.model.entities.Book
+import es.dam.paperwings.view.holders.CardViewHolderCart
 
 class CardAdapterCart (
 

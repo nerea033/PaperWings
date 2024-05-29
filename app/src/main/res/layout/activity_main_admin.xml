@@ -5,7 +5,7 @@
     android:id="@+id/main_admin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.admin.MainActivityAdmin">
+    tools:context=".view.activities.MainActivityAdmin">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frame_container_admin"

@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.user.fragments
+package es.dam.paperwings.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -28,8 +28,9 @@ import es.dam.paperwings.model.api.UpdateCartRequest
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.model.entities.CartData
-import es.dam.paperwings.view.user.BookDetailActivity
-import es.dam.paperwings.view.user.recicledView.CardAdapterCart
+import es.dam.paperwings.model.repositories.RepositoryImpl
+import es.dam.paperwings.view.activities.BookDetailActivity
+import es.dam.paperwings.view.adapters.CardAdapterCart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,7 +58,8 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
     // Elementos de la interfaz
     var tvFinalPrice: TextView? = null
 
-
+    // Instancia del repositorio
+    private val repository = RepositoryImpl()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -218,11 +220,11 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
             } else {
                 // Fallo al agregar el lirbo, manejar error
                 val errorResponse = response.errorBody()?.string()
-                showAlert("Error","Error al vaciar el carrito: $errorResponse")
+                repository.showAlert(this,"Error","Error al vaciar el carrito: $errorResponse")
             }
         }  catch (e: Exception) {
             // Manejar excepciones, como problemas de red o configuración
-            showAlert("Error","Error al conectar con la API: ${e.message}")
+            repository.showAlert(this, "Error","Error al conectar con la API: ${e.message}")
         }
     }
 
@@ -404,18 +406,6 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     }
 
-    fun showAlert(title: String, message: String) {
-        if (activity != null && !requireActivity().isFinishing) { // Verificar si la actividad no está en proceso de finalización
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton("Aceptar", null)
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        } else {
-            Log.d("ShowAlert", "Actividad no disponible para mostrar la alerta")
-        }
-    }
 
     private fun showConfirmationDialog(uid: String, title: String, positiveButton: String) {
         AlertDialog.Builder(requireContext())

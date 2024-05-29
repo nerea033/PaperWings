@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.user
+package es.dam.paperwings.view.activities
 
 import android.os.Bundle
 import android.widget.Button
@@ -16,6 +16,7 @@ import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.api.UpdateCartRequest
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.model.entities.Cart
+import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 import java.time.format.TextStyle
 import java.util.Locale
@@ -39,6 +40,9 @@ class BookDetailActivity : AppCompatActivity() {
     private var bookPrice: Double = 0.0
 
     private var sourceFragment: String? = null
+
+    // Instancia del repositorio
+    private val repository = RepositoryImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -246,7 +250,7 @@ class BookDetailActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     // Registro agregado con éxito
                     println("Registro agregado con éxito al carrito")
-                    showToast("Libro agregado al carrito")
+                    repository.showToast(this,"Libro agregado al carrito")
                 } else {
                     // Fallo al agregar el usuario, manejar error
                     val errorResponse = response.errorBody()?.string()
@@ -273,7 +277,7 @@ class BookDetailActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     // Registro agregado con éxito
                     println("Registro actualizado con éxito en el carrito")
-                    showToast("Libro agregado al carrito")
+                    repository.showToast(this,"Libro agregado al carrito")
                 } else {
                     // Fallo al agregar el usuario, manejar error
                     val errorResponse = response.errorBody()?.string()
@@ -312,7 +316,4 @@ class BookDetailActivity : AppCompatActivity() {
         onBackPressedDispatcher.onBackPressed()
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 }

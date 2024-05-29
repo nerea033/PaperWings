@@ -1,7 +1,7 @@
-package es.dam.paperwings.view.admin
+package es.dam.paperwings.view.activities
 
 import android.content.Intent
-import es.dam.paperwings.view.ProfileFragment
+import es.dam.paperwings.view.fragments.ProfileFragment
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,10 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.constans.Constants
-import es.dam.paperwings.view.Login
-import es.dam.paperwings.view.admin.fragments.AddFragment
-import es.dam.paperwings.view.admin.fragments.UpdateFragment
-import es.dam.paperwings.view.user.MainActivity
+import es.dam.paperwings.view.fragments.AddFragment
+import es.dam.paperwings.view.fragments.UpdateFragment
 
 class MainActivityAdmin : AppCompatActivity() {
 
@@ -98,7 +96,7 @@ class MainActivityAdmin : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             // Usuario no autenticado, redirigir a la pantalla de login
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         } else {

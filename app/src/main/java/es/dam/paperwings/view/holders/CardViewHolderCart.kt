@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.user.recicledView
+package es.dam.paperwings.view.holders
 
 import android.graphics.BitmapFactory
 import androidx.recyclerview.widget.RecyclerView

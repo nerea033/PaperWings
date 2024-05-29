@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/img_loginbkg"
-    tools:context=".view.Register">
+    tools:context=".view.activities.RegisterActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -117,7 +117,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="@string/have_account"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

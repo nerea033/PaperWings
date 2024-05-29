@@ -5,5 +5,4 @@ object Categories {
     const val ROL_USER = "USER"
     const val ROL_ADMIN = "ADMIN"
 
-
 }

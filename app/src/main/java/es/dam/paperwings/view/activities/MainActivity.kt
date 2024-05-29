@@ -1,6 +1,6 @@
-package es.dam.paperwings.view.user
+package es.dam.paperwings.view.activities
 
-import es.dam.paperwings.view.ProfileFragment
+import es.dam.paperwings.view.fragments.ProfileFragment
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -12,11 +12,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.constans.Constants
-import es.dam.paperwings.view.Login
-import es.dam.paperwings.view.admin.MainActivityAdmin
-import es.dam.paperwings.view.user.fragments.HomeFragment
-import es.dam.paperwings.view.user.fragments.CartFragment
-import es.dam.paperwings.view.user.fragments.CategoryFragment
+import es.dam.paperwings.view.fragments.HomeFragment
+import es.dam.paperwings.view.fragments.CartFragment
+import es.dam.paperwings.view.fragments.CategoryFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -112,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             // Usuario no autenticado, redirigir a la pantalla de login
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         } else {

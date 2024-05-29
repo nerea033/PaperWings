@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.admin.fragments
+package es.dam.paperwings.view.fragments
 
 import android.app.DatePickerDialog
 import android.graphics.Bitmap
@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.entities.Book
+import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -38,6 +39,8 @@ class AddFragment : Fragment() {
     private lateinit var actLanguage: AutoCompleteTextView
     private lateinit var btnAddBook: Button
 
+    // Instancia del repositorio
+    private val repository = RepositoryImpl()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -133,9 +136,9 @@ class AddFragment : Fragment() {
             stream.toByteArray()
         }
         if (title.isEmpty() || category.isEmpty() || price == 0.0|| pages == 0|| language.isEmpty()) {
-            showAlert("Atención", "Debe rellenar todos los campos marcados con un asterisco*")
+            repository.showAlert(this,"Atención", "Debe rellenar todos los campos marcados con un asterisco*")
         } else if (author.isEmpty() || isbn.isEmpty() || publisher.isEmpty() || description.isEmpty() || date.isEmpty() || image == null ) {
-            showAlertOkCancel("Atención", "¿Seguro que quiere dejar campos vacíos?", true) { confirmed ->
+            repository.showAlertOkCancel(this, "Atención", "¿Seguro que quiere dejar campos vacíos?", true) { confirmed ->
                 if (confirmed) {
                     val book =
                         Book(author, category, description, discount,
@@ -170,16 +173,16 @@ class AddFragment : Fragment() {
             val response = bookService.addBook(book)
             if (response.isSuccessful) {
                 // Usuario agregado con éxito
-                showAlert("Información","Libro agregado con éxito.")
+                repository.showAlert(this,"Información","Libro agregado con éxito.")
 
             } else {
                 // Fallo al agregar el lirbo, manejar error
                 val errorResponse = response.errorBody()?.string()
-                showAlert("Error","Error al agregar el libro: $errorResponse")
+                repository.showAlert(this,"Error","Error al agregar el libro: $errorResponse")
             }
         }  catch (e: Exception) {
             // Manejar excepciones, como problemas de red o configuración
-            showAlert("Error","Error al conectar con la API: ${e.message}")
+            repository.showAlert(this,"Error","Error al conectar con la API: ${e.message}")
         }
     }
 
@@ -230,35 +233,6 @@ class AddFragment : Fragment() {
         return dateFormat.format(calendar.time)
     }
 
-    fun showAlertOkCancel(title: String, message: String, showCancel: Boolean = false, onResult: ((Boolean) -> Unit)? = null) {
-        // Verificar si la actividad no está en proceso de finalización
-        if (activity?.isFinishing == false) {
-            // Usar el contexto de la actividad para construir el AlertDialog
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton("Aceptar") { dialog, which ->
-                onResult?.invoke(true)
-            }
-            if (showCancel) {
-                builder.setNegativeButton("Cancelar") { dialog, which ->
-                    onResult?.invoke(false)
-                }
-            }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-    }
-    fun showAlert(title: String, message: String) {
-        if (activity?.isFinishing == false) { // Verificar si la actividad no está en proceso de finalización
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton("Aceptar", null)
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-    }
 }
 
 

@@ -14,5 +14,4 @@ object Constants {
     const val REGISTER_ACTIVITY = "Register"
 
 
-
 }

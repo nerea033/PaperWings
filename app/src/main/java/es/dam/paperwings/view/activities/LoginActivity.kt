@@ -1,10 +1,9 @@
-package es.dam.paperwings.view
+package es.dam.paperwings.view.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -16,17 +15,19 @@ import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
-import es.dam.paperwings.view.admin.MainActivityAdmin
-import es.dam.paperwings.view.user.MainActivity
+import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 
-class Login : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     // Declaro los elementos de mi vista
     private lateinit var tbMail: EditText
     private lateinit var tbPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var linkRegister: TextView
+
+    // Instancia del repositorio
+    private val repository = RepositoryImpl()
 
     // Inicializo la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,11 +82,11 @@ class Login : AppCompatActivity() {
 
                                 if (rolResult == "USER") {
                                     // Si el rol es "USER", cambiar a la actividad principal pasando el username
-                                    saveUserToSharedPreferences(usernameResult, userId, mail, rolResult)
+                                    repository.saveUserToSharedPreferences(this@LoginActivity, usernameResult, userId, mail, rolResult)
                                     switchToHome()
                                 } else if (rolResult == "ADMIN"){
                                     // Si el rol es "admin", cambiar a la actividad principal del administrador pasando el username
-                                    saveUserToSharedPreferences(usernameResult, userId, mail, rolResult)
+                                    repository.saveUserToSharedPreferences(this@LoginActivity, usernameResult, userId, mail, rolResult)
                                     switchToHomeAdmin()
                                 }
                             }
@@ -93,9 +94,11 @@ class Login : AppCompatActivity() {
 
                     } else {
                         // Mostrar mensaje de error
-                        showAlert("Error","Usuario o contraseña incorrectos")
+                        repository.showAlert(this@LoginActivity, "Error","Usuario o contraseña incorrectos")
                     }
                 }
+            } else{
+                repository.showAlert(this@LoginActivity, "Error","Por favor, completa todos los campos.")
             }
         }
 
@@ -145,13 +148,13 @@ class Login : AppCompatActivity() {
                     rol = user.rol
 
                 } else {
-                    println("No se encontró el usuario con uid: $uid")
+                    println("No se encontró el usuario en la bbdd con uid: $uid")
                 }
             } else {
                 println("Error al obtener los datos del usuario: ${response.errorBody()?.string()}")
             }
         } catch (e: Exception) {
-            println("Error en la red o al parsear los datos: ${e.message}")
+            repository.showAlert(this@LoginActivity,"Error","Error en la red o al parsear los datos: ${e.message}")
         }
         // Devuelvo una pareja (Pair) con el nombre de usuario y el rol
         return if (username.isNotEmpty() && rol.isNotEmpty()) {
@@ -161,34 +164,6 @@ class Login : AppCompatActivity() {
         }
     }
 
-    /**
-     * Persitir los datos localmente para poder acceder a ellos
-     */
-    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String, rol: String){
-        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("username", username)
-            putString("uid", uid)
-            putString("mail", mail)
-            putString("rol", rol)
-            apply()
-        }
-    }
-
-
-    /**
-     * Método para mostrar mensaje
-     */
-    fun showAlert(title: String, message: String) {
-        if (!isFinishing) { // Verificar si la actividad no está en proceso de finalización
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton("Aceptar", null)
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-    }
 
     /**
      * Método para cambiar la pestaña a la principal (Home)
@@ -221,7 +196,7 @@ class Login : AppCompatActivity() {
      * Método para cambiar la pestaña de Register
      */
     private fun switchToRegister() {
-        val registerIntent: Intent = Intent(this, Register::class.java).apply {}
+        val registerIntent: Intent = Intent(this, RegisterActivity::class.java).apply {}
         // Comenzar la actividad.
         startActivity(registerIntent)
         // Finalizar la actividad actual.

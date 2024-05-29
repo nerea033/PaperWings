@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.user.fragments
+package es.dam.paperwings.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,8 +19,8 @@ import es.dam.paperwings.model.CategoryClickListener
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.Book
-import es.dam.paperwings.view.user.CategoryActivity
-import es.dam.paperwings.view.user.recicledView.CardAdapterCategory
+import es.dam.paperwings.view.activities.CategoryActivity
+import es.dam.paperwings.view.adapters.CardAdapterCategory
 import kotlinx.coroutines.launch
 
 /**

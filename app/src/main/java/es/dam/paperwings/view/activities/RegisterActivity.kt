@@ -1,4 +1,4 @@
-package es.dam.paperwings.view
+package es.dam.paperwings.view.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,10 +17,10 @@ import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.entities.User
-import es.dam.paperwings.view.user.MainActivity
+import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 
-class Register : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     // Declaro los elementos de mi interfaz
     private lateinit var tbUsername: EditText
@@ -30,7 +30,8 @@ class Register : AppCompatActivity() {
     private lateinit var linkToLogin: TextView
     private lateinit var ivInformation: ImageView
 
-
+    // Instancia del repositorio
+    private val repository = RepositoryImpl()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -58,7 +59,7 @@ class Register : AppCompatActivity() {
         }
 
         ivInformation.setOnClickListener{
-            showAlert("Información", "Escribe tu nombre")
+            repository.showAlert(this@RegisterActivity, "Información", "Escribe tu nombre")
         }
 
     }
@@ -87,26 +88,27 @@ class Register : AppCompatActivity() {
                                 // Le paso el uid del Firebase Authentication junto al username a la API para que lo inserte en la DDBB
                                 lifecycleScope.launch {
                                     addUserToDatabase(userId, username)
-                                    saveUserToSharedPreferences(username, userId, mail, "USER")
+                                    repository.saveUserToSharedPreferences(this@RegisterActivity, username, userId, mail, "USER")
                                     switchToHome()// Llamada a switchToHome después de agregar al usuario a la base de datos
+                                    print("Registro del usuario exitoso.")
                                 }
 
                             } else {
                                 // Mostrar mensaje de error
-                                showAlert("Error","Error al registrar el usuario.")
+                                print("Error al registrar el usuario.")
                             }
                         }
                     } else {
                         // Mostrar mensaje de error
-                        showAlert("Error","El correo electrónico no es válido.")
+                        repository.showAlert(this@RegisterActivity, "Error","El correo electrónico no es válido.")
                     }
                 } else {
                     // Mostrar mensaje de error
-                    showAlert("Error","La contraseña debe tener entre 6 al menos 5 caracteres.")
+                    repository.showAlert(this@RegisterActivity, "Error","La contraseña debe tener al menos 6 caracteres.")
                 }
             } else {
                 // Mostrar mensaje de error
-                showAlert("Error","Por favor, completa todos los campos.")
+                repository.showAlert(this@RegisterActivity, "Error","Por favor, completa todos los campos.")
             }
         }
     }
@@ -126,7 +128,7 @@ class Register : AppCompatActivity() {
                     // Si hay un error, llamar al callback con null
                     onComplete(null)
                     // Mensaje de error
-                    showAlert("Error","Error al registrar el usuario")
+                    print("Error al registrar el usuario en Fireabase")
                 }
             }
     }
@@ -143,16 +145,16 @@ class Register : AppCompatActivity() {
             val response = userService.addUser(user)  // Hacer la llamada API
             if (response.isSuccessful) {
                 // Usuario agregado con éxito
-                    showAlert("Información","Usuario creado con éxito. Nombre del usuario: ${user.name}")
+                print("Usuario creado con éxito en ddbb. Nombre del usuario: ${user.name}")
 
             } else {
                 // Fallo al agregar el usuario, manejar error
                 val errorResponse = response.errorBody()?.string()
-                showAlert("Error","Error al crear el usuario: $errorResponse")
+                print("Error al crear el usuario: $errorResponse")
             }
         } catch (e: Exception) {
             // Manejar excepciones, como problemas de red o configuración
-            showAlert("Error","Error al conectar con la API: ${e.message}")
+            print("Error al conectar con la API: ${e.message}")
         }
     }
 
@@ -165,33 +167,6 @@ class Register : AppCompatActivity() {
         return email.matches(emailRegex.toRegex())
     }
 
-    /**
-     * Persitir los datos localmente para poder acceder a ellos
-     */
-    private fun saveUserToSharedPreferences(username: String, uid: String, mail: String, rol: String){
-        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("username", username)
-            putString("uid", uid)
-            putString("mail", mail)
-            putString("rol", rol)
-            apply()
-        }
-    }
-
-    /**
-     * Método para mostrar mensaje
-     */
-    fun showAlert(title: String, message: String) {
-        if (!isFinishing) { // Verificar si la actividad no está en proceso de finalización
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton("Aceptar", null)
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-    }
 
     /**
      * Método para cambiar la pestaña a la principal (Home)
@@ -211,7 +186,7 @@ class Register : AppCompatActivity() {
      * Método para cambiar la pestaña de Login
      */
     private fun switchToLogin() {
-        val loginIntent: Intent = Intent(this, Login::class.java).apply {}
+        val loginIntent: Intent = Intent(this, LoginActivity::class.java).apply {}
         // Comenzar la actividad.
         startActivity(loginIntent)
         // Finalizar la actividad actual.

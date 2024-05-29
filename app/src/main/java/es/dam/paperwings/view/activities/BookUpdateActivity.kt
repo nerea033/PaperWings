@@ -1,4 +1,4 @@
-package es.dam.paperwings.view.admin
+package es.dam.paperwings.view.activities
 
 
 import android.graphics.Bitmap
@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,6 +19,7 @@ import es.dam.paperwings.R
 import es.dam.paperwings.model.api.ApiServiceFactory
 import es.dam.paperwings.model.api.UpdateRequest
 import es.dam.paperwings.model.entities.Book
+import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.time.LocalDate
@@ -45,6 +45,9 @@ class BookUpdateActivity : AppCompatActivity() {
     private var uid: String? = null
 
     private var sourceFragment: String? = null
+
+    // Instancia del repositorio
+    private val repository = RepositoryImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -184,18 +187,16 @@ class BookUpdateActivity : AppCompatActivity() {
             stream.toByteArray()
         }
         if (title.isEmpty() || category.isEmpty() || price == 0.0|| pages == 0|| language.isEmpty()) {
-            showAlert("Atención", "Debe rellenar todos los campos marcados con un asterisco*")
+            repository.showAlert(this@BookUpdateActivity,"Atención", "Debe rellenar todos los campos marcados con un asterisco*")
         } else if (author.isEmpty() || isbn.isEmpty() || publisher.isEmpty() || description.isEmpty() || date.isEmpty() || image == null ) {
-            showAlertOkCancel("Atención", "¿Seguro que quiere dejar campos vacíos?", true) { confirmed ->
+            repository.showAlertOkCancel(this@BookUpdateActivity, "Atención", "¿Seguro que quiere dejar campos vacíos?", true) { confirmed ->
                 if (confirmed) {
                     val book =
                         Book(author, category, description, discount, bookId,
                             image, isbn, language, pages, price, publisher, stock, title, date)
 
-                    if (book != null) {
-                        lifecycleScope.launch {
-                            updateBookApi(book)
-                        }
+                    lifecycleScope.launch {
+                        updateBookApi(book)
                     }
                 }
             }
@@ -223,16 +224,16 @@ class BookUpdateActivity : AppCompatActivity() {
             val response = bookService.updateBook(updateRequest)
             if (response.isSuccessful) {
                 // Usuario agregado con éxito
-                showAlert("Información","Libro modificado con éxito.")
+                repository.showAlert(this@BookUpdateActivity,"Información","Libro modificado con éxito.")
 
             } else {
                 // Fallo al agregar el lirbo, manejar error
                 val errorResponse = response.errorBody()?.string()
-                showAlert("Error","Error al modificar el libro: $errorResponse")
+                repository.showAlert(this@BookUpdateActivity,"Error","Error al modificar el libro: $errorResponse")
             }
         }  catch (e: Exception) {
             // Manejar excepciones, como problemas de red o configuración
-            showAlert("Error","Error al conectar con la API: ${e.message}")
+            repository.showAlert(this@BookUpdateActivity,"Error","Error al conectar con la API: ${e.message}")
         }
     }
 
@@ -256,7 +257,6 @@ class BookUpdateActivity : AppCompatActivity() {
             // Editorial
             tiePublisherUpdate.setText(book.publisher ?: "")
 
-            // Fecha de publicación es de tipo LocalDate
             // Fecha de publicación es de tipo LocalDate
             book.date?.let { dateString ->
                 val localDate = LocalDate.parse(dateString)
@@ -288,33 +288,4 @@ class BookUpdateActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun showAlertOkCancel(title: String, message: String, showCancel: Boolean = false, onResult: ((Boolean) -> Unit)? = null) {
-        // Verificar si la actividad no está en proceso de finalización
-        if (!isFinishing) {
-            // Usar el contexto de la actividad para construir el AlertDialog
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton("Aceptar") { dialog, which ->
-                onResult?.invoke(true)
-            }
-            if (showCancel) {
-                builder.setNegativeButton("Cancelar") { dialog, which ->
-                    onResult?.invoke(false)
-                }
-            }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-    }
-    fun showAlert(title: String, message: String) {
-        if (!isFinishing) { // Verificar si la actividad no está en proceso de finalización
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton("Aceptar", null)
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-    }
 }

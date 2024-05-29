@@ -17,16 +17,16 @@
         android:theme="@style/Theme.PaperWings"
         tools:targetApi="31">
         <activity
-            android:name=".view.admin.BookUpdateActivity"
+            android:name=".view.activities.BookUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".view.user.CategoryActivity"
+            android:name=".view.activities.CategoryActivity"
             android:exported="false" />
         <activity
-            android:name=".view.user.BookDetailActivity"
+            android:name=".view.activities.BookDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".view.admin.MainActivityAdmin"
+            android:name=".view.activities.MainActivityAdmin"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -36,13 +36,13 @@
             </intent-filter>
         </activity> <!-- El layout se desplaza hacia arriba para que el campo de texto visible no sea ocultado por el teclado. El contenido del layout no se redimensiona, solo se desplaza. -->
         <activity
-            android:name=".view.Register"
+            android:name=".view.activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".view.Login"
+            android:name=".view.activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".view.user.MainActivity"
+            android:name=".view.activities.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"></activity>
     </application>
