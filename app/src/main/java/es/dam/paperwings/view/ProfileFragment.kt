@@ -14,8 +14,13 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
+import es.dam.paperwings.model.api.ApiServiceFactory
+import es.dam.paperwings.model.api.UpdateUserRequest
+import es.dam.paperwings.model.entities.User
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
@@ -27,6 +32,8 @@ class ProfileFragment : Fragment() {
 
     private var username: String? = null
     private var mail: String? = null
+    private var uid: String? = null
+    private var rol: String? = null
 
     private var backPressedOnce = false
     private val backPressHandler = Handler(Looper.getMainLooper())
@@ -48,8 +55,17 @@ class ProfileFragment : Fragment() {
 
         // Recuperar datos de SharedPreferences
         val sharedPref = activity?.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        username = sharedPref?.getString("username", "N/A")
+        username = sharedPref?.getString("username", "N/A") // volver a obtenerlo después de actualizarlo
         mail = sharedPref?.getString("mail", "N/A")
+        uid = sharedPref?.getString("uid", "N/A")
+        rol = sharedPref?.getString("rol", "N/A")
+
+
+        ////!!!!!!!!!!!!!! Eto irá en el botón de editar
+        lifecycleScope.launch {
+            updateUserApi()
+        }
+
 
         showProfile(username, mail)
 
@@ -99,6 +115,37 @@ class ProfileFragment : Fragment() {
             switchToLogin()
         } else {
             // El usuario todavía está autenticado en Firebase, el cierre de sesión no fue efectivo
+        }
+    }
+
+    suspend fun updateUserApi(){
+        val userService = ApiServiceFactory.makeUsersService()
+        val id = uid
+        val idField = "uid"
+        val nombre = "Nombre"
+        var user = uid?.let { rol?.let { it1 -> User(it, nombre, it1) } }
+
+        // Create UpdateRequest instance
+        val updateRequest =
+                UpdateUserRequest(idField, id, user)
+
+        try {
+            val response = userService.updateUser(updateRequest)
+            if (response != null) {
+                if (response.isSuccessful) {
+                    // Usuario editado con éxito
+                    //Cambiarlo en el sharedPreferences
+
+
+                } else {
+                    // Fallo al agregar el lirbo, manejar error
+                    val errorResponse = response.errorBody()?.string()
+                    //mostrar error
+                }
+            }
+        }  catch (e: Exception) {
+            // Manejar excepciones, como problemas de red o configuración
+            //mostrar error
         }
     }
 

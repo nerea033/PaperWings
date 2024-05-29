@@ -27,9 +27,6 @@ class Login : AppCompatActivity() {
     private lateinit var tbPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var linkRegister: TextView
-    private var btnGoogle: ImageButton? = null
-    private var btnFacebook: ImageButton? = null
-    private var btnTwitter: ImageButton? = null
 
     // Inicializo la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +44,6 @@ class Login : AppCompatActivity() {
         tbPassword = findViewById(R.id.tbPswLogin)
         btnLogin = findViewById(R.id.btnLogin)
         linkRegister = findViewById(R.id.linkToRegister)
-        /**btnGoogle = findViewById(R.id.btnGoogle)
-        btnFacebook = findViewById(R.id.btnFacebook)
-        btnTwitter = findViewById(R.id.btnTwitter)*/
 
         loginUser()
 
