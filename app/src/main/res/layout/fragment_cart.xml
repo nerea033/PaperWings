@@ -38,19 +38,6 @@
             android:layout_marginTop="10dp"/>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCart"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/tvDetailsCart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCartTitle"
-            app:layout_constraintVertical_bias="0.0"
-            android:layout_marginTop="17dp"
-            android:visibility="visible" />
-
         <include
             android:id="@+id/empty_view"
             layout="@layout/empty_view"
@@ -58,88 +45,104 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvDetailsCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/cardviewDetailCart"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="Detalles del pedido"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            android:singleLine="true"
-            android:textStyle="bold"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingStart="15dp"/>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardviewDetailCart"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="10dp"
-            android:clickable="true"
-            app:cardCornerRadius="15dp"
-            app:cardElevation="7dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnBuyAll"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCartTitle">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
+                    android:visibility="visible" >
+
+                </androidx.recyclerview.widget.RecyclerView>
 
                 <TextView
-                    android:id="@+id/tvCartDetails"
-                    android:layout_width="0dp"
+                    android:id="@+id/tvDetailsCart"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:padding="15dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingStart="15dp"
                     android:singleLine="true"
-                    android:text="Total: "
+                    android:text="Detalles del pedido"
                     android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"/>
 
-                <TextView
-                    android:id="@+id/tvFinalPrice"
-                    android:layout_width="0dp"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardviewDetailCart"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end|center_vertical"
-                    android:padding="15dp"
-                    android:singleLine="true"
-                    android:text="0.00 €"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:clickable="true"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="7dp">
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvCartDetails"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:padding="15dp"
+                            android:singleLine="true"
+                            android:text="Total: "
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvFinalPrice"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end|center_vertical"
+                            android:padding="15dp"
+                            android:singleLine="true"
+                            android:text="0.00 €"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <Button
+                    android:id="@+id/btnBuyAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="25dp"
+                    android:backgroundTint="@color/brown_background"
+                    android:text="Comprar"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="20dp" />
             </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <Button
-            android:id="@+id/btnBuyAll"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="25dp"
-            android:backgroundTint="@color/brown_background"
-            android:text="Comprar"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            app:cornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

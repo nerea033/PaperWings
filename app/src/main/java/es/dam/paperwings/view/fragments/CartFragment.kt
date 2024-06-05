@@ -334,6 +334,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
                     // Successfully deleted the record
                     println("Registro del Carrito eliminado con éxito")
                     showToast("Libro eliminado del carrito")
+                    getCartBooks()
                 } else {
                     // Failed to delete the record, handle error
                     val errorResponse = response.errorBody()?.string()

@@ -5,6 +5,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import es.dam.paperwings.R
@@ -27,6 +28,7 @@ class CardAdapterCart (
     private lateinit var emptyView: View  // Para referencia al empty_view
     private lateinit var tvDetailsCart: View
     private lateinit var cardDetails: CardView
+    private lateinit var btnBuyAll: Button
     private val handler = Handler(Looper.getMainLooper())  // Handler para manejar el retraso
     private val emptyCheckRunnable = Runnable { checkEmptyImmediate() }  // Runnable para la comprobación inmediata
 
@@ -53,6 +55,7 @@ class CardAdapterCart (
         emptyView = recyclerView.rootView.findViewById(R.id.empty_view)
         tvDetailsCart = recyclerView.rootView.findViewById(R.id.tvDetailsCart)
         cardDetails = recyclerView.rootView.findViewById(R.id.cardviewDetailCart)
+        btnBuyAll = recyclerView.rootView.findViewById(R.id.btnBuyAll)
         checkEmptyWithDelay()
     }
 
@@ -67,10 +70,12 @@ class CardAdapterCart (
             recyclerView.visibility = View.GONE
             tvDetailsCart.visibility = View.GONE
             cardDetails.visibility = View.GONE
+            btnBuyAll.visibility = View.GONE
         } else {
             emptyView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
             tvDetailsCart.visibility = View.VISIBLE
+            btnBuyAll.visibility = View.VISIBLE
             cardDetails.visibility = View.VISIBLE
         }
     }
