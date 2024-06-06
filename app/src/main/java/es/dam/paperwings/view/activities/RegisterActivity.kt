@@ -2,8 +2,10 @@ package es.dam.paperwings.view.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +27,7 @@ import kotlinx.coroutines.launch
  * via an API call. The activity includes validation checks for input fields and manages UI interactions
  * such as navigation to login or home screens.
  */
+@Suppress("DEPRECATION")
 class RegisterActivity : AppCompatActivity() {
 
     // Declare UI elements
@@ -34,9 +37,12 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var btnRegister: Button
     private lateinit var linkToLogin: TextView
     private lateinit var ivInformation: ImageView
+    private lateinit var tvInformation: TextView
 
     // Instance of the repository for data operations
     private val repository = RepositoryImpl()
+
+
 
     /**
      * Initializes the activity, sets up UI elements, enables edge-to-edge display,
@@ -62,6 +68,7 @@ class RegisterActivity : AppCompatActivity() {
         btnRegister = findViewById(R.id.btnRegister)
         linkToLogin = findViewById(R.id.linkToLogin)
         ivInformation = findViewById(R.id.ivInformation)
+        tvInformation = findViewById(R.id.tvInformation)
 
         // Set up user registration functionality
         registerUser()
@@ -72,7 +79,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         // Set up click listener for information icon
         ivInformation.setOnClickListener{
-            repository.showAlert(this@RegisterActivity, "Información", "Escribe tu nombre")
+            showMessage("Puede ser ficticio", 2000)
         }
 
     }
@@ -190,6 +197,16 @@ class RegisterActivity : AppCompatActivity() {
         return email.matches(emailRegex.toRegex())
     }
 
+    private fun showMessage(message: String, durationMillis: Long) {
+        // Mostrar el mensaje
+        tvInformation.text = message
+        tvInformation.visibility = TextView.VISIBLE
+
+        // Ocultar el mensaje después de 'durationMillis' milisegundos
+        Handler().postDelayed({
+            tvInformation.visibility = TextView.INVISIBLE
+        }, durationMillis)
+    }
 
     /**
      * Switches the activity to the home screen.

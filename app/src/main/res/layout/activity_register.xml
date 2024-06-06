@@ -42,18 +42,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
-                <ImageView
-                    android:id="@+id/ivInformation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_information"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:padding="8dp"
-                    android:paddingEnd="14dp"
-                    android:clickable="true"
-                    android:focusable="true"/>
-
                 <EditText
                     android:id="@+id/tbUsernameRegister"
                     android:layout_width="match_parent"
@@ -66,6 +54,31 @@
                     android:padding="8dp"
                     android:textColor="@color/black"
                     android:focusableInTouchMode="true"/>
+
+                <ImageView
+                    android:id="@+id/ivInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_information"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:paddingEnd="14dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <TextView
+                    android:id="@+id/tvInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/ivInformation"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="42dp"
+                    android:layout_marginBottom="25dp"
+                    android:background="@color/grey"
+                    android:textSize="12sp"
+                    android:visibility="invisible" />
+
             </RelativeLayout>
 
 
