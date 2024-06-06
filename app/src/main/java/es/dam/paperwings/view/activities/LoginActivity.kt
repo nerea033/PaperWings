@@ -17,18 +17,23 @@ import es.dam.paperwings.model.constans.Constants
 import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 
+/**
+ * Activity class for user login functionality.
+ * Implements user authentication via Firebase and validates user credentials
+ * against a database API. Handles navigation based on user roles.
+ */
 class LoginActivity : AppCompatActivity() {
 
-    // Declaro los elementos de mi vista
+    // View elements
     private lateinit var tbMail: EditText
     private lateinit var tbPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var linkRegister: TextView
 
-    // Instancia del repositorio
+    // Repository instance
     private val repository = RepositoryImpl()
 
-    // Inicializo la actividad
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,23 +44,27 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        // Inicializo los elementos de la vista
+        // Initialize view elements
         tbMail = findViewById(R.id.tbMailLogin)
         tbPassword = findViewById(R.id.tbPswLogin)
         btnLogin = findViewById(R.id.btnLogin)
         linkRegister = findViewById(R.id.linkToRegister)
 
+        // Call login function when Login button is clicked
         loginUser()
 
+        // Navigate to RegisterActivity when Register link is clicked
         linkRegister.setOnClickListener {
             switchToRegister()
         }
     }
 
     /**
-     * Permitir al usuario iniciar sesión si ya está registrado.
+     * Allows the user to log in if already registered.
+     * Authenticates user credentials via Firebase authentication
+     * and verifies user details against a database.
      */
-    fun loginUser(){
+    private fun loginUser(){
         var userId: String = ""
         var usernameResult : String = ""
         var rolResult : String= ""
@@ -66,24 +75,24 @@ class LoginActivity : AppCompatActivity() {
             if (mail.isNotEmpty() && password.isNotEmpty()){
                 loginFirebase(mail, password) { uid ->
                     if (uid != null) {
-                        // Registro exitoso
+                        // Successful login
                         userId = uid.toString()
                         println("Éxito, usuario encontrado en firebase")
-                        // Le paso el uid del Firebase Authentication a la API para que lo compruebe en la DDBB
+                        // Pass Firebase Authentication UID to API for database verification
                         lifecycleScope.launch {// Lanzar una corrutina
                             val result = loginDataBase(userId)
-                            // Verifico si el resultado no es nulo
+                            // Check if result is not null
                             result?.let { (username, rol) ->
-                                // Asignar los valores a las variables locales cambiadas
+                                // Assign values to local variables
                                 usernameResult = username
                                 rolResult = rol
 
                                 if (rolResult == "USER") {
-                                    // Si el rol es "USER", cambiar a la actividad principal pasando el username
+                                    // If role is USER, navigate to main activity passing username
                                     repository.saveUserToSharedPreferences(this@LoginActivity, usernameResult, userId, mail, rolResult)
                                     switchToHome()
                                 } else if (rolResult == "ADMIN"){
-                                    // Si el rol es "admin", cambiar a la actividad principal del administrador pasando el username
+                                    // If role is ADMIN, navigate to admin main activity passing username
                                     repository.saveUserToSharedPreferences(this@LoginActivity, usernameResult, userId, mail, rolResult)
                                     switchToHomeAdmin()
                                 }
@@ -91,7 +100,7 @@ class LoginActivity : AppCompatActivity() {
                         }
 
                     } else {
-                        // Mostrar mensaje de error
+                        // Show error message
                         repository.showAlert(this@LoginActivity, "Error","Usuario o contraseña incorrectos")
                     }
                 }
@@ -103,18 +112,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Comprobar el usuario en Firebase Authentication
+     * Performs user authentication using Firebase.
+     *
+     * @param email User's email address for authentication.
+     * @param password User's password for authentication.
+     * @param onResult Callback function to return UID on successful authentication.
      */
-    fun loginFirebase(email: String, password: String, onResult: (String?) -> Unit) {
+    private fun loginFirebase(email: String, password: String, onResult: (String?) -> Unit) {
         val firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Si la autenticación es exitosa, obtener el UID del usuario
+                    // If authentication is successful, get user's UID
                     val uid = firebaseAuth.currentUser?.uid
-                    onResult(uid)  // Devolver el UID al llamador
+                    onResult(uid)  // Return UID to caller
                 } else {
-                    // Si la autenticación falla, manejar el error
+                    // If authentication fails, handle error
                     onResult(null)
                     println("Authentication failed: ${task.exception?.message}")
                 }
@@ -122,7 +135,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Comprobar el usuario en la base de datos.
+     * Verifies user details against the database using API call.
+     *
+     * @param uid User's Firebase Authentication UID for database lookup.
+     * @return Pair containing username and role if found, null otherwise.
      */
     suspend fun loginDataBase(uid: String): Pair<String, String>?  {
         val userService = ApiServiceFactory.makeUsersService()
@@ -130,18 +146,18 @@ class LoginActivity : AppCompatActivity() {
         var rol: String= ""
         try {
 
-            // Busco el usuario mediante su uid a través de la API
+            // Fetch user by UID via API
             val response = userService.fetchUserByUid(uid)
-            if (response.isSuccessful && response.body() != null) { // Si no hay error y no es null
+            if (response.isSuccessful && response.body() != null) {
 
-                // Almaceno el usuario en forma de lista (por la Structure)
+                // Store user details in list (due to structure)
                 val usersList = response.body()!!.data
                 if (usersList != null && usersList.isNotEmpty()) {
 
-                    // Cojo el primer y único usuario de la lista
+                    // Get the first and only user from the list
                     val user = usersList.first()
 
-                    // Guardo el nombre y rol de usuario que quiere iniciar sesión
+                    // Store username and role of user attempting to log in
                     username = user.name
                     rol = user.rol
 
@@ -154,7 +170,7 @@ class LoginActivity : AppCompatActivity() {
         } catch (e: Exception) {
             repository.showAlert(this@LoginActivity,"Error","Error en la red o al parsear los datos: ${e.message}")
         }
-        // Devuelvo una pareja (Pair) con el nombre de usuario y el rol
+        // Return a Pair with username and role
         return if (username.isNotEmpty() && rol.isNotEmpty()) {
             Pair(username, rol)
         } else {
@@ -164,41 +180,44 @@ class LoginActivity : AppCompatActivity() {
 
 
     /**
-     * Método para cambiar la pestaña a la principal (Home)
+     * Switches to the main tab (Home).
      */
     private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
             putExtra("FRAGMENT_TO_LOAD", "home")
         }
-        // Comenzar la actividad.
+        // Start the activity.
         startActivity(homeIntent)
-        // Finalizar la actividad actual.
-        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+        // Finish the current activity.
+        finish() // To prevent the user from going back to the previous activity after pressing the back button.
     }
 
 
     /**
-     * Método para cambiar la pestaña a la principal (HomeAdmin) del administrador
+     * Switches to the Register tab.
      */
     private fun switchToHomeAdmin() {
         val homeIntent: Intent = Intent(this, MainActivityAdmin::class.java).apply {
             putExtra("FRAGMENT_TO_LOAD", Constants.ADD_FRAGMENT)
         }
-        // Comenzar la actividad.
+        // Start the activity.
         startActivity(homeIntent)
-        // Finalizar la actividad actual.
-        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+        // Finish the current activity.
+        finish() // To prevent the user from going back to the previous activity after pressing the back button.
     }
 
     /**
-     * Método para cambiar la pestaña de Register
+     * Method to switch to the Register tab.
+     * Starts the RegisterActivity and finishes the current activity to prevent
+     * the user from returning to it after pressing the back button.
      */
     private fun switchToRegister() {
         val registerIntent: Intent = Intent(this, RegisterActivity::class.java).apply {}
-        // Comenzar la actividad.
+        // Start the activity.
         startActivity(registerIntent)
-        // Finalizar la actividad actual.
-        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+        // Finish the current activity.
+        finish()
     }
+
 
 }

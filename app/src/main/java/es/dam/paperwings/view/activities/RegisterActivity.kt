@@ -19,18 +19,31 @@ import es.dam.paperwings.model.entities.User
 import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 
+/**
+ * The `RegisterActivity` class allows users to register by providing username, email, and password.
+ * It handles registration using Firebase Authentication and saves user data to the backend server
+ * via an API call. The activity includes validation checks for input fields and manages UI interactions
+ * such as navigation to login or home screens.
+ */
 class RegisterActivity : AppCompatActivity() {
 
-    // Declaro los elementos de mi interfaz
-    private lateinit var tbUsername: EditText
+    // Declare UI elements
+    private lateinit  var tbUsername: EditText
     private lateinit var tbMail: EditText
     private lateinit var tbPassword: EditText
     private lateinit var btnRegister: Button
     private lateinit var linkToLogin: TextView
     private lateinit var ivInformation: ImageView
 
-    // Instancia del repositorio
+    // Instance of the repository for data operations
     private val repository = RepositoryImpl()
+
+    /**
+     * Initializes the activity, sets up UI elements, enables edge-to-edge display,
+     * and sets listeners for UI interactions such as registration button click and link to login.
+     *
+     * @param savedInstanceState Previously saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,7 +54,7 @@ class RegisterActivity : AppCompatActivity() {
             insets
         }
 
-        // Inicializo los elementos que he declarado al inicio de la clase
+        // Initialize UI elements
         tbUsername = findViewById(R.id.tbUsernameRegister)
         tbMail = findViewById(R.id.tbMailRegister)
         tbUsername = findViewById(R.id.tbUsernameRegister)
@@ -50,13 +63,14 @@ class RegisterActivity : AppCompatActivity() {
         linkToLogin = findViewById(R.id.linkToLogin)
         ivInformation = findViewById(R.id.ivInformation)
 
-
+        // Set up user registration functionality
         registerUser()
 
+        // Set up click listener for "already have an account?" link
         linkToLogin.setOnClickListener {
             switchToLogin()
         }
-
+        // Set up click listener for information icon
         ivInformation.setOnClickListener{
             repository.showAlert(this@RegisterActivity, "Información", "Escribe tu nombre")
         }
@@ -64,45 +78,46 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     /**
-     * Método para registrar un usuario en Base de datos y Firebase
+     * Registers a user by validating input fields, registering in Firebase Authentication,
+     * and adding user data to the database via API call.
      */
-    fun registerUser() {
+    private fun registerUser() {
 
-        var userId: String = ""
+        var userId: String
 
         btnRegister.setOnClickListener {
             val username: String = tbUsername.text.toString()
             val mail: String = tbMail.text.toString()
             val password: String = tbPassword.text.toString()
 
-            if (mail.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty()) { // Si están todos los campos rellenos
-                if (password.length >= 6 && username.length <= 50) { // Comprobar los caracteres de los String
-                    if (isValidEmail(mail)) { // Comprobar si el mail es válido
+            if (mail.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty()) {
+                if (password.length >= 6 && username.length <= 50) { // Check string length constraints
+                    if (isValidEmail(mail)) { // Validate email format
 
                         registerFirebase(mail, password) { uid ->
                             if (uid != null) {
-                                // Registro exitoso
+                                // Successful registration
                                 userId = uid.toString()
 
-                                // Le paso el uid del Firebase Authentication junto al username a la API para que lo inserte en la DDBB
+                                // Pass Firebase Auth UID and username to API for database insertion
                                 lifecycleScope.launch {
                                     addUserToDatabase(userId, username)
                                     repository.saveUserToSharedPreferences(this@RegisterActivity, username, userId, mail, "USER")
-                                    switchToHome()// Llamada a switchToHome después de agregar al usuario a la base de datos
+                                    switchToHome() // Navigate to home screen after user is added to database
                                     print("Registro del usuario exitoso.")
                                 }
 
                             } else {
-                                // Mostrar mensaje de error
+                                // Show error message
                                 print("Error al registrar el usuario.")
                             }
                         }
                     } else {
-                        // Mostrar mensaje de error
+                        // Show error message
                         repository.showAlert(this@RegisterActivity, "Error","El correo electrónico no es válido.")
                     }
                 } else {
-                    // Mostrar mensaje de error
+                    // Show error message
                     repository.showAlert(this@RegisterActivity, "Error","La contraseña debe tener al menos 6 caracteres.")
                 }
             } else {
@@ -113,84 +128,91 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     /**
-     * Método para registrar al usuario en Firebase Authentication
+     * Registers the user in Firebase Authentication.
+     *
+     * @param mail User's email address.
+     * @param password User's chosen password.
+     * @param onComplete Callback function with UID as parameter upon completion.
      */
-    fun registerFirebase(mail: String, password: String, onComplete: (String?) -> Unit) {
+    private fun registerFirebase(mail: String, password: String, onComplete: (String?) -> Unit) {
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(mail, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val firebaseUser = task.result?.user
                     val uid = firebaseUser?.uid
-                    onComplete(uid) // Llamar al callback con el UID
+                    onComplete(uid) // Callback with UID
                 } else {
-                    // Si hay un error, llamar al callback con null
+                    // If there is an error, callback with null
                     onComplete(null)
-                    // Mensaje de error
+                    // Error message
                     print("Error al registrar el usuario en Fireabase")
                 }
             }
     }
 
-
     /**
-     * Método para pasar el usuario a la API y de esta a la DDBB
+     * Adds the user to the backend database via API call.
+     *
+     * @param uid User's Firebase Auth UID.
+     * @param username User's chosen username.
      */
     suspend fun addUserToDatabase(uid: String, username: String) {
-        val user = User(uid, username, "USER")  // Crear el objeto usuario
-        val userService = ApiServiceFactory.makeUsersService()  // Obtener la instancia del servicio API
+        val user = User(uid, username, "USER")  // Create user object
+        val userService = ApiServiceFactory.makeUsersService()  // Get API service instance
 
         try {
-            val response = userService.addUser(user)  // Hacer la llamada API
+            val response = userService.addUser(user)  // Make API call
             if (response.isSuccessful) {
-                // Usuario agregado con éxito
+                // User added successfully
                 print("Usuario creado con éxito en ddbb. Nombre del usuario: ${user.name}")
 
             } else {
-                // Fallo al agregar el usuario, manejar error
+                // Failed to add user, handle error
                 val errorResponse = response.errorBody()?.string()
                 print("Error al crear el usuario: $errorResponse")
             }
         } catch (e: Exception) {
-            // Manejar excepciones, como problemas de red o configuración
+            // Handle exceptions, such as network issues or configuration problems
             print("Error al conectar con la API: ${e.message}")
         }
     }
 
 
     /**
-     * Función 'regex' para validar un correo electrónico.
+     * Validates an email address using regex.
+     *
+     * @param email Email address to validate.
+     * @return `true` if the email is valid, `false` otherwise.
      */
-    fun isValidEmail(email: String): Boolean {
+    private fun isValidEmail(email: String): Boolean {
         val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
         return email.matches(emailRegex.toRegex())
     }
 
 
     /**
-     * Método para cambiar la pestaña a la principal (Home)
+     * Switches the activity to the home screen.
      */
     private fun switchToHome() {
         val homeIntent = Intent(this, MainActivity::class.java).apply {
-            // Pasar el fragmento que quiero mostrar a la actividad
+            // Pass the fragment to be displayed to the activity
             putExtra("FRAGMENT_TO_LOAD", Constants.HOME_FRAGMENT)
         }
-        // Comenzar la actividad.
+        // Start the activity
         startActivity(homeIntent)
-        // Finalizar la actividad actual.
-        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+        // Finish the current activity
+        finish() // To prevent the user from returning to the previous activity after pressing the back button
     }
 
     /**
-     * Método para cambiar la pestaña de Login
+     * Switches the activity to the login screen.
      */
     private fun switchToLogin() {
         val loginIntent: Intent = Intent(this, LoginActivity::class.java).apply {}
-        // Comenzar la actividad.
+        // Start the activity
         startActivity(loginIntent)
-        // Finalizar la actividad actual.
-        finish() // Para evitar que el usuario regrese a la actividad anterior después de pulsar el botón de retroceso.
+        // Finish the current activity
+        finish() // To prevent the user from returning to the previous activity after pressing the back button
     }
-
-
 }

@@ -17,17 +17,33 @@ import es.dam.paperwings.view.fragments.HomeFragment
 import es.dam.paperwings.view.fragments.CartFragment
 import es.dam.paperwings.view.fragments.CategoryFragment
 
+/**
+ * MainActivity class represents the main activity of the application,
+ * managing navigation between different fragments: Home, Category, Cart, and Profile.
+ * It handles user authentication and role verification using Firebase Auth,
+ * and allows navigation via BottomNavigationView.
+ */
 class MainActivity : AppCompatActivity() {
 
-    //Inicializar el bottom navigation view
+    // Initialize the BottomNavigationView
     private lateinit var bottomNavigationView: BottomNavigationView
 
+    // Firebase Authentication instance
     private lateinit var auth: FirebaseAuth
 
     private var rol: String? = null
 
+    // Repository instance for handling data operations
     private val repository = RepositoryImpl()
 
+    /**
+     * Method called when creating the activity. Initializes the user interface,
+     * sets up Firebase authentication, retrieves user data from SharedPreferences,
+     * checks user authentication status, initializes BottomNavigationView,
+     * and handles initial fragment loading based on intent extras.
+     *
+     * @param savedInstanceState Previously saved instance state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,26 +53,25 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // Llamar al método para manejar el doble clic en el botón de retroceso
+
+        // Handle double back press
         repository.handleDoubleBackPress(this, this)
 
-        // Inicializar Firebase Auth
+        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
 
-        // Recuperar datos de SharedPreferences
+        // Retrieve data from SharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val uid = sharedPref.getString("uid", "N/A")
         rol = sharedPref.getString("rol", "N/A")
-        val username = sharedPref.getString("username", "N/A")
-        val mail = sharedPref.getString("mail", "N/A")
 
-        // Verificar la autenticación del usuario
+        // Check user authentication status
         checkUserAuthentication()
 
+        // Initialize BottomNavigationView
         bottomNavigationView = findViewById(R.id.botton_navigation)
 
-        // Transiciones entre fragments
+        // Handle fragment transitions
         bottomNavigationView.setOnItemSelectedListener {menuItem ->
             when (menuItem.itemId){
                 R.id.bottom_start -> {
@@ -81,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        // Verifica el fragmento que debe ser mostrado inicialmente
+        // Determine which fragment to load initially based on intent extras
         val fragmentToLoad = intent.getStringExtra("FRAGMENT_TO_LOAD")
         when (fragmentToLoad) {
             Constants.HOME_FRAGMENT -> {
@@ -108,31 +123,44 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // Verificar si ha iniciado sesión
+    /**
+     * Checks if the user is authenticated. Redirects to LoginActivity if not authenticated.
+     * Redirects to MainActivityAdmin if the user role is "ADMIN".
+     */
     private fun checkUserAuthentication() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
-            // Usuario no autenticado, redirigir a la pantalla de login
+            // User not authenticated, redirect to LoginActivity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         } else {
-            // Usuario autenticado, verificar el rol
+            // User authenticated, check role
             if (rol == "ADMIN") {
-                // Si es ADMIN, redirigir a MainActivityAdmin
+                // If role is ADMIN, redirect to MainActivityAdmin
                 val intent = Intent(this, MainActivityAdmin::class.java)
                 startActivity(intent)
                 finish()
             } else {
-                // Lógica adicional
+                // Additional logic for authenticated users
             }
         }
     }
 
+    /**
+     * Replaces the current fragment with the provided fragment.
+     *
+     * @param fragment Fragment to replace the current fragment with.
+     */
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
     }
 
+    /**
+     * Sets the selected item in the BottomNavigationView.
+     *
+     * @param itemId ID of the menu item to select.
+     */
     private fun selectBottomNavItem(itemId: Int) {
         bottomNavigationView.selectedItemId = itemId
     }

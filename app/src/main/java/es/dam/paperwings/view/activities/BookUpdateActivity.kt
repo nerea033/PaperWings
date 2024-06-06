@@ -24,6 +24,11 @@ import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+
+/**
+ * `BookUpdateActivity` allows users to update information of an existing book.
+ * This activity extends `AppCompatActivity`.
+ */
 class BookUpdateActivity : AppCompatActivity() {
 
     private lateinit var tieTitleUpdate: TextInputEditText
@@ -43,11 +48,15 @@ class BookUpdateActivity : AppCompatActivity() {
     private var bookId: Int = -1
     private var uid: String? = null
 
-    private var sourceFragment: String? = null
-
-    // Instancia del repositorio
+    // Repository instance
     private val repository = RepositoryImpl()
 
+    /**
+     * Method called when creating the activity. Initializes the user interface
+     * and loads data of the existing book by its ID.
+     *
+     * @param savedInstanceState Previously saved instance state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -58,17 +67,15 @@ class BookUpdateActivity : AppCompatActivity() {
             insets
         }
 
-        // Obtengo el id_book de los fragment como Intent
+        // Get id_book from Intent
         bookId = intent.getIntExtra("id_book", -1)
 
-        // Obtengo el fragment del que procedo
-        sourceFragment = intent.getStringExtra("source")
 
-        // Obtengo el uid de sharedPreferences
+        // Get UID from sharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         uid = sharedPref.getString("uid", "N/A")
 
-        // Elementos de la vista
+        // Initialize view elements
         tieTitleUpdate = findViewById(R.id.tieTitleUpdate)
         tieAuthorUpdate = findViewById(R.id.tieAuthorUpdate)
         tiePublisherUpdate = findViewById(R.id.tiePublisherUpdate)
@@ -84,22 +91,24 @@ class BookUpdateActivity : AppCompatActivity() {
         ibCancel = findViewById(R.id.ibCancel)
 
 
-        // Obtengo los datos del libro por su id
+        // Load book data by ID
         lifecycleScope.launch{
             fetchBookById(bookId)
         }
 
+        // Configure Cancel button action
         ibCancel.setOnClickListener {
             repository.switchToPrevious(onBackPressedDispatcher)
         }
 
+        // Configure Update button action
         btnUpdateBook.setOnClickListener {
             lifecycleScope.launch{
                 updateBook()
             }
         }
 
-        // Defino las categorías y los idiomas
+        // Define categories and languages
         val categories = arrayListOf(
             "Ficción", "No Ficción", "Misterio", "Biografía", "Ciencia",
             "Fantasía", "Historia", "Romance", "Terror", "Aventura",
@@ -116,38 +125,39 @@ class BookUpdateActivity : AppCompatActivity() {
             "Finlandés", "Noruego", "Polaco", "Turco"
         )
 
-        // Creo un ArrayAdapter usando las categorías y el layout de lista predeterminado
+        // Create ArrayAdapter using categories and default list layout
         val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
         val languageAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, languages)
 
 
-        // Asigno el ArrayAdapter al AutoCompleteTextView
+        // Set ArrayAdapter to AutoCompleteTextView
         actCategory.setAdapter(categoryAdapter)
         actLanguage.setAdapter(languageAdapter)
         
     }
 
     /**
-     * Obtengo los datos del libro a través de su id
+     * Method to fetch data of an existing book from the API.
      *
+     * @param id ID of the book to fetch.
      */
     suspend fun fetchBookById(id: Int){
         val bookservice = ApiServiceFactory.makeBooksService()
 
         try {
 
-            // Busco el libro mediante su id a través de la API
+            // Fetch book by its ID from API
             val response = bookservice.fetchBookById(id)
-            if (response.isSuccessful && response.body() != null) { // Si no hay error y no es null
+            if (response.isSuccessful && response.body() != null) {
 
-                // Almaceno el libro en forma de lista (por la Structure)
+                // Retrieve book as a list (due to Structure)
                 val bookList = response.body()!!.data
                 if (bookList != null && bookList.isNotEmpty()) {
 
-                    // Cojo el primer y único usuario de la lista
+                    // Get the first and only book from the list
                     val book = bookList.first()
 
-                    // Mostrar los atributos en la interfaz
+                    // Display attributes in the UI
                     showBookAttributes(book)
 
                 } else {
@@ -162,8 +172,11 @@ class BookUpdateActivity : AppCompatActivity() {
 
     }
 
-
+    /**
+     * Method to update book information using user-entered data.
+     */
     fun updateBook() {
+        // Get values from text fields
         val title = tieTitleUpdate.text.toString()
         val category = actCategory.text.toString()
         val price = tiePriceUpdate.text.toString().toDoubleOrNull() ?: 0.0
@@ -179,12 +192,14 @@ class BookUpdateActivity : AppCompatActivity() {
         val image = if (tieImageUpdate.text.isNullOrEmpty()) {
             null
         } else {
-            // Convert the image path or URL to ByteArray, replace this with your actual logic
+            // Convert the image path or URL to ByteArray
             val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_book_cover)
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             stream.toByteArray()
         }
+
+        // Validate required fields
         if (title.isEmpty() || category.isEmpty() || price == 0.0|| pages == 0|| language.isEmpty()) {
             repository.showAlert(this@BookUpdateActivity,"Atención", "Debe rellenar todos los campos marcados con un asterisco*")
         } else if (author.isEmpty() || isbn.isEmpty() || publisher.isEmpty() || description.isEmpty() || date.isEmpty() || image == null ) {
@@ -200,18 +215,21 @@ class BookUpdateActivity : AppCompatActivity() {
                 }
             }
         } else {
-            val book = image?.let {
+            val book = image.let {
                 Book(author, category, description, discount, bookId,
                     image, isbn, language, pages, price, publisher, stock, title, date)
             }
             lifecycleScope.launch {
-                if (book != null) {
-                    updateBookApi(book)
-                }
+                updateBookApi(book)
             }
         }
     }
 
+    /**
+     * Method to update book information via API.
+     *
+     * @param book Book object containing updated information.
+     */
     suspend fun updateBookApi(book: Book){
         val bookService = ApiServiceFactory.makeBooksService()
         val id = bookId
@@ -222,33 +240,38 @@ class BookUpdateActivity : AppCompatActivity() {
         try {
             val response = bookService.updateBook(updateRequest)
             if (response.isSuccessful) {
-                // Usuario agregado con éxito
+                // Successfully updated book
                 repository.showAlert(this@BookUpdateActivity,"Información","Libro modificado con éxito.", true)
             } else {
-                // Fallo al agregar el libro, manejar error
+                // Failed to update book, handle error
                 val errorResponse = response.errorBody()?.string()
                 repository.showAlert(this@BookUpdateActivity,"Error","Error al modificar el libro: $errorResponse")
             }
         }  catch (e: Exception) {
-            // Manejar excepciones, como problemas de red o configuración
+            // Handle exceptions, such as network problems or configuration
             repository.showAlert(this@BookUpdateActivity,"Error","Error al conectar con la API: ${e.message}")
         }
     }
 
+    /**
+     * Method to populate UI fields with attributes of a given book.
+     *
+     * @param book Book object containing attributes to display.
+     */
     private fun showBookAttributes(book: Book) {
-        // Título
+        // Title
         tieTitleUpdate.setText(book.title)
 
-        // Autor
+        // Author
         tieAuthorUpdate.setText(book.author ?: "")
 
-        // Precio
+        // Price
         tiePriceUpdate.setText(book.price.toString())
 
-        // Páginas
+        // Pages
         tiePagesUpdate.setText(book.pages.toString())
 
-        // Idioma
+        // Language
         actLanguage.setText(book.language ?: "")
         actLanguage.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -257,11 +280,11 @@ class BookUpdateActivity : AppCompatActivity() {
             }
         }
 
-        // Editorial
+        // Publisher
         tiePublisherUpdate.setText(book.publisher ?: "")
 
-        // Fecha de publicación es de tipo LocalDate
-        book.date?.let { dateString ->
+        // Publication Date, which is of type LocalDate
+        book.date.let { dateString ->
             val localDate = LocalDate.parse(dateString)
             val formattedDate = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             tieDateUpdate.setText(formattedDate)
@@ -272,7 +295,7 @@ class BookUpdateActivity : AppCompatActivity() {
         // ISBN
         tieIsbnUpdate.setText(book.isbn ?: "")
 
-        // Categoría
+        // Category
         actCategory.setText(book.category ?: "")
         actCategory.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus){
@@ -281,7 +304,7 @@ class BookUpdateActivity : AppCompatActivity() {
             }
         }
 
-        // Sinopsis
+        // Synopsis
         tieDescriptionUpdate.setText(book.description ?: "")
     }
 

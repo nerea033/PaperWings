@@ -19,11 +19,12 @@ import es.dam.paperwings.view.adapters.CardAdapter
 import kotlinx.coroutines.launch
 
 /**
- * Clase para mostrar los libros de la categoría seleccionada
+ * Activity class to display books of the selected category.
+ * Implements BookClickListener to handle clicks on books.
  */
 class CategoryActivity : AppCompatActivity(), BookClickListener {
 
-    // This property holds the binding object that provides access to the views
+    // Binding object for this activity's layout
     private var _binding: ActivityCategoryBinding? = null
     private val binding get() = _binding!!
 
@@ -32,13 +33,19 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
     private val _booksLiveData = MutableLiveData<List<Book>>()
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
-
+    // Adapter for the RecyclerView
     private lateinit var cardAdapter: CardAdapter
 
     private var category: String? = null
     private var sourceFragment: String? = null
 
-
+    /**
+     * Called when the activity is starting. Sets up UI components,
+     * retrieves intent extras, initializes RecyclerView, and starts
+     * loading books.
+     *
+     * @param savedInstanceState Bundle containing saved state information.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCategoryBinding.inflate((layoutInflater))
@@ -50,7 +57,7 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
             insets
         }
 
-        // Obtengo la información pasada desde CategoryFragment
+        // Retrieve information passed from CategoryFragment
         category = intent.getStringExtra("category")
         sourceFragment = intent.getStringExtra("source")
 
@@ -63,9 +70,9 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
         }
 
         // Observe the books LiveData and update the adapter when the data changes
-        booksLiveData.observe(this, { books ->
+        booksLiveData.observe(this) { books ->
             cardAdapter.updateBooks(books)
-        })
+        }
 
         // Start loading books
         lifecycleScope.launch {
@@ -73,6 +80,11 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
         }
     }
 
+    /**
+     * Fetches the list of books from the API based on the selected category.
+     * Filters the retrieved books by the selected category and updates the
+     * books LiveData accordingly.
+     */
     suspend fun fetchBooks(){
         val bookService = ApiServiceFactory.makeBooksService()
         try {
@@ -84,7 +96,7 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
                 val booksList = response.body()!!.data
                 if (booksList != null && booksList.isNotEmpty()) {
 
-                    // Filtra los libros por la categoría seleccionada
+                    // Filter books by the selected category
                     val filteredBooks = booksList.filter { it.category == category }
                     _booksLiveData.postValue(filteredBooks)
 
@@ -100,10 +112,16 @@ class CategoryActivity : AppCompatActivity(), BookClickListener {
 
     }
 
+    /**
+     * Handles click events on the books displayed in the RecyclerView.
+     * Opens the BookDetailActivity with details of the clicked book.
+     *
+     * @param book Book object that was clicked.
+     */
     override fun onBookClick(book: Book) {
         val intent = Intent(this, BookDetailActivity::class.java)
         intent.putExtra("id_book", book.id)
-        intent.putExtra("source", "category") // Añado el extra para indicar que estoy en "home"
+        intent.putExtra("source", "category") // Add extra to indicate source as "category"
         startActivity(intent)
     }
 }

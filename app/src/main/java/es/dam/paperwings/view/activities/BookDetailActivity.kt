@@ -20,6 +20,10 @@ import kotlinx.coroutines.launch
 import java.time.format.TextStyle
 import java.util.Locale
 
+/**
+ * This activity displays the details of a book and allows the user to
+ * add it to their shopping cart. This class extends `AppCompatActivity`.
+ */
 class BookDetailActivity : AppCompatActivity() {
 
     private var ivCover: ImageView? = null
@@ -38,11 +42,15 @@ class BookDetailActivity : AppCompatActivity() {
     private var uid: String? = null
     private var bookPrice: Double = 0.0
 
-    private var sourceFragment: String? = null
-
-    // Instancia del repositorio
+    // Repository instance
     private val repository = RepositoryImpl()
 
+    /**
+    * Method called when creating the activity. Initializes the user interface
+    * and retrieves the necessary data to display the book details.
+    *
+    * @param savedInstanceState Previously saved instance state.
+    */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,17 +61,14 @@ class BookDetailActivity : AppCompatActivity() {
             insets
         }
 
-        // Obtengo el id_book de los fragment como Intent
+        // Get the id_book from fragments as Intent
         bookId = intent.getIntExtra("id_book", -1)
 
-        // Obtengo el fragment del que procedo
-        sourceFragment = intent.getStringExtra("source")
-
-        // Obtengo el uid de sharedPreferences
+        // Get UID from sharedPreferences
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         uid = sharedPref.getString("uid", "N/A")
 
-        // Inicializo los elementos de la interfaz
+        // Initialize UI elements
         val ibGoBack: ImageButton = findViewById(R.id.ibGoBack)
         val btnAddCart: Button = findViewById(R.id.btnAddCart)
         ivCover = findViewById(R.id.ivCoverDetail)
@@ -79,7 +84,7 @@ class BookDetailActivity : AppCompatActivity() {
         tvSinopsis = findViewById(R.id.tvSinopsisDetail)
 
 
-        // Obtengo los datos del libro por su id
+        // Fetch book data by its ID
         lifecycleScope.launch{
             bookPrice = fetchBookById(bookId)
 
@@ -90,6 +95,7 @@ class BookDetailActivity : AppCompatActivity() {
             }
         }
 
+        // When the back icon is pressed, return to the previous window
         ibGoBack.setOnClickListener {
             repository.switchToPrevious(onBackPressedDispatcher)
         }
@@ -97,31 +103,32 @@ class BookDetailActivity : AppCompatActivity() {
     }
 
     /**
-     * Obtengo los datos del libro a través de su id
+     * Fetches book data by its id.
      *
+     * @param id ID of the book to fetch.
+     * @return Price of the book.
      */
     suspend fun fetchBookById(id: Int): Double{
         val bookservice = ApiServiceFactory.makeBooksService()
 
-        var price: Double = 0.0
+        var price = 0.0
         try {
 
-            // Busco el libro mediante su id a través de la API
+            // Fetch the book by its id via API
             val response = bookservice.fetchBookById(id)
             if (response.isSuccessful && response.body() != null) { // Si no hay error y no es null
 
-                // Almaceno el libro en forma de lista (por la Structure)
+                // Store the book as a list (due to the Structure)
                 val bookList = response.body()!!.data
                 if (bookList != null && bookList.isNotEmpty()) {
 
-                    // Cojo el primer y único usuario de la lista
+                    // Get the first and only user from the list
                     val book = bookList.first()
 
-                    // Guardo todos los atributos que le voy a pasar al carrito
-                    val id_book = book.id
+                    // Store all attributes to pass to the cart
                     price = book.price
 
-                    // Mostrar los atributos en la interfaz
+                    // Display attributes in the interface
                     showBookAttributes(book)
 
                 } else {
@@ -137,47 +144,51 @@ class BookDetailActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Displays the book attributes in the user interface.
+     *
+     * @param book `Book` object whose attributes will be shown.
+     */
     fun showBookAttributes (book: Book){
-        // Imagen!!!!!!!!!!!!!!!!!!!!!!!!
-        // Manejar el caso donde la imagen es nula
+        // Image!!!!!!!!!!!!!!!!!!!!!!!!
+        // Handle case where image is null
         ivCover?.setImageResource(R.drawable.ic_book_cover2)
 
-        // Título
+        // Title
         tvTitle?.text = book.title
 
-        // Autor
-        book.author?.let {
+        // Author
+        book.author.let {
             tvAuthor?.text = it
         } ?: run {
-            // Manejar el caso donde el autor es nulo
+            // Handle case where author is null
             tvAuthor?.text = "Autor no disponible"
         }
 
-        // Precio
+        // Price
         tvPrice?.text = book.price.toString()  + " €"
 
-        // Páginas
-
+        // Pages
         tvPages?.text = book.pages.toString()
 
-        // Idioma
-        book.language?.let {
+        // Language
+        book.language.let {
             tvLanguage?.text = it
         } ?: run {
             // Manejar el caso donde el idioma es nulo
             tvLanguage?.text = "No disponible"
         }
 
-        // Editorial
-        book.publisher?.let {
+        // Publisher
+        book.publisher.let {
             tvPublisher?.text = it
         } ?: run {
-            // Manejar el caso donde la editorial es nula
+            // Handle case where publisher is null
             tvPublisher?.text = "No disponible"
         }
 
-        // Fecha de publicación es de tipo LocalDate
-        book.date?.let { dateString ->
+        // Publication date is of type LocalDate
+        book.date.let { dateString ->
             val localDate = book.getLocalDate()
             if (localDate != null) {
                 val day = localDate.dayOfMonth
@@ -193,36 +204,42 @@ class BookDetailActivity : AppCompatActivity() {
         }
 
         // ISBN
-        book.isbn?.let {
+        book.isbn.let {
             tvIsbn?.text = it
         } ?: run {
-            // Manejar el caso donde el ISBN es nulo
+            // Handle case where ISBN is null
             tvIsbn?.text = "No disponible"
         }
 
-        // Categoría
+        // Category
         tvCategory?.text = book.category
 
-        // Sinopsis
-        book.description?.let {
+        // Synopsis
+        book.description.let {
             tvSinopsis?.text = it
         } ?: run {
-            // Manejar el caso donde la sinopsis es nula
+            // Handle case where synopsis is null
             tvSinopsis?.text = "Sinopsis no disponible"
         }
     }
 
-    // Función principal para manejar la lógica de agregar o actualizar el carrito
+    /**
+     * Handles the logic of adding or updating the cart.
+     *
+     * @param uid User ID.
+     * @param bookId Book ID.
+     * @param price Book price.
+     */
     suspend fun handleCart(uid: String?, bookId: Int, price: Double) {
         if (uid != null && bookId != -1 && price != 0.0) {
-            // Verificar si el libro ya está en el carrito del usuario
+            // Check if the book is already in the user's cart
             val existingCartItem = checkIfBookInCart(uid, bookId)
 
             if (existingCartItem != null) {
-                // Si el libro ya está en el carrito, actualizar la cantidad
+                // If the book is already in the cart, update the quantity
                 updateCartRegister(uid, bookId, existingCartItem.quantity)
             } else {
-                // Si el libro no está en el carrito, agregarlo
+                // If the book is not in the cart, add it
                 addCartToDatabase(uid, bookId, price)
             }
         } else {
@@ -230,7 +247,13 @@ class BookDetailActivity : AppCompatActivity() {
         }
     }
 
-    // Agrego un libro a una persona por primera vez
+    /**
+     * Adds a book to the user's cart for the first time.
+     *
+     * @param uid User ID.
+     * @param id_book Book ID.
+     * @param price Book price.
+     */
     suspend fun addCartToDatabase(uid: String?, id_book: Int, price: Double) {
         if (uid != null && id_book != -1 && price != 0.0) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -238,18 +261,18 @@ class BookDetailActivity : AppCompatActivity() {
             val cart = Cart(uid, id_book, price, quantity)
 
             try {
-                val response = cartService.addCart(cart)  // Hacer la llamada API
+                val response = cartService.addCart(cart)  // Make API call
                 if (response.isSuccessful) {
-                    // Registro agregado con éxito
+                    // Successfully added record
                     println("Registro agregado con éxito al carrito")
                     repository.showToast(this,"Libro agregado al carrito")
                 } else {
-                    // Fallo al agregar el usuario, manejar error
+                    // Failed to add record, handle error
                     val errorResponse = response.errorBody()?.string()
                     println("Error al agregar el registro al carrito: $errorResponse")
                 }
             } catch (e: Exception) {
-                // Manejar excepciones, como problemas de red o configuración
+                // Handle exceptions, such as network problems or configuration
                 println("Error al conectar con la API: ${e.message}")
             }
         } else {
@@ -257,7 +280,13 @@ class BookDetailActivity : AppCompatActivity() {
         }
     }
 
-    // Funcion para actualizar la cantidad si el libro ya existe para ese usuario
+    /**
+     * Updates the quantity of a book in the cart if it already exists for that user.
+     *
+     * @param uid user UID.
+     * @param id_book book ID.
+     * @param quantity Quantity of the book in the cart.
+     */
     suspend fun updateCartRegister(uid: String?, id_book: Int, quantity: Int){
         if (uid != null && id_book != -1 && quantity != -1) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -267,16 +296,16 @@ class BookDetailActivity : AppCompatActivity() {
             try {
                 val response = cartService.updateCart(updateCartRequest)  // Hacer la llamada API
                 if (response.isSuccessful) {
-                    // Registro agregado con éxito
+                    // Successfully updated record in the cart
                     println("Registro actualizado con éxito en el carrito")
                     repository.showToast(this,"Libro agregado al carrito")
                 } else {
-                    // Fallo al agregar el usuario, manejar error
+                    // Failed to update record, handle error
                     val errorResponse = response.errorBody()?.string()
                     println("Error al actualizar el registro del carrito: $errorResponse")
                 }
             } catch (e: Exception) {
-                // Manejar excepciones, como problemas de red o configuración
+                // Handle exceptions, such as network problems or configuration
                 println("Error al conectar con la API: ${e.message}")
             }
         } else {
@@ -284,7 +313,13 @@ class BookDetailActivity : AppCompatActivity() {
         }
     }
 
-    // Función para comprobar si el usuario actual tiene el libro actual en el carrito
+    /**
+     * Checks if the current user has the specified book in the cart.
+     *
+     * @param uid User ID.
+     * @param bookId Book ID.
+     * @return `Cart` object if the book is in the cart, `null` otherwise.
+     */
     suspend fun checkIfBookInCart(uid: String, bookId: Int): Cart? {
         val cartService = ApiServiceFactory.makeCartService()
         return try {
