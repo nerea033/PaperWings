@@ -32,16 +32,11 @@ class CategoryFragment : Fragment(), CategoryClickListener {
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
 
-
     // LiveData to hold the list of books
     private val _booksLiveData = MutableLiveData<List<Book>>()
     val booksLiveData: LiveData<List<Book>> get() = _booksLiveData
 
-
     private lateinit var cardAdapterCategory: CardAdapterCategory
-
-    private var backPressedOnce = false
-    private val backPressHandler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,19 +65,6 @@ class CategoryFragment : Fragment(), CategoryClickListener {
         lifecycleScope.launch {
             fetchBooks()
         }
-
-        // Función para que solo salga si pulsa back dos veces seguidas
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (backPressedOnce) {
-                    activity?.finish()
-                } else {
-                    backPressedOnce = true
-                    showToast("Haga click de nuevo para salir")
-                    backPressHandler.postDelayed({ backPressedOnce = false }, 2000)
-                }
-            }
-        })
 
         return view
     }

@@ -5,7 +5,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -92,7 +91,7 @@ class BookDetailActivity : AppCompatActivity() {
         }
 
         ibGoBack.setOnClickListener {
-            switchPrevios()
+            repository.switchToPrevious(onBackPressedDispatcher)
         }
 
     }
@@ -143,10 +142,8 @@ class BookDetailActivity : AppCompatActivity() {
         // Manejar el caso donde la imagen es nula
         ivCover?.setImageResource(R.drawable.ic_book_cover2)
 
-
         // Título
         tvTitle?.text = book.title
-
 
         // Autor
         book.author?.let {
@@ -162,7 +159,6 @@ class BookDetailActivity : AppCompatActivity() {
         // Páginas
 
         tvPages?.text = book.pages.toString()
-
 
         // Idioma
         book.language?.let {
@@ -204,10 +200,8 @@ class BookDetailActivity : AppCompatActivity() {
             tvIsbn?.text = "No disponible"
         }
 
-
         // Categoría
         tvCategory?.text = book.category
-
 
         // Sinopsis
         book.description?.let {
@@ -235,8 +229,6 @@ class BookDetailActivity : AppCompatActivity() {
             println("Información insuficiente para manejar el carrito")
         }
     }
-
-
 
     // Agrego un libro a una persona por primera vez
     suspend fun addCartToDatabase(uid: String?, id_book: Int, price: Double) {
@@ -308,12 +300,6 @@ class BookDetailActivity : AppCompatActivity() {
             println("Error en la red o al parsear los datos: ${e.message}")
             null
         }
-    }
-
-
-    private fun switchPrevios() {
-        // Simula la acción de presionar el botón de retroceso utilizando onBackPressedDispatcher.
-        onBackPressedDispatcher.onBackPressed()
     }
 
 }

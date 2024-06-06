@@ -34,9 +34,6 @@ class ProfileFragment : Fragment() {
     private var uid: String? = null
     private var rol: String? = null
 
-    private var backPressedOnce = false
-    private val backPressHandler = Handler(Looper.getMainLooper())
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,19 +72,6 @@ class ProfileFragment : Fragment() {
                 show()
             }
         }
-
-        // Función para que solo salga si pulsa back dos veces seguidas
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (backPressedOnce) {
-                    activity?.finish()
-                } else {
-                    backPressedOnce = true
-                    Toast.makeText(context, "Haga click de nuevo para salir", Toast.LENGTH_SHORT).show()
-                    backPressHandler.postDelayed({ backPressedOnce = false }, 2000)
-                }
-            }
-        })
 
         return view
     }

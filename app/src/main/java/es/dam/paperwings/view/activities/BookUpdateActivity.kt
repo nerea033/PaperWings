@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -91,7 +90,7 @@ class BookUpdateActivity : AppCompatActivity() {
         }
 
         ibCancel.setOnClickListener {
-            switchPrevios()
+            repository.switchToPrevious(onBackPressedDispatcher)
         }
 
         btnUpdateBook.setOnClickListener {
@@ -236,61 +235,54 @@ class BookUpdateActivity : AppCompatActivity() {
         }
     }
 
+    private fun showBookAttributes(book: Book) {
+        // Título
+        tieTitleUpdate.setText(book.title)
 
-        private fun showBookAttributes(book: Book) {
-            // Título
-            tieTitleUpdate.setText(book.title)
+        // Autor
+        tieAuthorUpdate.setText(book.author ?: "")
 
-            // Autor
-            tieAuthorUpdate.setText(book.author ?: "")
+        // Precio
+        tiePriceUpdate.setText(book.price.toString())
 
-            // Precio
-            tiePriceUpdate.setText(book.price.toString())
+        // Páginas
+        tiePagesUpdate.setText(book.pages.toString())
 
-            // Páginas
-            tiePagesUpdate.setText(book.pages.toString())
-
-            // Idioma
-            actLanguage.setText(book.language ?: "")
-            actLanguage.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    actLanguage.setText("")
-                    actLanguage.setHint(book.language)
-                }
+        // Idioma
+        actLanguage.setText(book.language ?: "")
+        actLanguage.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                actLanguage.setText("")
+                actLanguage.setHint(book.language)
             }
-
-            // Editorial
-            tiePublisherUpdate.setText(book.publisher ?: "")
-
-            // Fecha de publicación es de tipo LocalDate
-            book.date?.let { dateString ->
-                val localDate = LocalDate.parse(dateString)
-                val formattedDate = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                tieDateUpdate.setText(formattedDate)
-            } ?: run {
-                tieDateUpdate.setText("")
-            }
-
-            // ISBN
-            tieIsbnUpdate.setText(book.isbn ?: "")
-
-            // Categoría
-            actCategory.setText(book.category ?: "")
-            actCategory.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus){
-                    actCategory.setText("")
-                    actCategory.setHint(book.category)
-                }
-            }
-
-            // Sinopsis
-            tieDescriptionUpdate.setText(book.description ?: "")
         }
 
+        // Editorial
+        tiePublisherUpdate.setText(book.publisher ?: "")
 
-    private fun switchPrevios() {
-        // Simula la acción de presionar el botón de retroceso utilizando onBackPressedDispatcher.
-        onBackPressedDispatcher.onBackPressed()
+        // Fecha de publicación es de tipo LocalDate
+        book.date?.let { dateString ->
+            val localDate = LocalDate.parse(dateString)
+            val formattedDate = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            tieDateUpdate.setText(formattedDate)
+        } ?: run {
+            tieDateUpdate.setText("")
+        }
+
+        // ISBN
+        tieIsbnUpdate.setText(book.isbn ?: "")
+
+        // Categoría
+        actCategory.setText(book.category ?: "")
+        actCategory.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus){
+                actCategory.setText("")
+                actCategory.setHint(book.category)
+            }
+        }
+
+        // Sinopsis
+        tieDescriptionUpdate.setText(book.description ?: "")
     }
 
 }

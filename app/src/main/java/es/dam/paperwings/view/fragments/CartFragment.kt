@@ -49,10 +49,6 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     private lateinit var cardAdapterCart: CardAdapterCart
 
-    // Presionar hacia atrás
-    private var backPressedOnce = false
-    private val backPressHandler = Handler(Looper.getMainLooper())
-
     private var uid: String? = null
 
     // Elementos de la interfaz
@@ -118,21 +114,6 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
                 Toast.makeText(context, "Compra ralizada con éxito", Toast.LENGTH_SHORT).show()
             }
         }
-
-
-
-        // Función para que solo salga de la app si pulsa back dos veces seguidas
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (backPressedOnce) {
-                    activity?.finish()
-                } else {
-                    backPressedOnce = true
-                    Toast.makeText(context, "Haga click de nuevo para salir", Toast.LENGTH_SHORT).show()
-                    backPressHandler.postDelayed({ backPressedOnce = false }, 2000)
-                }
-            }
-        })
 
         return view
     }
@@ -406,7 +387,6 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
 
     }
-
 
     private fun showConfirmationDialog(uid: String, title: String, positiveButton: String) {
         AlertDialog.Builder(requireContext())

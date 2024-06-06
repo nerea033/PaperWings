@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import es.dam.paperwings.R
 import es.dam.paperwings.model.constans.Constants
+import es.dam.paperwings.model.repositories.RepositoryImpl
 import es.dam.paperwings.view.fragments.HomeFragment
 import es.dam.paperwings.view.fragments.CartFragment
 import es.dam.paperwings.view.fragments.CategoryFragment
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
 
     private var rol: String? = null
 
+    private val repository = RepositoryImpl()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,7 +37,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        // Llamar al método para manejar el doble clic en el botón de retroceso
+        repository.handleDoubleBackPress(this, this)
 
         // Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance()
@@ -49,7 +53,6 @@ class MainActivity : AppCompatActivity() {
 
         // Verificar la autenticación del usuario
         checkUserAuthentication()
-
 
         bottomNavigationView = findViewById(R.id.botton_navigation)
 
@@ -125,7 +128,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()

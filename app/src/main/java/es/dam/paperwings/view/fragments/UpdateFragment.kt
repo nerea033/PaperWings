@@ -51,10 +51,6 @@ class UpdateFragment : Fragment(), BookClickListener {
     // Elementos de la vista
     private lateinit var searchView: SearchView
 
-
-    private var backPressedOnce = false
-    private val backPressHandler = Handler(Looper.getMainLooper())
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -118,19 +114,6 @@ class UpdateFragment : Fragment(), BookClickListener {
         lifecycleScope.launch {
             fetchBooks()
         }
-
-        // Función para que solo salga si pulsa back dos veces seguidas
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (backPressedOnce) {
-                    activity?.finish()
-                } else {
-                    backPressedOnce = true
-                    Toast.makeText(context, "Haga click de nuevo para salir", Toast.LENGTH_SHORT).show()
-                    backPressHandler.postDelayed({ backPressedOnce = false }, 2000)
-                }
-            }
-        })
 
         return view
 
