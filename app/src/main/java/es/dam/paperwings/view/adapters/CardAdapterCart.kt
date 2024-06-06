@@ -15,6 +15,14 @@ import es.dam.paperwings.model.CartClickListener
 import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.view.holders.CardViewHolderCart
 
+/**
+ * RecyclerView adapter for displaying a list of books in a shopping cart format.
+ *
+ * @property books List of books to display in the cart.
+ * @property quantities List of quantities corresponding to each book in the cart.
+ * @property clickListener Listener for handling clicks on each book card.
+ * @property updateClickListener Listener for handling updates like quantity changes or removals from the cart.
+ */
 class CardAdapterCart (
 
     private var books: List<Book>,
@@ -24,16 +32,22 @@ class CardAdapterCart (
 
     : RecyclerView.Adapter<CardViewHolderCart>() {
 
-    private lateinit var recyclerView: RecyclerView  // Para referencia al RecyclerView
-    private lateinit var emptyView: View  // Para referencia al empty_view
-    private lateinit var tvDetailsCart: View
-    private lateinit var cardDetails: CardView
-    private lateinit var btnBuyAll: Button
-    private val handler = Handler(Looper.getMainLooper())  // Handler para manejar el retraso
-    private val emptyCheckRunnable = Runnable { checkEmptyImmediate() }  // Runnable para la comprobación inmediata
+    private lateinit var recyclerView: RecyclerView  // Reference to the RecyclerView
+    private lateinit var emptyView: View  // Reference to the empty_view
+    private lateinit var tvDetailsCart: View  // Reference to the cart details TextView
+    private lateinit var cardDetails: CardView  // Reference to the card view containing cart details
+    private lateinit var btnBuyAll: Button  // Reference to the Buy All button
+    private val handler = Handler(Looper.getMainLooper())  // Handler to manage delays
+    private val emptyCheckRunnable = Runnable { checkEmptyImmediate() }  // Runnable for immediate empty check
 
 
-    // Actualiza la lista de libros y verifica la visibilidad del empty_view
+    /**
+     * Updates the list of books in the cart and their quantities, then notifies any registered observers
+     * that the data set has changed. Also checks and updates the visibility of empty view with a delay.
+     *
+     * @param newBooks The new list of books to display in the cart.
+     * @param newQuantities The new list of quantities corresponding to the books.
+     */
     fun updateBooks(newBooks: List<Book>, newQuantities: List<Int>) {
         books = newBooks
         quantities = newQuantities
@@ -41,14 +55,25 @@ class CardAdapterCart (
         checkEmptyWithDelay()
     }
 
-
+    /**
+     * Called when RecyclerView needs a new [CardViewHolderCart] to represent an item.
+     *
+     * @param parent The ViewGroup into which the new view will be added.
+     * @param viewType The view type of the new view.
+     * @return A new [CardViewHolderCart] that holds a view representing an item in the cart.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolderCart {
         val from = LayoutInflater.from(parent.context)
         val binding = CardCellCartBinding.inflate(from, parent,false)
         return CardViewHolderCart(binding, clickListener, updateClickListener)
     }
 
-    // Método llamado cuando se adjunta el adaptador al RecyclerView -> para mostrar cuando la lista está vacía
+    /**
+     * Called when the adapter is attached to a RecyclerView. Checks and updates the visibility of empty view
+     * and other UI elements related to the cart immediately.
+     *
+     * @param recyclerView The RecyclerView to which the adapter is attached.
+     */
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
@@ -59,11 +84,19 @@ class CardAdapterCart (
         checkEmptyWithDelay()
     }
 
+    /**
+     * Checks and updates the visibility of empty view and other UI elements related to the cart immediately.
+     * Called after a delay to allow time for other UI updates to settle.
+     */
     private fun checkEmptyWithDelay() {
-        handler.removeCallbacks(emptyCheckRunnable)  // Eliminar cualquier llamada previa
-        handler.postDelayed(emptyCheckRunnable, 0)  // Postponer la comprobación en segundos
+        handler.removeCallbacks(emptyCheckRunnable)  // Remove any previous callbacks
+        handler.postDelayed(emptyCheckRunnable, 0)  // Post the check with no delay
     }
 
+    /**
+     * Checks and updates the visibility of empty view and other UI elements related to the cart immediately.
+     * This method is called directly for immediate checks.
+     */
     private fun checkEmptyImmediate() {
         if (books.isEmpty()) {
             emptyView.visibility = View.VISIBLE
@@ -80,12 +113,21 @@ class CardAdapterCart (
         }
     }
 
-
+    /**
+     * Returns the total number of items in the cart.
+     *
+     * @return The total number of items in the cart.
+     */
     override fun getItemCount(): Int {
         return books.size
     }
 
-
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     *
+     * @param holder The [CardViewHolderCart] that represents the view of an item.
+     * @param position The position of the item within the adapter's data set.
+     */
     override fun onBindViewHolder(holder: CardViewHolderCart, position: Int) {
         holder.findBook(books[position], quantities[position])
 

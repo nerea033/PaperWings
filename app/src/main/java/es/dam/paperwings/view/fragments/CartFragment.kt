@@ -35,7 +35,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
+/**
+ * A Fragment that displays the user's shopping cart, allowing them to view added books,
+ * manage quantities, remove books from the cart, and make purchases for all books in the cart.
+ */
 class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     // This property holds the binding object that provides access to the views in the fragment_home.xml layout.
@@ -46,17 +49,20 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
     private val _cartLiveData = MutableLiveData<CartData>()
     val cartLiveData: LiveData<CartData> get() = _cartLiveData
 
-
     private lateinit var cardAdapterCart: CardAdapterCart
 
     private var uid: String? = null
 
-    // Elementos de la interfaz
+    // Interface elements
     var tvFinalPrice: TextView? = null
 
-    // Instancia del repositorio
+    // Repository instance
     private val repository = RepositoryImpl()
 
+    /**
+     * Called when creating the view of the fragment.
+     * Sets up views, initializes adapters, and sets listeners for buttons.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,17 +71,16 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // Obtengo el uid de sharedPreferences
+        // Get user's uid from SharedPreferences
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
         uid = sharedPref.getString("uid", "N/A")
 
-        // Inicializa tvFinalPrice usando binding
+        // Initialize tvFinalPrice using binding
         tvFinalPrice = binding.tvFinalPrice
         val ibDeleteAllCart: ImageButton =  binding.ibDeleteAllCart
         val btnBuyAll: Button =  binding.btnBuyAll
 
-
-        // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
+        // Configure RecyclerView with GridLayoutManager and CardAdapterCart adapter
         cardAdapterCart = CardAdapterCart(emptyList(), emptyList(), this, this)
 
         binding.rvCart.apply {
@@ -83,31 +88,32 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
             adapter = cardAdapterCart
         }
 
-
         // Observe the books LiveData and update the adapter when the data changes
-        cartLiveData.observe(viewLifecycleOwner, { cartData ->
+        cartLiveData.observe(viewLifecycleOwner) { cartData ->
             cartData?.let {
                 cardAdapterCart.updateBooks(it.books, it.quantities)
-                calculateFinalPrice(it.books, it.quantities)  // Calcular el precio total cuando los datos cambian
+                calculateFinalPrice(
+                    it.books,
+                    it.quantities
+                )  // Calculate final price when data changes
             }
-        })
+        }
 
-
-        // Start loading records
+        // Initial load of books in the cart
         lifecycleScope.launch {
             getCartBooks()
         }
 
-        if (ibDeleteAllCart != null) {
-            ibDeleteAllCart.setOnClickListener{
-                lifecycleScope.launch {
-                    // Vaciar carrito del ususario
-                    uid?.let { it1 -> showConfirmationDialog(it1,"¿Está seguro que desea vaciar el carrito?","Vaciar") }
-                }
-
+        // Listener for clear cart button
+        ibDeleteAllCart.setOnClickListener{
+            lifecycleScope.launch {
+                // Vaciar carrito del ususario
+                uid?.let { it1 -> showConfirmationDialog(it1,"¿Está seguro que desea vaciar el carrito?","Vaciar") }
             }
+
         }
 
+        // Listener for buy all button
         btnBuyAll.setOnClickListener {
             lifecycleScope.launch {
                 uid?.let { it1 -> deleteAllCart(it1) }
@@ -118,7 +124,10 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         return view
     }
 
-    // Obtiene los registros en el carrito del usuario actual
+    /**
+     * Fetches the records of books and quantities in the user's cart from the API.
+     * @return Pair with the list of book IDs and the list of quantities.
+     */
     suspend fun fetchCartRecords(uid: String): Pair<List<Int>, List<Int>>  {
         val cartService = ApiServiceFactory.makeCartService()
         val bookIds = mutableListOf<Int>()
@@ -151,8 +160,10 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         return Pair(bookIds, quantities)
     }
 
-
-    // Obtiene los datos de cada libro
+    /**
+     * Fetches details of a specific book by its ID from the API.
+     * @return Book object if found, null if not found.
+     */
     suspend fun fetchBookById(id: Int): Book? {
         val bookService = ApiServiceFactory.makeBooksService()
 
@@ -165,7 +176,6 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
                 // Verificar si se encontró el libro con el ID dado
                 if (bookList != null && bookList.isNotEmpty()) {
-                    //???????????????????????????????????????????????????????????????????????????
                     bookList[0] // Devuelve el primer libro encontrado
                 } else {
                     println("No se encontró el libro con id: $id")
@@ -182,6 +192,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
 
     }
 
+    /**
+     * Deletes all records from the cart for the current user.
+     */
     suspend fun deleteAllCart(uid: String) {
         val cartService = ApiServiceFactory.makeCartService()
         getCartBooks()
@@ -209,8 +222,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
-
-    // Almaceno en el LiveData los libros y las cantidades de estos que tiene el usuario en la cesta
+    /**
+     * Retrieves books and quantities in the user's cart and stores them in LiveData.
+     */
     suspend fun getCartBooks() {
         val results = uid?.let { fetchCartRecords(it) }
         val bookIds = results?.first ?: emptyList()
@@ -229,7 +243,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
-    // Se ejecuta el volver a este fragmento
+    /**
+     * Retrieves books and quantities in the user's cart and stores them in LiveData.
+     */
     override fun onResume() {
         super.onResume()
         // Recargar los datos del carrito al volver a este fragmento
@@ -238,8 +254,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
-
-    // Aumentar la cantidad de un libro en el carrito del usuario
+    /**
+     * Increases the quantity of a book in the user's cart.
+     */
     suspend fun addCartQuantity(uid: String?, id_book: Int, quantity: Int) {
         if (uid != null && id_book != -1 && quantity >= 1) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -266,7 +283,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
-    // Disminuir la cantidad de un libro en el carrito del usuario
+    /**
+     * Decreases the quantity of a book in the user's cart.
+     */
     suspend fun subtractCartQuantity(uid: String?, id_book: Int, quantity: Int) {
         if (uid != null && id_book != -1 && quantity >= 1) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -291,7 +310,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
                     println("Error connectando con la API: ${e.message}")
                 }
             } else {
-                showDeleteConfirmationDialog {
+                repository.showAlertOkCancel(this, "Atención", "Está a punto de eliminar el libro del carrito, ¿está seguro que desea continuar?"){
                     // Call the function to delete the cart record if que user accept
                     viewLifecycleOwner.lifecycleScope.launch {
                         deleteCartRegister(uid, id_book)
@@ -304,7 +323,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
-    // Eliminar un reguistro del carrito
+    /**
+     * Deletes a specific record from the user's cart.
+     */
     suspend fun deleteCartRegister(uid: String?, id_book: Int) {
         if (uid != null && id_book != -1) {
             val cartService = ApiServiceFactory.makeCartService()
@@ -314,7 +335,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
                 if (response.isSuccessful) {
                     // Successfully deleted the record
                     println("Registro del Carrito eliminado con éxito")
-                    showToast("Libro eliminado del carrito")
+                    activity?.let { repository.showToast(it.applicationContext,"Libro eliminado del carrito") }
                     getCartBooks()
                 } else {
                     // Failed to delete the record, handle error
@@ -330,7 +351,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         }
     }
 
-    // Función para calcular el precio final (todos los libros del carrito)
+    /**
+     * Calculates the final price by summing the price of all books in the cart.
+     */
     private fun calculateFinalPrice(books: List<Book>, quantities: List<Int>) {
         var finalPrice: Double = 0.0
         for ((index, book) in books.withIndex()) {
@@ -339,28 +362,9 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         tvFinalPrice?.text = finalPrice.toString()
     }
 
-    // Mostrar un mensaje temporal
-    private fun showToast(message: String) {
-        Toast.makeText(activity?.applicationContext, message, Toast.LENGTH_SHORT).show()
-    }
-
-    // Mostrar un mensaje para continuar o terminar con una operación
-    fun showDeleteConfirmationDialog(onConfirm: () -> Unit) {
-        val activity = activity
-        if (activity != null && !activity.isFinishing) { // Verificar si la actividad no está en proceso de finalización
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Confirmación")
-            builder.setMessage("Está a punto de eliminar el libro del carrito, ¿está seguro que desea continuar?")
-            builder.setPositiveButton("Aceptar") { _, _ ->
-                onConfirm()  // Acción a realizar si el usuario acepta
-            }
-            builder.setNegativeButton("Cancelar", null)
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        }
-    }
-
-    // Cuando clico un libro cambio a una actividad
+    /**
+     * Click listener for a book in the cart to navigate to the book details.
+     */
     override fun onBookClick(book: Book) {
         val intent = Intent(activity?.applicationContext, BookDetailActivity::class.java)
         intent.putExtra("id_book", book.id)
@@ -368,26 +372,31 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         startActivity(intent)
     }
 
-    // Aumentar la cantidad a través del botón de la card
+    /**
+     * Click listener for add quantity button in a card of a book in the cart.
+     */
     override fun onAddClick(idBook: Int, quantity: Int) {
         lifecycleScope.launch {
             addCartQuantity(uid, idBook, quantity )
             // Actualizar la vista después de agregar cantidad
             getCartBooks()
         }
-
     }
 
-    // Disminuir la cantidad a través del botón de la card
+    /**
+     * Click listener for subtract quantity button in a card of a book in the cart.
+     */
     override fun onSubstractClick(idBook: Int, quantity: Int) {
         lifecycleScope.launch {
             subtractCartQuantity(uid, idBook, quantity )
             // Actualizar la vista después de agregar cantidad
             getCartBooks()
         }
-
     }
 
+    /**
+     * Shows a confirmation dialog for performing an action with the cart.
+     */
     private fun showConfirmationDialog(uid: String, title: String, positiveButton: String) {
         AlertDialog.Builder(requireContext())
             .setTitle(title)
@@ -401,11 +410,12 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
             .show()
     }
 
+    /**
+     * Cleans up _binding when the fragment's view is destroyed.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
 
 }

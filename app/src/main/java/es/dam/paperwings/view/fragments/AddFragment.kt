@@ -28,8 +28,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * A Fragment for adding a new book entry.
+ */
 class AddFragment : Fragment() {
 
+    // Views
     private lateinit var tieTitleAdd: TextInputEditText
     private lateinit var tieAuthorAdd: TextInputEditText
     private lateinit var tiePublisherAdd: TextInputEditText
@@ -43,7 +47,7 @@ class AddFragment : Fragment() {
     private lateinit var actLanguage: AutoCompleteTextView
     private lateinit var btnAddBook: Button
 
-    // Instancia del repositorio
+    // Repository instance
     private val repository = RepositoryImpl()
 
     override fun onCreateView(
@@ -53,7 +57,7 @@ class AddFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_add, container, false)
 
-        // Elementos de la vista
+        // Initialize views
         tieTitleAdd = view.findViewById(R.id.tieTitleAdd)
         tieAuthorAdd = view.findViewById(R.id.tieAuthorAdd)
         tiePublisherAdd = view.findViewById(R.id.tiePublisherAdd)
@@ -67,7 +71,7 @@ class AddFragment : Fragment() {
         actLanguage = view.findViewById(R.id.actLanguageAdd)
         btnAddBook = view.findViewById(R.id.btnAddBook)
 
-
+        // Button click listener
         btnAddBook.setOnClickListener {
             lifecycleScope.launch {
                 addBook()
@@ -86,7 +90,7 @@ class AddFragment : Fragment() {
             }
         }
 
-        // Defino las categorías y los idiomas
+        // Setup categories and languages
         val categories = listOf(
             "Ficción", "No Ficción", "Misterio", "Biografía", "Ciencia",
             "Fantasía", "Historia", "Romance", "Terror", "Aventura",
@@ -103,18 +107,20 @@ class AddFragment : Fragment() {
             "Finlandés", "Noruego", "Polaco", "Turco"
         )
 
-        // Creo un ArrayAdapter usando las categorías y el layout de lista predeterminado
+        // ArrayAdapter for AutoCompleteTextViews
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories)
         val languageAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, languages)
 
-        // Asigno el ArrayAdapter al AutoCompleteTextView
+        // Set adapters
         actCategoryAdd.setAdapter(adapter)
         actLanguage.setAdapter(languageAdapter)
 
         return view
     }
 
-    // Guardar un libro en la base de datos
+    /**
+     * Adds a book entry to the database.
+     */
     fun addBook() {
         val title = tieTitleAdd.text.toString()
         val category = actCategoryAdd.text.toString()
@@ -131,12 +137,14 @@ class AddFragment : Fragment() {
         val image = if (tieImageAdd.text.isNullOrEmpty()) {
             null
         } else {
-            // Convert the image path or URL to ByteArray, replace this with your actual logic
+            // Convert the image path or URL to ByteArray
             val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_book_cover)
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             stream.toByteArray()
         }
+
+        // Validate required fields
         if (title.isEmpty() || category.isEmpty() || price == 0.0|| pages == 0|| language.isEmpty()) {
             repository.showAlert(this,"Atención", "Debe rellenar todos los campos marcados con un asterisco*")
         } else if (author.isEmpty() || isbn.isEmpty() || publisher.isEmpty() || description.isEmpty() || date.isEmpty() || image == null ) {
@@ -168,26 +176,34 @@ class AddFragment : Fragment() {
         }
     }
 
+    /**
+     * Calls the API to add a book.
+     *
+     * @param book The book object to add.
+     */
     suspend fun addBookApi(book: Book){
         val bookService = ApiServiceFactory.makeBooksService()
 
         try {
             val response = bookService.addBook(book)
             if (response.isSuccessful) {
-                // Usuario agregado con éxito
+                // Book added successfully
                 repository.showAlert(this,"Información","Libro agregado con éxito.")
 
             } else {
-                // Fallo al agregar el lirbo, manejar error
+                // Failed to add book, handle error
                 val errorResponse = response.errorBody()?.string()
                 repository.showAlert(this,"Error","Error al agregar el libro: $errorResponse")
             }
         }  catch (e: Exception) {
-            // Manejar excepciones, como problemas de red o configuración
+            // Handle exceptions, such as network issues or configuration problems
             repository.showAlert(this,"Error","Error al conectar con la API: ${e.message}")
         }
     }
 
+    /**
+     * Clears all input fields.
+     */
     private fun clearFields() {
         tieTitleAdd.text?.clear()
         actCategoryAdd.setHint("Categoría*")
@@ -204,7 +220,9 @@ class AddFragment : Fragment() {
         tieImageAdd.text?.clear()
     }
 
-    // Mostrar calendario para la fecha
+    /**
+     * Shows a DatePickerDialog to select a date.
+     */
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -227,7 +245,14 @@ class AddFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    // Ajustar el formato de la fecha
+    /**
+     * Formats the date into a string with the format "yyyy-MM-dd".
+     *
+     * @param year The year.
+     * @param month The month (1-12).
+     * @param day The day of the month.
+     * @return The formatted date string.
+     */
     private fun formatDate(year: Int, month: Int, day: Int): String {
         val calendar = Calendar.getInstance()
         calendar.set(year, month - 1, day) // Month is 0 based

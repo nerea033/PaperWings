@@ -105,9 +105,9 @@ class UpdateFragment : Fragment(), BookClickListener {
         }
 
         // Observe the books LiveData and update the adapter when the data changes
-        booksLiveData.observe(viewLifecycleOwner, { books ->
+        booksLiveData.observe(viewLifecycleOwner) { books ->
             cardAdapter.updateBooks(books)
-        })
+        }
 
 
         // Start loading books

@@ -114,7 +114,6 @@ class ProfileFragment : Fragment() {
                     // Usuario editado con éxito
                     //Cambiarlo en el sharedPreferences
 
-
                 } else {
                     // Fallo al agregar el lirbo, manejar error
                     val errorResponse = response.errorBody()?.string()
