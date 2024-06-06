@@ -47,6 +47,23 @@ class RepositoryImpl: Repository {
             dialog.show()
         }
     }
+    //volver a la actividad anterior
+    override fun showAlert(activity: Activity, title: String, message: String, switchToPrevious: Boolean) {
+        if (!activity.isFinishing) {
+            val builder = AlertDialog.Builder(activity)
+            builder.setTitle(title)
+            builder.setMessage(message)
+            builder.setPositiveButton("Aceptar") { _, _ ->
+                if (switchToPrevious) {
+                    // Termina la actividad actual para regresar a la anterior
+                    activity.finish()
+                }
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+    }
+
 
     // Interfaz para mostrar diálogos con opción de aceptar y cancelar
     override fun showAlertOkCancel(activity: Activity, title: String, message: String, showCancel: Boolean, onResult: ((Boolean) -> Unit)?) {
@@ -91,4 +108,5 @@ class RepositoryImpl: Repository {
     override fun showToast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+
 }

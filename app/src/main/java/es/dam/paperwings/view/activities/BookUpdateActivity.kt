@@ -169,7 +169,7 @@ class BookUpdateActivity : AppCompatActivity() {
         val category = actCategory.text.toString()
         val price = tiePriceUpdate.text.toString().toDoubleOrNull() ?: 0.0
         val pages = tiePagesUpdate.text.toString().toIntOrNull() ?: 0
-        val language = actLanguage.text.toString()
+        val language = actLanguage.text.toString().ifEmpty { actLanguage.hint.toString() }
         val author = tieAuthorUpdate.text.toString().ifEmpty { "Unknown" }
         val isbn = tieIsbnUpdate.text.toString().ifEmpty { "Unknown" }
         val publisher = tiePublisherUpdate.text.toString().ifEmpty { "Unknown" }
@@ -224,10 +224,9 @@ class BookUpdateActivity : AppCompatActivity() {
             val response = bookService.updateBook(updateRequest)
             if (response.isSuccessful) {
                 // Usuario agregado con éxito
-                repository.showAlert(this@BookUpdateActivity,"Información","Libro modificado con éxito.")
-
+                repository.showAlert(this@BookUpdateActivity,"Información","Libro modificado con éxito.", true)
             } else {
-                // Fallo al agregar el lirbo, manejar error
+                // Fallo al agregar el libro, manejar error
                 val errorResponse = response.errorBody()?.string()
                 repository.showAlert(this@BookUpdateActivity,"Error","Error al modificar el libro: $errorResponse")
             }
@@ -252,7 +251,13 @@ class BookUpdateActivity : AppCompatActivity() {
             tiePagesUpdate.setText(book.pages.toString())
 
             // Idioma
-            actLanguage.setHint(book.language ?: "")
+            actLanguage.setText(book.language ?: "")
+            actLanguage.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    actLanguage.setText("")
+                    actLanguage.setHint(book.language)
+                }
+            }
 
             // Editorial
             tiePublisherUpdate.setText(book.publisher ?: "")
@@ -270,22 +275,22 @@ class BookUpdateActivity : AppCompatActivity() {
             tieIsbnUpdate.setText(book.isbn ?: "")
 
             // Categoría
-            actCategory.setHint(book.category)
+            actCategory.setText(book.category ?: "")
+            actCategory.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus){
+                    actCategory.setText("")
+                    actCategory.setHint(book.category)
+                }
+            }
 
             // Sinopsis
             tieDescriptionUpdate.setText(book.description ?: "")
         }
 
 
-
     private fun switchPrevios() {
         // Simula la acción de presionar el botón de retroceso utilizando onBackPressedDispatcher.
         onBackPressedDispatcher.onBackPressed()
-    }
-
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
 }
