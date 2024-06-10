@@ -60,6 +60,31 @@ class UpdateFragment : Fragment(), BookClickListener {
         val view = binding.root
 
 
+
+
+        // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
+        cardAdapter = CardAdapter(emptyList(), this)
+
+        binding.recycledViewUpdate.apply {
+            layoutManager = GridLayoutManager(activity?.applicationContext, 2)
+            adapter = cardAdapter
+        }
+
+        // Observe the books LiveData and update the adapter when the data changes
+        booksLiveData.observe(viewLifecycleOwner) { books ->
+            cardAdapter.updateBooks(books)
+        }
+
+
+        // Start loading books
+        lifecycleScope.launch {
+            fetchBooks()
+        }
+
+        return view
+
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Initialize the SearchView from the layout
         searchView = view.findViewById(R.id.searchViewUpdate)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -95,30 +120,7 @@ class UpdateFragment : Fragment(), BookClickListener {
                 return true
             }
         })
-
-        // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
-        cardAdapter = CardAdapter(emptyList(), this)
-
-        binding.recycledViewUpdate.apply {
-            layoutManager = GridLayoutManager(activity?.applicationContext, 2)
-            adapter = cardAdapter
-        }
-
-        // Observe the books LiveData and update the adapter when the data changes
-        booksLiveData.observe(viewLifecycleOwner) { books ->
-            cardAdapter.updateBooks(books)
-        }
-
-
-        // Start loading books
-        lifecycleScope.launch {
-            fetchBooks()
-        }
-
-        return view
-
     }
-
     suspend fun fetchBooks(){
         val bookService = ApiServiceFactory.makeBooksService()
         _booksLiveData.postValue(emptyList())

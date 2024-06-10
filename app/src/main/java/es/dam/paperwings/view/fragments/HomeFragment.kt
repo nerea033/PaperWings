@@ -50,42 +50,6 @@ class HomeFragment : Fragment(), BookClickListener {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // Initialize the SearchView from the layout
-        searchView = view.findViewById(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-            override fun onQueryTextSubmit(newText: String?): Boolean {
-                if (newText != null && newText.length >= 3) {
-                    lifecycleScope.launch {
-                        searchBooks(newText)
-                    }
-                    return true
-                }
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-
-                    if (newText.length >= 3) {
-                        // Iniciar la búsqueda solo si hay al menos 3 caracteres
-                        lifecycleScope.launch {
-                            searchBooks(newText)
-                        }
-                    } else if (newText.length == 0) {
-                        // Si el texto es vacío, mostrar todos los libros nuevamente
-                        lifecycleScope.launch {
-                            fetchBooks() // Esto recuperará todos los libros nuevamente
-                        }
-                    } else {
-                        // Si no coincide, no muestro nada
-                        _booksLiveData.postValue(emptyList())
-                    }
-                }
-                return true
-            }
-        })
-
         // Set up the RecyclerView with a GridLayoutManager and the CardAdapter.
         cardAdapter = CardAdapter(emptyList(), this)
 
@@ -106,6 +70,43 @@ class HomeFragment : Fragment(), BookClickListener {
         }
 
         return view
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize the SearchView from the layout
+        searchView = view.findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(newText: String?): Boolean {
+                if (newText != null && newText.length >= 3) {
+                    lifecycleScope.launch {
+                        searchBooks(newText)
+                    }
+                    return true
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    if (newText.length >= 3) {
+                        lifecycleScope.launch {
+                            searchBooks(newText)
+                        }
+                    } else if (newText.length == 0) {
+                        lifecycleScope.launch {
+                            fetchBooks()
+                        }
+                    } else {
+                        _booksLiveData.postValue(emptyList())
+                    }
+                }
+                return true
+            }
+        })
+
+
     }
 
     suspend fun fetchBooks(){

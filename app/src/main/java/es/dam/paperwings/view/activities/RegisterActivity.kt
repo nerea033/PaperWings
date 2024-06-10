@@ -110,6 +110,7 @@ class RegisterActivity : AppCompatActivity() {
                                 lifecycleScope.launch {
                                     addUserToDatabase(userId, username)
                                     repository.saveUserToSharedPreferences(this@RegisterActivity, username, userId, mail, "USER")
+                                    // I should do "login with..." before switch
                                     switchToHome() // Navigate to home screen after user is added to database
                                     print("Registro del usuario exitoso.")
                                 }
