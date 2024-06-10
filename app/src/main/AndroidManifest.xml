@@ -18,7 +18,8 @@
         tools:targetApi="31">
         <activity
             android:name=".view.activities.BookUpdateActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".view.activities.CategoryActivity"
             android:exported="false" />

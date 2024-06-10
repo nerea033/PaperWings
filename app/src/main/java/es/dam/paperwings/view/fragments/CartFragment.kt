@@ -359,7 +359,7 @@ class CartFragment : Fragment(), BookClickListener, CartClickListener {
         for ((index, book) in books.withIndex()) {
             finalPrice += book.price * quantities[index]
         }
-        tvFinalPrice?.text = finalPrice.toString()
+        tvFinalPrice?.text = String.format("%.2f", finalPrice)
     }
 
     /**
