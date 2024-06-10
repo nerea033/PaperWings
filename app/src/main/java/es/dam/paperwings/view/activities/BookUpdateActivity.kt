@@ -1,6 +1,7 @@
 package es.dam.paperwings.view.activities
 
 
+import android.app.DatePickerDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -21,8 +22,11 @@ import es.dam.paperwings.model.entities.Book
 import es.dam.paperwings.model.repositories.RepositoryImpl
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 
 
 /**
@@ -105,6 +109,17 @@ class BookUpdateActivity : AppCompatActivity() {
         btnUpdateBook.setOnClickListener {
             lifecycleScope.launch{
                 updateBook()
+            }
+        }
+
+        // Set OnClickListener to show DatePickerDialog
+        tieDateUpdate.setOnClickListener {
+            showDatePickerDialog()
+        }
+        // Prevent keyboard from appearing
+        tieDateUpdate.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                showDatePickerDialog()
             }
         }
 
@@ -308,4 +323,40 @@ class BookUpdateActivity : AppCompatActivity() {
         tieDescriptionUpdate.setText(book.description ?: "")
     }
 
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                // Month is 0 based, so add 1 to display correct month
+                val selectedDate = formatDate(year, month + 1, dayOfMonth)
+                tieDateUpdate.setText(selectedDate)
+            },
+            year,
+            month,
+            dayOfMonth
+        )
+
+        // Show the DatePickerDialog
+        datePickerDialog.show()
+    }
+
+    /**
+     * Formats the date into a string with the format "yyyy-MM-dd".
+     *
+     * @param year The year.
+     * @param month The month (1-12).
+     * @param day The day of the month.
+     * @return The formatted date string.
+     */
+    private fun formatDate(year: Int, month: Int, day: Int): String {
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month - 1, day) // Month is 0 based
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(calendar.time)
+    }
 }
